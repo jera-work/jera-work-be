@@ -14,9 +14,9 @@ public class CandidateProfile extends BaseEntity {
 
 	@Column(name = "profile_name", length = 50, nullable = false)
 	private String profileName;
-	@Column(name = "profile_address", length = 50, nullable = false)
+	@Column(name = "profile_address", length = 50)
 	private String profileAddress;
-	@Column(name = "phone_number", length = 14, nullable = false)
+	@Column(name = "phone_number", length = 14)
 	private String phoneNumber;
 	@Column(name = "expected_salary")
 	private String expectedSalary;
