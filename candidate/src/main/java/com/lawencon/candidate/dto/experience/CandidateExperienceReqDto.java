@@ -1,42 +1,15 @@
-package com.lawencon.candidate.model;
+package com.lawencon.candidate.dto.experience;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+public class CandidateExperienceReqDto {
 
-import com.lawencon.base.BaseEntity;
-
-@Entity
-@Table(name = "t_candidate_experience")
-public class CandidateExperience extends BaseEntity {
-
-	@OneToOne
-	@JoinColumn(name = "candidate_id", nullable = false)
-	private Candidate candidate;
-	@Column(name="former_position", nullable=false)
 	private String formerPosition;
-	@Column(name="former_institution", nullable=false)
 	private String formerInstitution;
-	@Column(name="former_location", nullable=false)
 	private String formerLocation;
-	@Column(name="former_jobdesk", nullable=false)
 	private String formerJobdesk;
-	@Column(name="start_date", nullable=false)
 	private LocalDate startDate;
-	@Column(name="end_date", nullable=false)
 	private LocalDate endDate;
-
-	public Candidate getCandidate() {
-		return candidate;
-	}
-
-	public void setCandidate(Candidate candidate) {
-		this.candidate = candidate;
-	}
 
 	public String getFormerPosition() {
 		return formerPosition;
@@ -85,4 +58,5 @@ public class CandidateExperience extends BaseEntity {
 	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
 	}
+
 }
