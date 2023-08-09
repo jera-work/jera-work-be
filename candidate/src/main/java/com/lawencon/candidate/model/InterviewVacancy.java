@@ -2,19 +2,38 @@ package com.lawencon.candidate.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 import com.lawencon.base.BaseEntity;
 
+@Entity
+@Table(name = "t_gender")
 public class InterviewVacancy extends BaseEntity {
-	private String appliedVacancy;
+	
+	@OneToOne
+	@JoinColumn(name = "photo_id", nullable = false)
+	private AppliedVacancy appliedVacancy;
+	
+	@Column(name = "notes", nullable = false)
 	private String notes;
+	
+	@Column(name = "start_date", nullable = false)
 	private LocalDate startDate;
+	
+	@Column(name = "end_date", nullable = false)
 	private LocalDate endDate;
+	
+	@Column(name = "interview_location", nullable = false)
 	private String interviewLocation;
 	
-	public String getAppliedVacancy() {
+	public AppliedVacancy getAppliedVacancy() {
 		return appliedVacancy;
 	}
-	public void setAppliedVacancy(String appliedVacancy) {
+	public void setAppliedVacancy(AppliedVacancy appliedVacancy) {
 		this.appliedVacancy = appliedVacancy;
 	}
 	public String getNotes() {

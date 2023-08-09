@@ -1,9 +1,19 @@
 package com.lawencon.candidate.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import com.lawencon.base.BaseEntity;
 
+@Entity
+@Table(name = "t_age_vacancy")
 public class AgeVacancy extends BaseEntity {
+	
+	@Column(name = "age_code", nullable = false, unique = true, length = 8)
 	private String ageCode;
+	
+	@Column(name = "age_name", nullable = false, length = 30)
 	private String ageName;
 	
 	public String getAgeCode() {

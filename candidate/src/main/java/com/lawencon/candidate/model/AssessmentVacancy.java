@@ -2,15 +2,38 @@ package com.lawencon.candidate.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 import com.lawencon.base.BaseEntity;
 
+@Entity
+@Table(name = "t_assessment_vacancy")
 public class AssessmentVacancy extends BaseEntity{
+	
+	@OneToOne
+	@JoinColumn(name = "applied_vacancy_id", nullable = false)
 	private AppliedVacancy appliedVacancy;
+	
+	@Column(name = "is_question", nullable = true)
 	private Boolean isQuestion;
+	
+	@Column(name = "score", nullable = true)
 	private Float score;
+	
+	@Column(name = "notes", nullable = true)
 	private String notes;
+	
+	@Column(name = "start_date", nullable = false)
 	private LocalDate startDate;
+	
+	@Column(name = "end_date", nullable = false)
 	private LocalDate endDate;
+	
+	@Column(name = "assessment_location", nullable = false)
 	private String assessmentLocation;
 	
 	public AppliedVacancy getAppliedVacancy() {

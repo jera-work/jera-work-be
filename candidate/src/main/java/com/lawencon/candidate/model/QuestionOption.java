@@ -1,10 +1,25 @@
 package com.lawencon.candidate.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 import com.lawencon.base.BaseEntity;
 
+@Entity
+@Table(name = "t_question_option")
 public class QuestionOption extends BaseEntity{
+	
+	@Column(name = "option_label", nullable = false)
 	private String optionLabel;
+	
+	@Column(name = "is_correct", nullable = false)
 	private Boolean isCorrect;
+	
+	@OneToOne
+	@JoinColumn(name = "question_id", nullable = false)
 	private Question question;
 	
 	public String getOptionLabel() {

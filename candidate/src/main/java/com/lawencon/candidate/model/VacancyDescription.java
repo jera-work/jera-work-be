@@ -1,15 +1,44 @@
 package com.lawencon.candidate.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 import com.lawencon.base.BaseEntity;
 
+@Entity
+@Table(name = "t_vacancy_description")
 public class VacancyDescription extends BaseEntity{
+	
+	@OneToOne
+	@JoinColumn(name = "degree_id", nullable = false)
 	private Degree degree;
+	
+	@OneToOne
+	@JoinColumn(name = "gender_id", nullable = false)
 	private Gender gender;
+	
+	@OneToOne
+	@JoinColumn(name = "age_vacancy_id", nullable = false)
 	private AgeVacancy ageVacancy;
+	
+	@OneToOne
+	@JoinColumn(name = "job_type_id", nullable = false)
 	private JobType jobType;
+	
+	@Column(name = "salary", nullable = false)
 	private String salary;
+	
+	@OneToOne
+	@JoinColumn(name = "city_id", nullable = false)
 	private City city;
+	
+	@Column(name = "address", nullable = false)
 	private String address;
+	
+	@Column(name = "description", nullable = false)
 	private String description;
 	
 	public Degree getDegree() {
