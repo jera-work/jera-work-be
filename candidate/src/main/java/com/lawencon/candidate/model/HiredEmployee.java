@@ -8,7 +8,7 @@ import javax.persistence.Table;
 import com.lawencon.base.BaseEntity;
 
 @Entity
-@Table(name = "t_gender")
+@Table(name = "t_hired_employee")
 public class HiredEmployee extends BaseEntity {
 
 	@OneToOne
