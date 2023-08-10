@@ -1,5 +1,6 @@
 package com.lawencon.admin.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -50,17 +51,17 @@ public class UserDao extends AbstractJpaDao {
 	
 	public User getByEmail(String email) {
 		final String sql = "SELECT "
-				+ "tu.id, tu.user_password , tp.profile_name, tf.id as fileId, tr.role_code "
+					+ "tu.id, tu.user_password , tp.profile_name, tf.id as fileId, tr.role_code "
 				+ "FROM "
-				+ "t_user tu "
+					+ "t_user tu "
 				+ "INNER JOIN "
-				+ "t_role tr ON tu.role_id = tr.id "
+					+ "t_role tr ON tu.role_id = tr.id "
 				+ "INNER JOIN "
-				+ "t_profile tp ON tu.profile_id = tp.id "
+					+ "t_profile tp ON tu.profile_id = tp.id "
 				+ "LEFT JOIN "
-				+ "t_file tf ON tp.photo_id  = tf.id "
+					+ "t_file tf ON tp.photo_id  = tf.id "
 				+ "WHERE "
-				+ "tu.user_email = :email";
+					+ "tu.user_email = :email";
 		final User user = new User();
 		try {
 			final Object userObj = ConnHandler.getManager().createNativeQuery(sql)
@@ -93,6 +94,43 @@ public class UserDao extends AbstractJpaDao {
 		}
 		return user;
 		
+	}
+	
+	public List<User> getByRoleCode(String roleCode, String companyCode) {
+		final List<User> users = new ArrayList<>();
+		final String sql =
+				"SELECT "
+					+ "	tu.id, tp.profile_name "
+				+ "FROM "
+					+ "	t_user tu "
+				+ "INNER JOIN "
+					+ "	t_role tr ON tu.role_id = tr.id "
+				+ "INNER JOIN "
+					+ "	t_profile tp ON tu.profile_id = tp.id "
+				+ "INNER JOIN "
+					+ "	t_company tc ON tp.company_id = tc.id "
+				+ "WHERE "
+					+ "	tr.role_code = :roleCode AND tc.company_code = :companyCode ";
+		
+		final List<?> userObj = ConnHandler.getManager().createNativeQuery(sql, User.class)
+				.setParameter("roleCode", roleCode)
+				.setParameter("companyCode", companyCode)
+				.getResultList();
+		
+		if(userObj.size() > 0) {
+			for(Object u : userObj) {
+				final Object[] userArr = (Object[]) u;
+				
+				final Profile profile = new Profile();
+				profile.setProfileName(userArr[1].toString());
+				
+				final User user = new User();
+				user.setId(userArr[0].toString());
+				user.setProfile(profile);
+				users.add(user);
+			}
+		}
+		return users;
 	}
 
 }
