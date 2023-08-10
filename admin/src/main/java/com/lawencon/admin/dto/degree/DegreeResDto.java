@@ -1,4 +1,4 @@
-package com.lawencon.admin.dto;
+package com.lawencon.admin.dto.degree;
 
 public class DegreeResDto {
 	private String id;
