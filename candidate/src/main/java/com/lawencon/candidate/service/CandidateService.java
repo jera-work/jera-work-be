@@ -1,10 +1,9 @@
 package com.lawencon.candidate.service;
 
-import java.util.ArrayList;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,10 +34,11 @@ public class CandidateService {
 		
 		final CandidateProfile candidateProfile = new CandidateProfile();
 		candidateProfile.setProfileName(data.getProfileName());
-		final CandidateProfile candidateProfileDb = candidateProfileDao.saveNoLogin(candidateProfile, null);
+		final Supplier<String> id = () -> UUID.randomUUID().toString();
+		final CandidateProfile candidateProfileDb = candidateProfileDao.saveNoLogin(candidateProfile, id);
 		
 		candidate.setCandidateProfile(candidateProfileDb);
-		final Candidate candidateDb = candidateDao.saveAndFlush(candidate);
+		final Candidate candidateDb = candidateDao.saveNoLogin(candidate, id);
 		
 		final InsertResDto response = new InsertResDto();
 		response.setId(candidateDb.getId());

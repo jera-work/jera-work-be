@@ -1,7 +1,5 @@
 package com.lawencon.candidate.controller;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +20,7 @@ public class CandidateController {
 	private CandidateService cdtService;
 	
 	@PostMapping("/signup")
-	public ResponseEntity<InsertResDto> signUp(@Valid @RequestBody RegisterReqDto data){
+	public ResponseEntity<InsertResDto> signUp(@RequestBody RegisterReqDto data){
 		final InsertResDto response = cdtService.register(data);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
