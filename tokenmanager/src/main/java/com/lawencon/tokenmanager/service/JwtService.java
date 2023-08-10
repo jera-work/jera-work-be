@@ -12,7 +12,7 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
 
-private final KeyPair key = Keys.keyPairFor(SignatureAlgorithm.RS256);
+	private final KeyPair key = Keys.keyPairFor(SignatureAlgorithm.RS256);
 	
 	public String generateJwt(final Map<String, Object> claims) {
 		final String jwt = Jwts.builder()
@@ -30,5 +30,5 @@ private final KeyPair key = Keys.keyPairFor(SignatureAlgorithm.RS256);
 				.parseClaimsJws(jwt)
 				.getBody();
 	}
-	
+
 }

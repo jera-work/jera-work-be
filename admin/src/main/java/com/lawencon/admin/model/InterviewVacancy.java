@@ -15,7 +15,7 @@ import com.lawencon.base.BaseEntity;
 public class InterviewVacancy extends BaseEntity {
 	
 	@OneToOne
-	@JoinColumn(name = "photo_id", nullable = false)
+	@JoinColumn(name = "applied_vacancy_id", nullable = false)
 	private AppliedVacancy appliedVacancy;
 	
 	@Column(name = "notes", nullable = false)
