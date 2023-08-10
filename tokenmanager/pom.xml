@@ -5,5 +5,5 @@
     <artifactId>bootcamp</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>tokenauth</artifactId>
+  <artifactId>tokenmanager</artifactId>
 </project>

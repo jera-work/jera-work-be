@@ -19,7 +19,7 @@
 		<module>core</module>
 		<module>admin</module>
 		<module>candidate</module>
-		<module>tokenauth</module>
+		<module>tokenmanager</module>
 	</modules>
 	<dependencies>
 		<dependency>

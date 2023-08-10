@@ -7,7 +7,6 @@ import com.lawencon.admin.dao.ProfileDao;
 import com.lawencon.admin.dao.UserDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.register.RegisterReqDto;
-import com.lawencon.admin.dto.user.UserResDto;
 import com.lawencon.admin.model.Profile;
 import com.lawencon.admin.model.User;
 
@@ -40,9 +39,4 @@ public class UserService {
 		return response;
 	}
 	
-	public UserResDto getByEmail(String email) {
-		final User user = userDao.getByEmail(email);
-		final UserResDto response = new UserResDto();
-		response.
-	}
 }

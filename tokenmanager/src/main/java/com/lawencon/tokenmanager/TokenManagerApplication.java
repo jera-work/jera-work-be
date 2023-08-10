@@ -1,14 +1,14 @@
-package com.lawencon.tokenauth;
+package com.lawencon.tokenmanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class TokenAuthApplication extends SpringBootServletInitializer {
+public class TokenManagerApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TokenAuthApplication.class, args);
+		SpringApplication.run(TokenManagerApplication.class, args);
 	}
 
 }
