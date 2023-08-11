@@ -15,14 +15,14 @@ public class Profile extends BaseEntity{
 	@Column(name = "profile_name", nullable = false, length = 50)
 	private String profileName;
 	
-	@Column(name = "profile_phone", nullable = false, length = 14)
+	@Column(name = "profile_phone", length = 14)
 	private String profilePhone;
 	
-	@Column(name = "profile_address", nullable = false)
+	@Column(name = "profile_address")
 	private String profileAddress;
 	
 	@OneToOne
-	@JoinColumn(name = "photo_id", nullable = false)
+	@JoinColumn(name = "photo_id")
 	private File photo;
 	
 	@OneToOne

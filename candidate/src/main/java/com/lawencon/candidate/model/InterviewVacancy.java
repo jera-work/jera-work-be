@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import com.lawencon.base.BaseEntity;
 
 @Entity
-@Table(name = "t_gender")
+@Table(name = "t_interview_vacancy")
 public class InterviewVacancy extends BaseEntity {
 	
 	@OneToOne

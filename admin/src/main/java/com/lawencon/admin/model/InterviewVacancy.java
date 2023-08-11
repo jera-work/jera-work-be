@@ -11,11 +11,11 @@ import javax.persistence.Table;
 import com.lawencon.base.BaseEntity;
 
 @Entity
-@Table(name = "t_gender")
+@Table(name = "t_interview_vacancy")
 public class InterviewVacancy extends BaseEntity {
 	
 	@OneToOne
-	@JoinColumn(name = "photo_id", nullable = false)
+	@JoinColumn(name = "applied_vacancy_id", nullable = false)
 	private AppliedVacancy appliedVacancy;
 	
 	@Column(name = "notes", nullable = false)

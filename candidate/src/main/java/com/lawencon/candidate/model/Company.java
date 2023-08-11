@@ -25,6 +25,9 @@ public class Company extends BaseEntity{
 	@Column(name = "address", nullable = false)
 	private String address;
 	
+	@Column(name = "description", nullable = false)
+	private String description;
+	
 	@Column(name = "phone_number", nullable = false, length = 14)
 	private String phoneNumber;
 	
@@ -51,6 +54,12 @@ public class Company extends BaseEntity{
 	}
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	public String getPhoneNumber() {
 		return phoneNumber;

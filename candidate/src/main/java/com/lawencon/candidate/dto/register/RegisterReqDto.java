@@ -1,11 +1,5 @@
 package com.lawencon.candidate.dto.register;
 
-import java.util.List;
-
-import com.lawencon.candidate.dto.document.CandidateDocumentReqDto;
-import com.lawencon.candidate.dto.education.CandidateEducationReqDto;
-import com.lawencon.candidate.dto.experience.CandidateExperienceReqDto;
-
 public class RegisterReqDto {
 	
 	private String candidateEmail;
