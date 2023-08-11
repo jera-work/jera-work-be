@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class TokenManagerApplication extends SpringBootServletInitializer {
+public class TokenManagerApplication{
 
 	public static void main(String[] args) {
 		SpringApplication.run(TokenManagerApplication.class, args);

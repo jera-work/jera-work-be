@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.admin.model.File;
@@ -16,6 +18,9 @@ import com.lawencon.base.ConnHandler;
 @Repository
 @org.springframework.context.annotation.Profile(value = { "native-query" })
 public class UserDao extends AbstractJpaDao {
+	private EntityManager em() {
+		return ConnHandler.getManager();
+	}
 	
 	public User getById(final Object id) {
 		return super.getById(User.class, id);
@@ -51,49 +56,48 @@ public class UserDao extends AbstractJpaDao {
 	
 	public User getByEmail(String email) {
 		final String sql = "SELECT "
-					+ "tu.id, tu.user_password , tp.profile_name, tf.id as fileId, tr.role_code "
+				+ "tu.id, tu.user_password , tp.profile_name, tf.id as fileId, tr.role_code "
 				+ "FROM "
-					+ "t_user tu "
+				+ "t_user tu "
 				+ "INNER JOIN "
-					+ "t_role tr ON tu.role_id = tr.id "
+				+ "t_role tr ON tu.role_id = tr.id "
 				+ "INNER JOIN "
-					+ "t_profile tp ON tu.profile_id = tp.id "
+				+ "t_profile tp ON tu.profile_id = tp.id "
 				+ "LEFT JOIN "
-					+ "t_file tf ON tp.photo_id  = tf.id "
+				+ "t_file tf ON tp.photo_id  = tf.id "
 				+ "WHERE "
-					+ "tu.user_email = :email";
-		final User user = new User();
-		try {
-			final Object userObj = ConnHandler.getManager().createNativeQuery(sql)
+				+ "tu.user_email = :email";
+		
+			final Object userObj = em().createNativeQuery(sql)
 					.setParameter("email", email)
 					.getSingleResult();
 			
 			final Object[] userArr = (Object[]) userObj;
-			
+
+			User user = null;
 			if(userArr.length > 0) {
+				user = new User();
 				user.setId(userArr[0].toString());
 				user.setUserPassword(userArr[1].toString());
 				
 				final Profile profile = new Profile();
 				profile.setProfileName(userArr[2].toString());
 				
-				final File photo = new File();
-				photo.setId(userArr[3].toString());
-				profile.setPhoto(photo);
+				if(userArr[3] != null) {
+					final File photo = new File();
+					photo.setId(userArr[3].toString());
+					profile.setPhoto(photo);
+				}
 				
 				final Role role = new Role();
 				role.setRoleCode(userArr[4].toString());
 				
 				user.setProfile(profile);
 				user.setRole(role);
-				
+
 			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return user;
-		
+
+			return user;
 	}
 	
 	public List<User> getByRoleCode(String roleCode, String companyCode) {
@@ -112,7 +116,7 @@ public class UserDao extends AbstractJpaDao {
 				+ "WHERE "
 					+ "	tr.role_code = :roleCode AND tc.company_code = :companyCode ";
 		
-		final List<?> userObj = ConnHandler.getManager().createNativeQuery(sql, User.class)
+		final List<?> userObj = em().createNativeQuery(sql, User.class)
 				.setParameter("roleCode", roleCode)
 				.setParameter("companyCode", companyCode)
 				.getResultList();
