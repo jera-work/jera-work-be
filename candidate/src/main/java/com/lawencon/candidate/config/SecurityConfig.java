@@ -15,31 +15,32 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.lawencon.candidate.filter.AuthorizationFilter;
+import com.lawencon.candidate.service.CandidateService;
 
 @Configuration
 public class SecurityConfig {
-//
-//	@Bean
-//	public AuthenticationManager authManager(HttpSecurity http, UserService userService, BCryptPasswordEncoder encoder)
-//			throws Exception {
-//
-//		return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(userService)
-//				.passwordEncoder(encoder).and().build();
-//	}
-//
-//	@Bean
-//	public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthorizationFilter authorizationFilter)
-//			throws Exception {
-//
-//		http.cors();
-//		http.csrf().disable();
-//
-//		http.addFilterAt(authorizationFilter, BasicAuthenticationFilter.class);
-//
-//		return http.build();
-//	}
+
+	@Bean
+	public AuthenticationManager authManager(HttpSecurity http, CandidateService userService, BCryptPasswordEncoder encoder)
+			throws Exception {
+
+		return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(userService)
+				.passwordEncoder(encoder).and().build();
+	}
+
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthorizationFilter authorizationFilter)
+			throws Exception {
+
+		http.cors();
+		http.csrf().disable();
+
+		http.addFilterAt(authorizationFilter, BasicAuthenticationFilter.class);
+
+		return http.build();
+	}
 
 	@Bean
 	public List<RequestMatcher> matchers() {

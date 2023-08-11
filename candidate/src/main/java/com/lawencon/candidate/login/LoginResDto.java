@@ -6,7 +6,6 @@ public class LoginResDto {
 	private String photoId;
 	private String profileName;
 	private String token;
-	private String roleCode;
 
 	public String getId() {
 		return id;
@@ -24,13 +23,6 @@ public class LoginResDto {
 		this.photoId = photoId;
 	}
 
-	public String getRoleCode() {
-		return roleCode;
-	}
-
-	public void setRoleCode(String roleCode) {
-		this.roleCode = roleCode;
-	}
 
 	public String getProfileName() {
 		return profileName;

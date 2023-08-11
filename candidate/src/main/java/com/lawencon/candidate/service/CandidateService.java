@@ -1,10 +1,12 @@
 package com.lawencon.candidate.service;
 
-import java.util.UUID;
+import java.util.ArrayList;
 import java.util.function.Supplier;
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,7 @@ import com.lawencon.candidate.model.Candidate;
 import com.lawencon.candidate.model.CandidateProfile;
 
 @Service
-public class CandidateService {
+public class CandidateService implements UserDetailsService {
 	
 	@Autowired
 	private CandidateDao candidateDao;
@@ -56,16 +58,17 @@ public class CandidateService {
 		final Candidate candidateLogin = candidateDao.getByEmail(candidateEmail);
 		return candidateLogin;
 	}
-	
-//	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//		final Candidate detail = candidateDao.getByEmail(username);
-//
-//		if (detail != null) {
-//			return new org.springframework.security.core.userdetails.User(username, detail.getCandidatePassword(),
-//					new ArrayList<>());
-//		}
-//
-//		throw new UsernameNotFoundException("Candidate not found!");
-//	}
 
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		final Candidate detail = candidateDao.getByEmail(username);
+		
+		if (detail != null) {
+			return new org.springframework.security.core.userdetails.User(username, detail.getCandidatePassword(),
+					new ArrayList<>());
+		}
+		
+		throw new UsernameNotFoundException("Candidate not found!");
+	}
+	
 }

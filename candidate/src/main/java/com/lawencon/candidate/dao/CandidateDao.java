@@ -75,9 +75,11 @@ public class CandidateDao extends AbstractJpaDao {
 				final CandidateProfile profile = new CandidateProfile();
 				profile.setProfileName(cdtArr[2].toString());
 				
-				final File photo = new File();
-				photo.setId(cdtArr[3].toString());
-				profile.setPhoto(photo);
+				if(cdtArr[3] != null) {
+					final File photo = new File();
+					photo.setId(cdtArr[3].toString());
+					profile.setPhoto(photo);					
+				}
 				
 				cdt.setCandidateProfile(profile);
 			}

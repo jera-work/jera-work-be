@@ -73,11 +73,11 @@
 			<artifactId>springdoc-openapi-ui</artifactId>
 			<version>1.7.0</version>
 		</dependency>-->
-		<dependency>
+<!--		<dependency>
 			<groupId>com.lawencon</groupId>
 			<artifactId>tokenmanager</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+		</dependency>-->
 	</dependencies>
 	<build>
 		<plugins>
