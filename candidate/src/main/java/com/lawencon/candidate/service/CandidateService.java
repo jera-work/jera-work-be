@@ -2,11 +2,13 @@ package com.lawencon.candidate.service;
 
 import java.util.UUID;
 import java.util.function.Supplier;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.base.ConnHandler;
 import com.lawencon.candidate.dao.CandidateDao;
 import com.lawencon.candidate.dao.CandidateProfileDao;
 import com.lawencon.candidate.dto.InsertResDto;
@@ -27,6 +29,7 @@ public class CandidateService {
 	
 	public InsertResDto register(RegisterReqDto data) {
 		
+		ConnHandler.begin();
 		final String passwordEncoded = passwordEncoder.encode(data.getCandidatePassword());
 		final Candidate candidate = new Candidate();
 		candidate.setCandidateEmail(data.getCandidateEmail());
@@ -34,11 +37,12 @@ public class CandidateService {
 		
 		final CandidateProfile candidateProfile = new CandidateProfile();
 		candidateProfile.setProfileName(data.getProfileName());
-		final Supplier<String> id = () -> UUID.randomUUID().toString();
-		final CandidateProfile candidateProfileDb = candidateProfileDao.saveNoLogin(candidateProfile, id);
+		final Supplier<String> systemId = () -> candidateDao.getSystemId();
+		final CandidateProfile candidateProfileDb = candidateProfileDao.saveNoLogin(candidateProfile, systemId);
 		
 		candidate.setCandidateProfile(candidateProfileDb);
-		final Candidate candidateDb = candidateDao.saveNoLogin(candidate, id);
+		final Candidate candidateDb = candidateDao.saveNoLogin(candidate, systemId);
+		ConnHandler.commit();
 		
 		final InsertResDto response = new InsertResDto();
 		response.setId(candidateDb.getId());

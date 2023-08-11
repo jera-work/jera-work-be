@@ -19,7 +19,7 @@ public class CandidateProfile extends BaseEntity {
 	@Column(name = "phone_number", length = 14)
 	private String phoneNumber;
 	@Column(name = "expected_salary")
-	private String expectedSalary;
+	private Integer expectedSalary;
 	@OneToOne
 	@JoinColumn(name = "gender_id")
 	private Gender gender;
@@ -60,11 +60,11 @@ public class CandidateProfile extends BaseEntity {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public String getExpectedSalary() {
+	public Integer getExpectedSalary() {
 		return expectedSalary;
 	}
 
-	public void setExpectedSalary(String expectedSalary) {
+	public void setExpectedSalary(Integer expectedSalary) {
 		this.expectedSalary = expectedSalary;
 	}
 

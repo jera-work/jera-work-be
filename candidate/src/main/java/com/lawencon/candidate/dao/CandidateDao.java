@@ -49,17 +49,16 @@ public class CandidateDao extends AbstractJpaDao {
 	}
 	
 	public Candidate getByEmail(String email) {
-		final String sql = 
-					"SELECT "
-							+ "tc.id, tc.candidate_password, tcp.profile_name , tf.id as fileId "
+		final String sql = "SELECT "
+					+ "tc.id, tc.candidate_password, tcp.profile_name , tf.id as fileId "
 					+ "FROM "
-						+ "t_candidate tc "
+					+ "t_candidate tc "
 					+ "INNER JOIN "
-						+ "t_candidate_profile tcp ON tc.candidate_profile_id = tcp.id "
+					+ "t_candidate_profile tcp ON tc.candidate_profile_id = tcp.id "
 					+ "LEFT JOIN "
-						+ "t_file tf ON tcp.photo_id = tf.id "
+					+ "t_file tf ON tcp.photo_id = tf.id "
 					+ "WHERE "
-						+ "tc.candidate_email = :email ";
+					+ "tc.candidate_email = :email ";
 		try {
 			final Object cdtObj = ConnHandler.getManager()
 					.createNativeQuery(sql)
@@ -87,6 +86,16 @@ public class CandidateDao extends AbstractJpaDao {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public String getSystemId() {
+		final String sql = "SELECT "
+				+ "tc.id "
+				+ "FROM "
+				+ "t_candidate tc "
+				+ "WHERE "
+				+ "tc.candidate_email = 'system-cdt@email.com' ";
 		
+		return (String) ConnHandler.getManager().createNativeQuery(sql).getSingleResult();
 	}
 }
