@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Repository;
 
+import com.lawencon.admin.model.Company;
 import com.lawencon.admin.model.File;
 import com.lawencon.admin.model.Profile;
 import com.lawencon.admin.model.Role;
@@ -56,7 +57,7 @@ public class UserDao extends AbstractJpaDao {
 	
 	public User getByEmail(String email) {
 		final String sql = "SELECT "
-				+ "tu.id, tu.user_password , tp.profile_name, tf.id as fileId, tr.role_code "
+				+ "tu.id, tu.user_password , tp.profile_name, tp.company_id, tf.id as fileId, tr.role_code "
 				+ "FROM "
 				+ "t_user tu "
 				+ "INNER JOIN "
@@ -83,14 +84,18 @@ public class UserDao extends AbstractJpaDao {
 				final Profile profile = new Profile();
 				profile.setProfileName(userArr[2].toString());
 				
-				if(userArr[3] != null) {
+				final Company company = new Company();
+				company.setId(userArr[3].toString());
+				profile.setCompany(company);
+				
+				if(userArr[4] != null) {
 					final File photo = new File();
-					photo.setId(userArr[3].toString());
+					photo.setId(userArr[4].toString());
 					profile.setPhoto(photo);
 				}
 				
 				final Role role = new Role();
-				role.setRoleCode(userArr[4].toString());
+				role.setRoleCode(userArr[5].toString());
 				
 				user.setProfile(profile);
 				user.setRole(role);
@@ -104,19 +109,19 @@ public class UserDao extends AbstractJpaDao {
 		final List<User> users = new ArrayList<>();
 		final String sql =
 				"SELECT "
-					+ "	tu.id, tp.profile_name "
+				+ "	tu.id, tp.profile_name "
 				+ "FROM "
-					+ "	t_user tu "
+				+ "	t_user tu "
 				+ "INNER JOIN "
-					+ "	t_role tr ON tu.role_id = tr.id "
+				+ "	t_role tr ON tu.role_id = tr.id "
 				+ "INNER JOIN "
-					+ "	t_profile tp ON tu.profile_id = tp.id "
+				+ "	t_profile tp ON tu.profile_id = tp.id "
 				+ "INNER JOIN "
-					+ "	t_company tc ON tp.company_id = tc.id "
+				+ "	t_company tc ON tp.company_id = tc.id "
 				+ "WHERE "
-					+ "	tr.role_code = :roleCode AND tc.company_code = :companyCode ";
+				+ "	tr.role_code = :roleCode AND tc.company_code = :companyCode ";
 		
-		final List<?> userObj = em().createNativeQuery(sql, User.class)
+		final List<?> userObj = em().createNativeQuery(sql)
 				.setParameter("roleCode", roleCode)
 				.setParameter("companyCode", companyCode)
 				.getResultList();
