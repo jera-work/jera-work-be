@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.base.ConnHandler;
 import com.lawencon.candidate.model.AppliedProgress;
 
 @Repository
@@ -44,5 +45,18 @@ public class AppliedProgressDao extends AbstractJpaDao {
 	public boolean deleteById(final Object entityId) {
 		return super.deleteById(AppliedProgress.class, entityId);
 	}
-
+	
+	public AppliedProgress getByCode(String progressCode)  {
+		final String sql = "SELECT "
+				+ "ap "
+				+ "FROM "
+				+ "AppliedProgress ap "
+				+ "WHERE ap.progressCode = :progressCode";
+		
+		final AppliedProgress result = ConnHandler.getManager().createQuery(sql, AppliedProgress.class)
+				.setParameter("progressCode", progressCode)
+				.getSingleResult();
+		
+		return result;
+	}
 }

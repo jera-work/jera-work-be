@@ -30,6 +30,7 @@ public class CandidateService implements UserDetailsService {
 	private PasswordEncoder passwordEncoder;
 	
 	public InsertResDto register(RegisterReqDto data) {
+		final InsertResDto response = new InsertResDto();
 		
 		ConnHandler.begin();
 		final String passwordEncoded = passwordEncoder.encode(data.getCandidatePassword());
@@ -46,7 +47,6 @@ public class CandidateService implements UserDetailsService {
 		final Candidate candidateDb = candidateDao.saveNoLogin(candidate, systemId);
 		ConnHandler.commit();
 		
-		final InsertResDto response = new InsertResDto();
 		response.setId(candidateDb.getId());
 		response.setMessage("Your profile : " + candidateDb.getCandidateProfile().getProfileName() + " has been created!");
 		

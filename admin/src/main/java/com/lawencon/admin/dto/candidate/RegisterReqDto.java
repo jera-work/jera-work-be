@@ -1,4 +1,4 @@
-package com.lawencon.candidate.dto.register;
+package com.lawencon.admin.dto.candidate;
 
 public class RegisterReqDto {
 	

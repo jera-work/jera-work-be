@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.base.ConnHandler;
 import com.lawencon.admin.model.Candidate;
 
 @Repository
@@ -45,4 +46,15 @@ public class CandidateDao extends AbstractJpaDao {
 		return super.deleteById(Candidate.class, entityId);
 	}
 	
+	
+	public String getSystemId() {
+		final String sql = "SELECT "
+				+ "tc.id "
+				+ "FROM "
+				+ "t_candidate tc "
+				+ "WHERE "
+				+ "tc.candidate_email = 'system-adm@email.com' ";
+		
+		return (String) ConnHandler.getManager().createNativeQuery(sql).getSingleResult();
+	}
 }

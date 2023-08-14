@@ -50,20 +50,3 @@ public class TokenController {
 	}
 	
 }
-//
-//@RestController
-//@RequestMapping("tokens")
-//public class TokenController {
-//	
-//	
-//	
-//	@Autowired
-//	private TokenService tokenService;
-//	
-//	@PostMapping
-//	public ResponseEntity<TokenResDto> getToken(@RequestBody TokenReqDto data){
-//		final TokenResDto response = tokenService.generateToken(data);
-//		return new ResponseEntity<TokenResDto>(response, HttpStatus.CREATED);
-//	}
-//
-//}

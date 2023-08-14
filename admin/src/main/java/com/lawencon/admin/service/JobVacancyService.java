@@ -64,7 +64,7 @@ public class JobVacancyService {
 		desc.setGender(genderDao.getByIdRef(data.getGenderId()));
 		desc.setJobType(typeDao.getByIdRef(data.getJobTypeId()));
 		desc.setSalary(data.getSalary());
-		final VacancyDescription descDb = descDao.save(desc);
+		final VacancyDescription descDb = descDao.saveAndFlush(desc);
 		
 		final JobVacancy job = new JobVacancy();
 		job.setAvailableStatus(statusDao.getByIdRef(data.getAvailableStatusId()));
