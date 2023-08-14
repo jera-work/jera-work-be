@@ -1,8 +1,8 @@
-package com.lawencon.candidate.dto.education;
+package com.lawencon.admin.dto.education;
 
 import java.time.LocalDate;
 
-public class CandidateEducationReqDto {
+public class CandidateEducationCreateReqDto {
 
 	private String institutionName;
 	private String degreeId;

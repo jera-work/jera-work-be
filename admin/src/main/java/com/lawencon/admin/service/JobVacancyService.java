@@ -53,42 +53,47 @@ public class JobVacancyService {
 	private ApiService apiService;
 
 	public InsertResDto insertJob(InsertJobVacancyReqDto data) {
-		ConnHandler.begin();
 		
-		final VacancyDescription desc = new VacancyDescription();
-		desc.setAddress(data.getAddress());
-		desc.setAgeVacancy(ageDao.getByIdRef(data.getAgeVacancyId()));
-		desc.setCity(cityDao.getByIdRef(data.getCityId()));
-		desc.setDegree(degreeDao.getByIdRef(data.getDegreeId()));
-		desc.setDescription(data.getDescription());
-		desc.setGender(genderDao.getByIdRef(data.getGenderId()));
-		desc.setJobType(typeDao.getByIdRef(data.getJobTypeId()));
-		desc.setSalary(data.getSalary());
-		final VacancyDescription descDb = descDao.saveAndFlush(desc);
-		
-		final JobVacancy job = new JobVacancy();
-		job.setAvailableStatus(statusDao.getByIdRef(data.getAvailableStatusId()));
-		
-		final User user = userDao.getById(principalService.getAuthPrincipal());
-		job.setCompany(companyDao.getByIdRef(user.getProfile().getCompany().getId()));
-		job.setEndDate(data.getEndDate());
-		job.setExpLevel(levelDao.getByIdRef(data.getExpLevelId()));
-		job.setStartDate(data.getStartDate());
-		job.setVacancyCode(data.getVacancyCode());
-		job.setVacancyTitle(data.getVacancyTitle());
-		job.setPicHr(userDao.getByIdRef(data.getPicHrId()));
-		job.setPicUser(userDao.getByIdRef(data.getPicUserId()));
-		job.setVacancyDescription(descDb);
-		final JobVacancy jobDb = jobDao.save(job);
-		
-		apiService.writeTo("http://localhost:8080/jobs", data);
-		
-		final InsertResDto response = new InsertResDto();
-		response.setId(jobDb.getId());
-		response.setMessage("Job has been created!");
-		ConnHandler.commit();
-		
-		return response;
-		
+		try {
+			final VacancyDescription desc = new VacancyDescription();
+			desc.setAddress(data.getAddress());
+			desc.setAgeVacancy(ageDao.getByIdRef(data.getAgeVacancyId()));
+			desc.setCity(cityDao.getByIdRef(data.getCityId()));
+			desc.setDegree(degreeDao.getByIdRef(data.getDegreeId()));
+			desc.setDescription(data.getDescription());
+			desc.setGender(genderDao.getByIdRef(data.getGenderId()));
+			desc.setJobType(typeDao.getByIdRef(data.getJobTypeId()));
+			desc.setSalary(data.getSalary());
+			final VacancyDescription descDb = descDao.save(desc);
+
+			final JobVacancy job = new JobVacancy();
+			job.setAvailableStatus(statusDao.getByIdRef(data.getAvailableStatusId()));
+
+			final User user = userDao.getById(principalService.getAuthPrincipal());
+			job.setCompany(companyDao.getByIdRef(user.getProfile().getCompany().getId()));
+			job.setEndDate(data.getEndDate());
+			job.setExpLevel(levelDao.getByIdRef(data.getExpLevelId()));
+			job.setStartDate(data.getStartDate());
+			job.setVacancyCode(data.getVacancyCode());
+			job.setVacancyTitle(data.getVacancyTitle());
+			job.setPicHr(userDao.getByIdRef(data.getPicHrId()));
+			job.setPicUser(userDao.getByIdRef(data.getPicUserId()));
+			job.setVacancyDescription(descDb);
+			final JobVacancy jobDb = jobDao.save(job);
+
+			apiService.writeTo("http://localhost:8080/jobs", data);
+
+			final InsertResDto response = new InsertResDto();
+			response.setId(jobDb.getId());
+			response.setMessage("Job has been created!");
+
+			ConnHandler.commit();
+			return response;
+
+		} catch (Exception e) {
+			ConnHandler.rollback();
+			return null;
+		}
+
 	}
 }
