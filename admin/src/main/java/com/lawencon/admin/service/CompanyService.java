@@ -33,6 +33,9 @@ public class CompanyService {
 	
 	@Autowired
 	private FileDao fileDao;
+	
+	@Autowired
+	private ApiService apiService;
 
 	public InsertResDto createCompany(CompanyCreateReqDto data) {
 
@@ -56,20 +59,9 @@ public class CompanyService {
 			company.setPhoto(logo);
 			final Company companyDb = companyDao.save(company);
 			
-			final String insertCompanyCandidateAPI = "http://localhost:8080/companies";
+			final HttpStatus status = apiService.writeTo("http://localhost:8080/companies", data);
 			
-			final HttpHeaders httpHeaders = new HttpHeaders();
-			httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-			httpHeaders.setBearerAuth(JwtConfig.get());
-			
-			final RequestEntity<CompanyCreateReqDto> insertCompany = RequestEntity
-					.post(insertCompanyCandidateAPI)
-					.headers(httpHeaders)
-					.body(data);
-			
-			final ResponseEntity<InsertResDto> responseCandidate = restTemplate.exchange(insertCompany, InsertResDto.class);
-			
-			if(responseCandidate.getStatusCode().equals(HttpStatus.CREATED)) {
+			if(status.equals(HttpStatus.CREATED)) {
 				response.setId(companyDb.getId());
 				response.setMessage("Company : " + companyDb.getCompanyName() + " has been created!");
 				

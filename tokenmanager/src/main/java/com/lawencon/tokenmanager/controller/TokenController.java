@@ -24,29 +24,27 @@ public class TokenController {
 
 	@Autowired
 	private JwtService jwtService;
-	
+
 	@PostMapping
-	public ResponseEntity<String> getToken(@RequestBody TokenReqDto tokenDto){
+	public ResponseEntity<String> getToken(@RequestBody TokenReqDto tokenDto) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
 		cal.add(Calendar.HOUR_OF_DAY, 1);
-		
+
 		final Map<String, Object> claims = new HashMap<>();
 		claims.put("exp", cal.getTime());
-		claims.put("id",tokenDto.getId());
+		claims.put("id", tokenDto.getId());
 		final String response = jwtService.generateJwt(claims);
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/validate")
-	public ResponseEntity<String> validateToken(){
+	public ResponseEntity<String> validateToken() {
 		final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 		if (auth == null || auth.getPrincipal() == null)
 			throw new RuntimeException("Invalid Login");
-		
-		
+
 		return new ResponseEntity<String>(auth.getPrincipal().toString(), HttpStatus.OK);
 	}
-	
 }

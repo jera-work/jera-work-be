@@ -53,8 +53,7 @@ public class JobVacancyService {
 	private ApiService apiService;
 
 	public InsertResDto insertJob(InsertJobVacancyReqDto data) {
-
-		ConnHandler.begin();
+		
 		try {
 			final VacancyDescription desc = new VacancyDescription();
 			desc.setAddress(data.getAddress());
