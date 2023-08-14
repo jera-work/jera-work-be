@@ -1,4 +1,4 @@
-package com.lawencon.candidate.controller;
+package com.lawencon.admin.controller;
 
 import java.util.List;
 
@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lawencon.candidate.dto.InsertResDto;
-import com.lawencon.candidate.dto.UpdateResDto;
-import com.lawencon.candidate.dto.document.CandidateDocumentCreateReqDto;
-import com.lawencon.candidate.dto.education.CandidateEducationCreateReqDto;
-import com.lawencon.candidate.dto.profile.CandidateProfileUpdateReqDto;
-import com.lawencon.candidate.dto.register.RegisterReqDto;
-import com.lawencon.candidate.service.CandidateService;
+import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.UpdateResDto;
+import com.lawencon.admin.dto.candidate.CandidateInsertReqDto;
+import com.lawencon.admin.dto.candidateprofile.CandidateProfileUpdateReqDto;
+import com.lawencon.admin.dto.document.CandidateDocumentCreateReqDto;
+import com.lawencon.admin.dto.education.CandidateEducationCreateReqDto;
+import com.lawencon.admin.service.CandidateService;
 
 @RestController
 @RequestMapping("candidates")
@@ -27,7 +27,7 @@ public class CandidateController {
 	private CandidateService cdtService;
 
 	@PostMapping("/register")
-	public ResponseEntity<InsertResDto> register(@RequestBody RegisterReqDto data) {
+	public ResponseEntity<InsertResDto> register(@RequestBody CandidateInsertReqDto data) {
 		final InsertResDto response = cdtService.register(data);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}

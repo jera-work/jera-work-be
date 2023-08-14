@@ -1,52 +1,44 @@
-package com.lawencon.candidate.service;
+package com.lawencon.admin.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.admin.dao.CandidateDao;
+import com.lawencon.admin.dao.CandidateDocumentDao;
+import com.lawencon.admin.dao.CandidateEducationDao;
+import com.lawencon.admin.dao.CandidateProfileDao;
+import com.lawencon.admin.dao.DegreeDao;
+import com.lawencon.admin.dao.DocumentTypeDao;
+import com.lawencon.admin.dao.FileDao;
+import com.lawencon.admin.dao.GenderDao;
+import com.lawencon.admin.dao.MajorDao;
+import com.lawencon.admin.dao.MaritalDao;
+import com.lawencon.admin.dao.NationalityDao;
+import com.lawencon.admin.dao.ReligionDao;
+import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.UpdateResDto;
+import com.lawencon.admin.dto.candidate.CandidateInsertReqDto;
+import com.lawencon.admin.dto.candidateprofile.CandidateProfileUpdateReqDto;
+import com.lawencon.admin.dto.document.CandidateDocumentCreateReqDto;
+import com.lawencon.admin.dto.education.CandidateEducationCreateReqDto;
+import com.lawencon.admin.model.Candidate;
+import com.lawencon.admin.model.CandidateDocument;
+import com.lawencon.admin.model.CandidateEducation;
+import com.lawencon.admin.model.CandidateProfile;
+import com.lawencon.admin.model.File;
 import com.lawencon.base.ConnHandler;
-import com.lawencon.candidate.dao.CandidateDao;
-import com.lawencon.candidate.dao.CandidateDocumentDao;
-import com.lawencon.candidate.dao.CandidateEducationDao;
-import com.lawencon.candidate.dao.CandidateProfileDao;
-import com.lawencon.candidate.dao.DegreeDao;
-import com.lawencon.candidate.dao.DocumentTypeDao;
-import com.lawencon.candidate.dao.FileDao;
-import com.lawencon.candidate.dao.GenderDao;
-import com.lawencon.candidate.dao.MajorDao;
-import com.lawencon.candidate.dao.MaritalDao;
-import com.lawencon.candidate.dao.NationalityDao;
-import com.lawencon.candidate.dao.ReligionDao;
-import com.lawencon.candidate.dto.InsertResDto;
-import com.lawencon.candidate.dto.UpdateResDto;
-import com.lawencon.candidate.dto.document.CandidateDocumentCreateReqDto;
-import com.lawencon.candidate.dto.education.CandidateEducationCreateReqDto;
-import com.lawencon.candidate.dto.profile.CandidateProfileUpdateReqDto;
-import com.lawencon.candidate.dto.register.RegisterReqDto;
-import com.lawencon.candidate.login.LoginReqDto;
-import com.lawencon.candidate.model.Candidate;
-import com.lawencon.candidate.model.CandidateDocument;
-import com.lawencon.candidate.model.CandidateEducation;
-import com.lawencon.candidate.model.CandidateProfile;
-import com.lawencon.candidate.model.File;
 import com.lawencon.security.principal.PrincipalServiceImpl;
 
 @Service
-public class CandidateService implements UserDetailsService {
+public class CandidateService {
 
 	@Autowired
 	private CandidateDao candidateDao;
 	@Autowired
 	private CandidateProfileDao candidateProfileDao;
-	@Autowired
-	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private GenderDao genderDao;
 	@Autowired
@@ -71,13 +63,11 @@ public class CandidateService implements UserDetailsService {
 	private CandidateEducationDao educationDao;
 
 	/* Register for Candidate */
-	public InsertResDto register(RegisterReqDto data) {
+	public InsertResDto register(CandidateInsertReqDto data) {
 		try {
 			ConnHandler.begin();
-			final String passwordEncoded = passwordEncoder.encode(data.getCandidatePassword());
 			final Candidate candidate = new Candidate();
 			candidate.setCandidateEmail(data.getCandidateEmail());
-			candidate.setCandidatePassword(passwordEncoded);
 
 			final CandidateProfile candidateProfile = new CandidateProfile();
 			candidateProfile.setProfileName(data.getProfileName());
@@ -198,25 +188,6 @@ public class CandidateService implements UserDetailsService {
 			ConnHandler.rollback();
 			return null;
 		}
-	}
-
-	/* Login for candidate */
-	public Candidate login(LoginReqDto data) {
-		final String candidateEmail = data.getUserEmail();
-		final Candidate candidateLogin = candidateDao.getByEmail(candidateEmail);
-		return candidateLogin;
-	}
-
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		final Candidate detail = candidateDao.getByEmail(username);
-
-		if (detail != null) {
-			return new org.springframework.security.core.userdetails.User(username, detail.getCandidatePassword(),
-					new ArrayList<>());
-		}
-
-		throw new UsernameNotFoundException("Candidate not found!");
 	}
 
 }

@@ -10,24 +10,27 @@ import com.lawencon.base.BaseEntity;
 @Entity
 @Table(name = "t_blacklist_employee")
 public class BlacklistEmployee extends BaseEntity {
-	
+
 	@OneToOne
 	@JoinColumn(name = "employee_id", nullable = false, unique = true)
-	private Candidate employee;
-	
+	private HiredEmployee employee;
+
 	@OneToOne
 	@JoinColumn(name = "company_id", nullable = false)
 	private Company company;
-	
-	public Candidate getEmployee() {
+
+	public HiredEmployee getEmployee() {
 		return employee;
 	}
-	public void setEmployee(Candidate employee) {
+
+	public void setEmployee(HiredEmployee employee) {
 		this.employee = employee;
 	}
+
 	public Company getCompany() {
 		return company;
 	}
+
 	public void setCompany(Company company) {
 		this.company = company;
 	}
