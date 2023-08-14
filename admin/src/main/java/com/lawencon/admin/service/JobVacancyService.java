@@ -24,7 +24,7 @@ import com.lawencon.security.principal.PrincipalServiceImpl;
 
 @Service
 public class JobVacancyService {
-	
+
 	@Autowired
 	private AvailableStatusDao statusDao;
 	@Autowired
@@ -51,7 +51,7 @@ public class JobVacancyService {
 	private UserDao userDao;
 	@Autowired
 	private ApiService apiService;
-	
+
 	public InsertResDto insertJob(InsertJobVacancyReqDto data) {
 		ConnHandler.begin();
 		
@@ -91,5 +91,4 @@ public class JobVacancyService {
 		return response;
 		
 	}
-
 }

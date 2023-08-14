@@ -7,6 +7,7 @@ public class LoginResDto {
 	private String profileName;
 	private String token;
 	private String roleCode;
+	private String companyId;
 
 	public String getId() {
 		return id;
@@ -46,6 +47,14 @@ public class LoginResDto {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
 	}
 
 }

@@ -31,8 +31,8 @@ public class UserController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<UserResDto>> getUsers(@RequestParam String roleCode, @RequestParam String companyId) {
-		final List<UserResDto> response = userService.getUsers(roleCode, companyId);
+	public ResponseEntity<List<UserResDto>> getUsers(@RequestParam String roleCode, @RequestParam String companyCode) {
+		final List<UserResDto> response = userService.getUsers(roleCode, companyCode);
 		return new ResponseEntity<List<UserResDto>>(response, HttpStatus.OK);
 	}
 
