@@ -12,13 +12,15 @@ import com.lawencon.admin.dao.ExperienceLevelDao;
 import com.lawencon.admin.dao.GenderDao;
 import com.lawencon.admin.dao.JobTypeDao;
 import com.lawencon.admin.dao.JobVacancyDao;
+import com.lawencon.admin.dao.UserDao;
 import com.lawencon.admin.dao.VacancyDescriptionDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.jobvacancy.InsertJobVacancyReqDto;
-import com.lawencon.admin.dto.vacancydescription.InsertVacancyDescriptionReqDto;
 import com.lawencon.admin.model.JobVacancy;
+import com.lawencon.admin.model.User;
 import com.lawencon.admin.model.VacancyDescription;
 import com.lawencon.base.ConnHandler;
+import com.lawencon.security.principal.PrincipalServiceImpl;
 
 @Service
 public class JobVacancyService {
@@ -44,45 +46,47 @@ public class JobVacancyService {
 	@Autowired
 	private JobVacancyDao jobDao;
 	@Autowired
+	private PrincipalServiceImpl principalService;
+	@Autowired
+	private UserDao userDao;
+	@Autowired
 	private ApiService apiService;
 	
-	public InsertResDto insertJob(InsertJobVacancyReqDto data, InsertVacancyDescriptionReqDto descData) {
+	public InsertResDto insertJob(InsertJobVacancyReqDto data) {
 		ConnHandler.begin();
 		
 		final VacancyDescription desc = new VacancyDescription();
-		desc.setAddress(descData.getAddress());
-		desc.setAgeVacancy(ageDao.getByIdRef(descData.getAgeVacancyId()));
-		desc.setCity(cityDao.getByIdRef(descData.getCityId()));
-//		desc.setCreatedBy(null);
-		desc.setDegree(degreeDao.getByIdRef(descData.getDegreeId()));
-		desc.setDescription(descData.getDescription());
-		desc.setGender(genderDao.getByIdRef(descData.getGenderId()));
-		desc.setJobType(typeDao.getByIdRef(descData.getJobTypeId()));
-		desc.setSalary(descData.getSalary());
-		
+		desc.setAddress(data.getAddress());
+		desc.setAgeVacancy(ageDao.getByIdRef(data.getAgeVacancyId()));
+		desc.setCity(cityDao.getByIdRef(data.getCityId()));
+		desc.setDegree(degreeDao.getByIdRef(data.getDegreeId()));
+		desc.setDescription(data.getDescription());
+		desc.setGender(genderDao.getByIdRef(data.getGenderId()));
+		desc.setJobType(typeDao.getByIdRef(data.getJobTypeId()));
+		desc.setSalary(data.getSalary());
 		final VacancyDescription descDb = descDao.save(desc);
 		
 		final JobVacancy job = new JobVacancy();
 		job.setAvailableStatus(statusDao.getByIdRef(data.getAvailableStatusId()));
-//		job.setCandidateTotal(data.get);
-		job.setCompany(companyDao.getByIdRef(data.getCompanyId()));
+		
+		final User user = userDao.getById(principalService.getAuthPrincipal());
+		job.setCompany(companyDao.getByIdRef(user.getProfile().getCompany().getId()));
 		job.setEndDate(data.getEndDate());
 		job.setExpLevel(levelDao.getByIdRef(data.getExpLevelId()));
 		job.setStartDate(data.getStartDate());
 		job.setVacancyCode(data.getVacancyCode());
 		job.setVacancyTitle(data.getVacancyTitle());
-//		job.setCreatedBy(princi);
+		job.setPicHr(userDao.getByIdRef(data.getPicHrId()));
+		job.setPicUser(userDao.getByIdRef(data.getPicUserId()));
 		job.setVacancyDescription(descDb);
-		
 		final JobVacancy jobDb = jobDao.save(job);
+		
+		apiService.writeTo("http://localhost:8080/jobs", data);
 		
 		final InsertResDto response = new InsertResDto();
 		response.setId(jobDb.getId());
 		response.setMessage("Job has been created!");
 		ConnHandler.commit();
-		
-		apiService.writeTo("localhost:8080/jobs/desc", descDb);
-		apiService.writeTo("localhost:8080/jobs", jobDb);
 		
 		return response;
 		

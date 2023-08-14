@@ -1,4 +1,4 @@
-package com.lawencon.admin.service;
+package com.lawencon.candidate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

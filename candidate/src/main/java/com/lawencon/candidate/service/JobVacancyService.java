@@ -16,9 +16,9 @@ import com.lawencon.candidate.dao.JobVacancyDao;
 import com.lawencon.candidate.dao.VacancyDescriptionDao;
 import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.jobvacancy.InsertJobVacancyReqDto;
-import com.lawencon.candidate.dto.vacancydescription.InsertVacancyDescriptionReqDto;
 import com.lawencon.candidate.model.JobVacancy;
 import com.lawencon.candidate.model.VacancyDescription;
+import com.lawencon.security.principal.PrincipalServiceImpl;
 
 @Service
 public class JobVacancyService {
@@ -43,20 +43,22 @@ public class JobVacancyService {
 	private VacancyDescriptionDao descDao;
 	@Autowired
 	private JobVacancyDao jobDao;
+	@Autowired
+	private PrincipalServiceImpl principalService;
 	
-	public InsertResDto insertJob(InsertJobVacancyReqDto data, InsertVacancyDescriptionReqDto descData) {
+	public InsertResDto insertJob(InsertJobVacancyReqDto data) {
 		ConnHandler.begin();
 		
 		final VacancyDescription desc = new VacancyDescription();
-		desc.setAddress(descData.getAddress());
-		desc.setAgeVacancy(ageDao.getByIdRef(descData.getAgeVacancyId()));
-		desc.setCity(cityDao.getByIdRef(descData.getCityId()));
-//		desc.setCreatedBy(null);
-		desc.setDegree(degreeDao.getByIdRef(descData.getDegreeId()));
-		desc.setDescription(descData.getDescription());
-		desc.setGender(genderDao.getByIdRef(descData.getGenderId()));
-		desc.setJobType(typeDao.getByIdRef(descData.getJobTypeId()));
-		desc.setSalary(descData.getSalary());
+		desc.setAddress(data.getAddress());
+		desc.setAgeVacancy(ageDao.getByIdRef(data.getAgeVacancyId()));
+		desc.setCity(cityDao.getByIdRef(data.getCityId()));
+		desc.setCreatedBy(principalService.getAuthPrincipal());
+		desc.setDegree(degreeDao.getByIdRef(data.getDegreeId()));
+		desc.setDescription(data.getDescription());
+		desc.setGender(genderDao.getByIdRef(data.getGenderId()));
+		desc.setJobType(typeDao.getByIdRef(data.getJobTypeId()));
+		desc.setSalary(data.getSalary());
 		
 		final VacancyDescription descDb = descDao.save(desc);
 		
@@ -69,7 +71,7 @@ public class JobVacancyService {
 		job.setStartDate(data.getStartDate());
 		job.setVacancyCode(data.getVacancyCode());
 		job.setVacancyTitle(data.getVacancyTitle());
-//		job.setCreatedBy(princi);
+		job.setCreatedBy(principalService.getAuthPrincipal());
 		job.setVacancyDescription(descDb);
 		
 		final JobVacancy jobDb = jobDao.save(job);

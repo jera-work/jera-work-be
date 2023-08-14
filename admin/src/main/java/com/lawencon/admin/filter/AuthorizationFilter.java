@@ -10,19 +10,28 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawencon.admin.dto.ErrorResDto;
+import com.lawencon.config.JwtConfig;
 
 
 @Component
 public class AuthorizationFilter extends OncePerRequestFilter {
 
-//	@Autowired
-//	private JwtService jwtService;
+	@Autowired
+	private RestTemplate restTemplate;
 
 	@Autowired
 	private List<RequestMatcher> matchers;
@@ -37,11 +46,18 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 			final String header = request.getHeader("Authorization");
 			if (header != null) {
 				final String jwt = header.replaceFirst("Bearer ", "");
-				try {					
-//					final Map<String, Object> map = jwtService.parseJwt(jwt);
+				try {			
+					JwtConfig.set(jwt);
+					final String tokenURL = "http://localhost:8082/token/validate";
 					
-//					final Authentication auth = new UsernamePasswordAuthenticationToken(map.get("id"), null);
-//					SecurityContextHolder.getContext().setAuthentication(auth);
+					final HttpHeaders headers = new HttpHeaders();
+					headers.setContentType(MediaType.APPLICATION_JSON);
+					headers.setBearerAuth(jwt);
+					
+					final RequestEntity<Object> tokenChecker= RequestEntity.post(tokenURL).headers(headers).body(null);
+					final ResponseEntity<String> id = restTemplate.exchange(tokenChecker, String.class);
+					final Authentication auth = new UsernamePasswordAuthenticationToken(id.getBody(),null);
+					SecurityContextHolder.getContext().setAuthentication(auth);
 					
 				} catch (Exception e) {
 					e.printStackTrace();

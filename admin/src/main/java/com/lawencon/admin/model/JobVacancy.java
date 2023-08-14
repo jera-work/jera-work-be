@@ -51,7 +51,7 @@ public class JobVacancy extends BaseEntity{
 	private Company company;
 	
 	@OneToOne
-	@JoinColumn(name = "vacantion_description_id", nullable = false)
+	@JoinColumn(name = "vacancy_description_id", nullable = false)
 	private VacancyDescription vacancyDescription;
 	
 	public String getVacancyCode() {
