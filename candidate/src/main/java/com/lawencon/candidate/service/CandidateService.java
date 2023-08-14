@@ -36,6 +36,10 @@ import com.lawencon.candidate.model.CandidateDocument;
 import com.lawencon.candidate.model.CandidateEducation;
 import com.lawencon.candidate.model.CandidateProfile;
 import com.lawencon.candidate.model.File;
+import com.lawencon.candidate.model.Gender;
+import com.lawencon.candidate.model.Marital;
+import com.lawencon.candidate.model.Nationality;
+import com.lawencon.candidate.model.Religion;
 import com.lawencon.security.principal.PrincipalServiceImpl;
 
 @Service
@@ -69,30 +73,31 @@ public class CandidateService implements UserDetailsService {
 	private MajorDao majorDao;
 	@Autowired
 	private CandidateEducationDao educationDao;
+	@Autowired
+	private ApiService apiService;
 
 	/* Register for Candidate */
 	public InsertResDto register(RegisterReqDto data) {
 		try {
 			ConnHandler.begin();
-			final String passwordEncoded = passwordEncoder.encode(data.getCandidatePassword());
-			final Candidate candidate = new Candidate();
-			candidate.setCandidateEmail(data.getCandidateEmail());
-			candidate.setCandidatePassword(passwordEncoded);
-
 			final CandidateProfile candidateProfile = new CandidateProfile();
 			candidateProfile.setProfileName(data.getProfileName());
 			final Supplier<String> systemId = () -> candidateDao.getSystemId();
 			final CandidateProfile candidateProfileDb = candidateProfileDao.saveNoLogin(candidateProfile, systemId);
-
+			
+			final String passwordEncoded = passwordEncoder.encode(data.getCandidatePassword());
+			final Candidate candidate = new Candidate();
+			candidate.setCandidateEmail(data.getCandidateEmail());
+			candidate.setCandidatePassword(passwordEncoded);
 			candidate.setCandidateProfile(candidateProfileDb);
 			final Candidate candidateDb = candidateDao.saveNoLogin(candidate, systemId);
-			ConnHandler.commit();
 
 			final InsertResDto response = new InsertResDto();
 			response.setId(candidateDb.getId());
 			response.setMessage(
 					"Your profile : " + candidateDb.getCandidateProfile().getProfileName() + " has been created!");
 
+			apiService.writeTo("http://localhost:8081/candidates", data);
 			ConnHandler.commit();
 			return response;
 		} catch (Exception e) {
@@ -106,29 +111,39 @@ public class CandidateService implements UserDetailsService {
 
 		try {
 			ConnHandler.begin();
-			final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
-			final CandidateProfile profile = candidateProfileDao.getById(candidate.getCandidateProfile());
-
+			
+			final Gender gender = genderDao.getById(data.getGenderId());
+			final Marital marital = maritalDao.getById(data.getMaritalId());
+			final Nationality nationality = nationalityDao.getById(data.getNationalityId());
+			final Religion religion = religionDao.getById(data.getReligionId());
+			
 			final File photo = new File();
 			photo.setFileContent(data.getFileContent());
 			photo.setFileExt(data.getFileExt());
-			final File photoDb = fileDao.save(photo);
-
+			final File photoDb = fileDao.saveAndFlush(photo);
+			
+			final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
+			final CandidateProfile profile = candidateProfileDao.getById(candidate.getCandidateProfile());
 			profile.setExpectedSalary(data.getExpectedSalary());
-			profile.setGender(genderDao.getByIdRef(data.getGenderId()));
-			profile.setMarital(maritalDao.getByIdRef(data.getMaritalId()));
-			profile.setNationality(nationalityDao.getByIdRef(data.getNationalityId()));
+			profile.setGender(gender);
+			profile.setMarital(marital);
+			profile.setNationality(nationality);
+			profile.setReligion(religion);
 			profile.setPhoneNumber(data.getPhoneNumber());
 			profile.setPhoto(photoDb);
 			profile.setProfileAddress(data.getProfileAddress());
-			profile.setReligion(religionDao.getByIdRef(data.getReligionId()));
-
 			final CandidateProfile profileDb = candidateProfileDao.saveAndFlush(profile);
-
+			
+			data.setGenderCode(gender.getGenderCode());
+			data.setMaritalCode(marital.getMartialCode());
+			data.setNationalityCode(nationality.getNationalityCode());
+			data.setReligionCode(religion.getReligionCode());
+			
+			apiService.writeTo("http://localhost:8081/candidates/profile", data);
+			
 			final UpdateResDto response = new UpdateResDto();
 			response.setVer(profileDb.getVersion());
 			response.setMessage("Profile has been updated!");
-
 			ConnHandler.commit();
 
 			return response;
