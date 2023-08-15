@@ -18,6 +18,8 @@ public class AssessmentVacancyService {
 	private AppliedVacancyDao appliedVacancyDao;
 	@Autowired
 	private AssessmentVacancyDao assessmentVacancyDao;
+	@Autowired
+	private SendMailService mailService;
 
 	public InsertResDto insertAssessment(InsertAssessmentVacancyReqDto data) {
 
@@ -37,6 +39,7 @@ public class AssessmentVacancyService {
 
 		ConnHandler.commit();
 
+		mailService.sendEmail(appliedVacancy.getCandidate().getCandidateEmail());
 		final InsertResDto response = new InsertResDto();
 		response.setId(assessmentVacancyDb.getId());
 		response.setMessage("Assessment has been created!");

@@ -11,6 +11,8 @@ import com.lawencon.admin.dao.JobVacancyDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.appliedvacancy.InsertAppliedVacancyReqDto;
 import com.lawencon.admin.model.AppliedVacancy;
+import com.lawencon.admin.model.Candidate;
+import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.base.ConnHandler;
 
 @Service
@@ -30,14 +32,18 @@ public class AppliedVacancyService {
 	public InsertResDto insertAppliedVacancy(InsertAppliedVacancyReqDto data) {
 
 		ConnHandler.begin();
-
+		System.out.println(data.getJobVacancyCode());
+		final JobVacancy job = jobVacancyDao.getByCode(data.getJobVacancyCode());
+		final Candidate candidate = candidateDao.getByEmail(data.getCandidateEmail());
+		
 		final AppliedVacancy appliedVacancy = new AppliedVacancy();
-		appliedVacancy.setCandidate(candidateDao.getByIdRef(data.getCandidateId()));
+		appliedVacancy.setCandidate(candidate);
 		appliedVacancy.setAppliedProgress(progressDao.getByIdRef(data.getAppliedProgressId()));
 		appliedVacancy.setAppliedStatus(statusDao.getByIdRef(data.getAppliedStatusId()));
-		appliedVacancy.setJobVacancy(jobVacancyDao.getByIdRef(data.getJobVacancyId()));
-		final AppliedVacancy appliedVacancyDb = appliedVacancyDao.saveAndFlush(appliedVacancy);
-
+		appliedVacancy.setJobVacancy(job);
+		final AppliedVacancy appliedVacancyDb = appliedVacancyDao.save(appliedVacancy);
+		ConnHandler.commit();
+		
 		final InsertResDto response = new InsertResDto();
 		response.setId(appliedVacancyDb.getId());
 		response.setMessage("You have applied to this job!");
