@@ -4,13 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.lawencon.admin.dao.CompanyDao;
 import com.lawencon.admin.dao.FileDao;
@@ -20,13 +15,9 @@ import com.lawencon.admin.dto.company.CompanyResDto;
 import com.lawencon.admin.model.Company;
 import com.lawencon.admin.model.File;
 import com.lawencon.base.ConnHandler;
-import com.lawencon.config.JwtConfig;
 
 @Service
 public class CompanyService {
-
-	@Autowired
-	private RestTemplate restTemplate;
 	
 	@Autowired
 	private CompanyDao companyDao;
