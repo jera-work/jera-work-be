@@ -11,27 +11,25 @@ import javax.persistence.Table;
 import com.lawencon.base.BaseEntity;
 
 @Entity
-@Table(name="t_candidate_education")
+@Table(name = "t_candidate_education")
 public class CandidateEducation extends BaseEntity {
-	
+
 	@OneToOne
-	@JoinColumn(name="candidate_id")
+	@JoinColumn(name = "candidate_id")
 	private Candidate candidate;
-	@Column(name="institution_name", length=50, nullable=false)
+	@Column(name = "institution_name", length = 50, nullable = false)
 	private String institutionName;
-	@OneToOne
-	@JoinColumn(name="degree_id")
-	private Degree degree;
-	@OneToOne
-	@JoinColumn(name="major_id")
-	private Major major;
-	@Column(name="gpa", nullable=false)
+	@Column(name = "degree_id")
+	private String degree;
+	@Column(name = "major_id")
+	private String major;
+	@Column(name = "gpa", nullable = false)
 	private Float gpa;
-	@Column(name="start_year", nullable=false)
+	@Column(name = "start_year", nullable = false)
 	private LocalDate startYear;
-	@Column(name="end_year", nullable=false)
+	@Column(name = "end_year", nullable = false)
 	private LocalDate endYear;
-	@Column(name="institution_", nullable=false)
+	@Column(name = "institution_", nullable = false)
 	private String institutionAddress;
 
 	public Candidate getCandidate() {
@@ -50,19 +48,19 @@ public class CandidateEducation extends BaseEntity {
 		this.institutionName = institutionName;
 	}
 
-	public Degree getDegree() {
+	public String getDegree() {
 		return degree;
 	}
 
-	public void setDegree(Degree degree) {
+	public void setDegree(String degree) {
 		this.degree = degree;
 	}
 
-	public Major getMajor() {
+	public String getMajor() {
 		return major;
 	}
 
-	public void setMajor(Major major) {
+	public void setMajor(String major) {
 		this.major = major;
 	}
 

@@ -4,40 +4,67 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.admin.dao.CompanyDao;
+import com.lawencon.admin.dao.FileDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.company.CompanyCreateReqDto;
 import com.lawencon.admin.dto.company.CompanyResDto;
 import com.lawencon.admin.model.Company;
 import com.lawencon.admin.model.File;
+import com.lawencon.base.ConnHandler;
 
 @Service
 public class CompanyService {
-
+	
 	@Autowired
 	private CompanyDao companyDao;
+	
+	@Autowired
+	private FileDao fileDao;
+	
+	@Autowired
+	private ApiService apiService;
 
 	public InsertResDto createCompany(CompanyCreateReqDto data) {
-		
-		final Company company = new Company();
-		company.setCompanyName(data.getCompanyName());
-		company.setCompanyCode(data.getCompanyCode());
-		company.setAddress(data.getAddress());
-		company.setDescription(data.getDescription());
-		company.setPhoneNumber(data.getPhoneNumber());
-		
-		final File logo = new File();
-		logo.setFileContent(data.getFileContent());
-		logo.setFileExt(data.getFileExt());
-		
-		company.setPhoto(logo);
-		final Company companyDb = companyDao.save(company);
-		
+
 		final InsertResDto response = new InsertResDto();
-		response.setId(companyDb.getId());
-		response.setMessage("Company : " + companyDb.getCompanyName() + " has been created!");
+		final Company company = new Company();
+		
+		try {
+			ConnHandler.begin();
+			company.setCompanyName(data.getCompanyName());
+			company.setCompanyCode(data.getCompanyCode());
+			company.setAddress(data.getAddress());
+			company.setDescription(data.getDescription());
+			company.setPhoneNumber(data.getPhoneNumber());
+			
+			final File logo = new File();
+			logo.setFileContent(data.getFileContent());
+			logo.setFileExt(data.getFileExt());
+			
+			fileDao.saveAndFlush(logo);
+			
+			company.setPhoto(logo);
+			final Company companyDb = companyDao.save(company);
+			
+			final HttpStatus status = apiService.writeTo("http://localhost:8080/companies", data);
+			
+			if(status.equals(HttpStatus.CREATED)) {
+				response.setId(companyDb.getId());
+				response.setMessage("Company : " + companyDb.getCompanyName() + " has been created!");
+				
+				ConnHandler.commit();
+			} else {
+				ConnHandler.rollback();
+				
+				throw new RuntimeException("Insert Failed");
+			}
+		} catch (Exception e) {
+			ConnHandler.rollback();
+		}
 		
 		return response;
 	}

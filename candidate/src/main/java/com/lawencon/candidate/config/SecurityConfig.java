@@ -18,28 +18,31 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.lawencon.candidate.filter.AuthorizationFilter;
+import com.lawencon.candidate.service.CandidateService;
+
 @Configuration
 public class SecurityConfig {
-//
-//	@Bean
-//	public AuthenticationManager authManager(HttpSecurity http, UserService userService, BCryptPasswordEncoder encoder)
-//			throws Exception {
-//
-//		return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(userService)
-//				.passwordEncoder(encoder).and().build();
-//	}
-//
-//	@Bean
-//	public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthorizationFilter authorizationFilter)
-//			throws Exception {
-//
-//		http.cors();
-//		http.csrf().disable();
-//
-//		http.addFilterAt(authorizationFilter, BasicAuthenticationFilter.class);
-//
-//		return http.build();
-//	}
+
+	@Bean
+	public AuthenticationManager authManager(HttpSecurity http, CandidateService userService, BCryptPasswordEncoder encoder)
+			throws Exception {
+
+		return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(userService)
+				.passwordEncoder(encoder).and().build();
+	}
+
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthorizationFilter authorizationFilter)
+			throws Exception {
+
+		http.cors();
+		http.csrf().disable();
+
+		http.addFilterAt(authorizationFilter, BasicAuthenticationFilter.class);
+
+		return http.build();
+	}
 
 	@Bean
 	public List<RequestMatcher> matchers() {
@@ -57,23 +60,17 @@ public class SecurityConfig {
 		});
 	}
 
-//	@Bean
-//	public WebMvcConfigurer mvcConfigurer() {
-//		return new WebMvcConfigurer() {
-//			@Override
-//			public void addCorsMappings(CorsRegistry registry) {
-//				registry.addMapping("/**")
-//				.allowedOrigins("http://localhost:4200")
-//				.allowedMethods(HttpMethod.GET.name(),
-//						HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.PATCH.name(),
-//						HttpMethod.DELETE.name());
-////				
-////				registry.addMapping("/**")
-////				.allowedOrigins("http://localhost:57111")
-////				.allowedMethods(HttpMethod.GET.name(),
-////						HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.PATCH.name(),
-////						HttpMethod.DELETE.name());
-//			}
-//		};
-//	}
+	@Bean
+	public WebMvcConfigurer mvcConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**")
+				.allowedOrigins("http://localhost:4200")
+				.allowedMethods(HttpMethod.GET.name(),
+						HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.PATCH.name(),
+						HttpMethod.DELETE.name());
+			}
+		};
+	}
 }

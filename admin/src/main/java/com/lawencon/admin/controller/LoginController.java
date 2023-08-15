@@ -43,13 +43,15 @@ public class LoginController {
 
 		final User user = userService.login(data);
 
+		final String tokenURL = "http://localhost:8082/token";
+		
 		final TokenReqDto request = new TokenReqDto();
 		request.setId(user.getId());
 		
 		final HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		
-		final RequestEntity<TokenReqDto> token = RequestEntity.post("http://localhost:8082/token").headers(headers).body(request);
+		final RequestEntity<TokenReqDto> token = RequestEntity.post(tokenURL).headers(headers).body(request);
 		
 		final ResponseEntity<String> response = restTemplate.exchange(token, String.class);
 
@@ -61,6 +63,7 @@ public class LoginController {
 		if(loginRes.getPhotoId() != null) {
 			loginRes.setPhotoId(user.getProfile().getPhoto().getId());
 		}
+		loginRes.setCompanyId(user.getProfile().getCompany().getId());
 
 		return new ResponseEntity<>(loginRes, HttpStatus.OK);
 	}

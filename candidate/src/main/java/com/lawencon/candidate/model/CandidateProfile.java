@@ -19,22 +19,23 @@ public class CandidateProfile extends BaseEntity {
 	@Column(name = "phone_number", length = 14)
 	private String phoneNumber;
 	@Column(name = "expected_salary")
-	private Integer expectedSalary;
-	@OneToOne
-	@JoinColumn(name = "gender_id")
-	private Gender gender;
-	@OneToOne
-	@JoinColumn(name = "nationality_id")
-	private Nationality nationality;
+	private String expectedSalary;
+
+	@Column(name = "gender_id")
+	private String gender;
+
+	@Column(name = "nationality_id")
+	private String nationality;
+
 	@OneToOne
 	@JoinColumn(name = "photo_id")
 	private File photo;
-	@OneToOne
-	@JoinColumn(name = "marital_id")
-	private Marital marital;
-	@OneToOne
-	@JoinColumn(name = "religion_id")
-	private Religion religion;
+
+	@Column(name = "marital_id")
+	private String marital;
+
+	@Column(name = "religion_id")
+	private String religion;
 
 	public String getProfileName() {
 		return profileName;
@@ -60,27 +61,27 @@ public class CandidateProfile extends BaseEntity {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public Integer getExpectedSalary() {
+	public String getExpectedSalary() {
 		return expectedSalary;
 	}
 
-	public void setExpectedSalary(Integer expectedSalary) {
+	public void setExpectedSalary(String expectedSalary) {
 		this.expectedSalary = expectedSalary;
 	}
 
-	public Gender getGender() {
+	public String getGender() {
 		return gender;
 	}
 
-	public void setGender(Gender gender) {
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 
-	public Nationality getNationality() {
+	public String getNationality() {
 		return nationality;
 	}
 
-	public void setNationality(Nationality nationality) {
+	public void setNationality(String nationality) {
 		this.nationality = nationality;
 	}
 
@@ -92,19 +93,20 @@ public class CandidateProfile extends BaseEntity {
 		this.photo = photo;
 	}
 
-	public Marital getMarital() {
+	public String getMarital() {
 		return marital;
 	}
 
-	public void setMarital(Marital marital) {
+	public void setMarital(String marital) {
 		this.marital = marital;
 	}
 
-	public Religion getReligion() {
+	public String getReligion() {
 		return religion;
 	}
 
-	public void setReligion(Religion religion) {
+	public void setReligion(String religion) {
 		this.religion = religion;
 	}
+
 }
