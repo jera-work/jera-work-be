@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.admin.model.Candidate;
-import com.lawencon.admin.model.CandidateProfile;
-import com.lawencon.admin.model.File;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
@@ -27,7 +25,7 @@ public class CandidateDao extends AbstractJpaDao {
 	public Candidate getByIdAndDetach(final Object id) {
 		return super.getByIdAndDetach(Candidate.class, id);
 	}
-	
+
 	public List<Candidate> getAll() {
 		return super.getAll(Candidate.class);
 	}
@@ -47,41 +45,29 @@ public class CandidateDao extends AbstractJpaDao {
 	public boolean deleteById(final Object entityId) {
 		return super.deleteById(Candidate.class, entityId);
 	}
-	
+
 	public String getSystemId() {
-		final String sql = "SELECT "
-				+ "tu.id "
-				+ "FROM "
-				+ "t_user tu "
-				+ "WHERE "
+		final String sql = "SELECT " + "tu.id " + "FROM " + "t_user tu " + "WHERE "
 				+ "tu.user_email = 'system-adm@email.com' ";
-		
+
 		return (String) ConnHandler.getManager().createNativeQuery(sql).getSingleResult();
 	}
-	
-	public Candidate getByEmail(String email) {
-		final String sql = "SELECT "
-					+ "tc.id"
-					+ "FROM "
-					+ "t_candidate tc "
-					+ "WHERE "
-					+ "tc.candidate_email = :email ";
+
+	public Candidate getByEmail(String candidateEmail) {
+		final String sql = "SELECT " + "tc.id " + "FROM " + "t_candidate tc " + "WHERE "
+				+ "tc.candidate_email = :email";
+
 		try {
-			final Object cdtObj = ConnHandler.getManager()
-					.createNativeQuery(sql)
-					.setParameter("email", email)
+			final Object cdtObj = ConnHandler.getManager().createNativeQuery(sql).setParameter("email", candidateEmail)
 					.getSingleResult();
-			
-			final Object[] cdtArr = (Object[]) cdtObj;
-			Candidate cdt = null;
-			if(cdtArr.length > 0) {
-				cdt = new Candidate();
-				cdt.setId(cdtArr[0].toString());
-			}
-			return cdt;
+
+			final Candidate candidate = new Candidate();
+			candidate.setId(cdtObj.toString());
+			return candidate;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
+
 }

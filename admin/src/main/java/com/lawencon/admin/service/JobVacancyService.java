@@ -95,7 +95,6 @@ public class JobVacancyService {
 				
 				throw new RuntimeException("Insert Failed");
 			}
-
 			return response;
 
 		} catch (Exception e) {
@@ -106,3 +105,4 @@ public class JobVacancyService {
 
 	}
 }
+

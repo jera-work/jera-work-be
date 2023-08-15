@@ -34,42 +34,33 @@ public class AppliedVacancyService {
 
 	@Autowired
 	private AppliedVacancyDao appliedVacancyDao;
-	
 	@Autowired
 	private CandidateDao candidateDao;
-	
 	@Autowired
 	private JobVacancyDao jobVacancyDao;
-	
+	@Autowired
+	private AppliedProgressDao progressDao;
+	@Autowired
+	private AppliedStatusDao statusDao;
+
 	public InsertResDto insertAppliedVacancy(InsertAppliedVacancyReqDto data) {
-		final InsertResDto response = new InsertResDto();
-		
+
 		ConnHandler.begin();
-		try {
-			final AppliedVacancy appliedVacancy = new AppliedVacancy();
-			
-			final AppliedProgress appliedProgress = appliedProgressDao.getById(data.getAppliedProgressId());
-			appliedVacancy.setAppliedProgress(appliedProgress);
-			
-			final AppliedStatus appliedStatus = appliedStatusDao.getById(data.getAppliedStatusId());
-			appliedVacancy.setAppliedStatus(appliedStatus);
-			
-			final Candidate candidate =  candidateDao.getByEmail(data.getCandidateEmail());
-			appliedVacancy.setCandidate(candidate);
-			
-			final JobVacancy jobVacancy = jobVacancyDao.getById(data.getJobVacancyId());
-			appliedVacancy.setJobVacancy(jobVacancy);
-			
-			final AppliedVacancy appliedJob = appliedVacancyDao.save(appliedVacancy);
-			
-			response.setId(appliedJob.getId());
-			response.setMessage("Job applied successfully");
-			ConnHandler.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-			ConnHandler.rollback();
-		}
+		System.out.println(data.getJobVacancyCode());
+		final JobVacancy job = jobVacancyDao.getByCode(data.getJobVacancyCode());
+		final Candidate candidate = candidateDao.getByEmail(data.getCandidateEmail());
 		
+		final AppliedVacancy appliedVacancy = new AppliedVacancy();
+		appliedVacancy.setCandidate(candidate);
+		appliedVacancy.setAppliedProgress(progressDao.getByIdRef(data.getAppliedProgressId()));
+		appliedVacancy.setAppliedStatus(statusDao.getByIdRef(data.getAppliedStatusId()));
+		appliedVacancy.setJobVacancy(job);
+		final AppliedVacancy appliedVacancyDb = appliedVacancyDao.save(appliedVacancy);
+		ConnHandler.commit();
+		
+		final InsertResDto response = new InsertResDto();
+		response.setId(appliedVacancyDb.getId());
+		response.setMessage("You have applied to this job!");
 		return response;
 	}
 

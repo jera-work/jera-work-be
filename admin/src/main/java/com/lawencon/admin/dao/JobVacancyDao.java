@@ -6,8 +6,9 @@ import java.util.function.Supplier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
-import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.admin.model.JobVacancy;
+import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.base.ConnHandler;
 
 @Repository
 @Profile(value = { "native-query" })
@@ -43,6 +44,23 @@ public class JobVacancyDao extends AbstractJpaDao {
 
 	public boolean deleteById(final Object entityId) {
 		return super.deleteById(JobVacancy.class, entityId);
+	}
+	
+	public JobVacancy getByCode(final String code) {
+		final String sql = "SELECT id FROM t_job_vacancy WHERE vacancy_code LIKE :code";
+		
+		try {
+			final Object jobObj = ConnHandler.getManager().createNativeQuery(sql)
+					.setParameter("code", code)
+					.getSingleResult();
+			
+			final JobVacancy job = new JobVacancy();
+			job.setId(jobObj.toString());
+			return job;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

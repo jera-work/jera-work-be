@@ -11,10 +11,11 @@ import com.lawencon.base.BaseEntity;
 @Entity
 @Table(name = "t_custom_candidate_skill")
 public class CustomCandidateSkill extends BaseEntity {
+	
 	@OneToOne
 	@JoinColumn(name = "candidate_id", nullable = false)
 	private Candidate candidate;
-	
+
 	@Column(name = "skill_name", nullable = false, length = 50)
 	private String skillName;
 
