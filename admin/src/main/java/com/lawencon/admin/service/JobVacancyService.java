@@ -1,6 +1,7 @@
 package com.lawencon.admin.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.admin.dao.AgeVacancyDao;
@@ -55,6 +56,7 @@ public class JobVacancyService {
 	public InsertResDto insertJob(InsertJobVacancyReqDto data) {
 		
 		try {
+			ConnHandler.begin();
 			final VacancyDescription desc = new VacancyDescription();
 			desc.setAddress(data.getAddress());
 			desc.setAgeVacancy(ageDao.getByIdRef(data.getAgeVacancyId()));
@@ -81,19 +83,25 @@ public class JobVacancyService {
 			job.setVacancyDescription(descDb);
 			final JobVacancy jobDb = jobDao.save(job);
 
-			apiService.writeTo("http://localhost:8080/jobs", data);
-
+			final HttpStatus status = apiService.writeTo("http://localhost:8080/jobs", data);
 			final InsertResDto response = new InsertResDto();
-			response.setId(jobDb.getId());
-			response.setMessage("Job has been created!");
-
-			ConnHandler.commit();
+			
+			if(status.equals(HttpStatus.CREATED)) {
+				response.setId(jobDb.getId());
+				response.setMessage("Job has been created!");
+				ConnHandler.commit();
+			} else {
+				ConnHandler.rollback();
+				throw new RuntimeException("Insert Failed");
+			}
 			return response;
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			ConnHandler.rollback();
 			return null;
 		}
 
 	}
 }
+

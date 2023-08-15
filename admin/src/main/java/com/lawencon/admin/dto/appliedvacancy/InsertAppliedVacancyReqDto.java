@@ -4,8 +4,17 @@ public class InsertAppliedVacancyReqDto {
 
 	private String candidateId;
 	private String jobVacancyId;
+	private String jobVacancyCode;
 	private String appliedStatusId;
 	private String appliedProgressId;
+
+	public String getJobVacancyCode() {
+		return jobVacancyCode;
+	}
+
+	public void setJobVacancyCode(String jobVacancyCode) {
+		this.jobVacancyCode = jobVacancyCode;
+	}
 
 	public String getCandidateId() {
 		return candidateId;

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.lawencon.base.BaseEntity;
@@ -36,7 +38,8 @@ public class JobVacancy extends BaseEntity {
 	@Column(name = "company_id", nullable = false)
 	private String company;
 
-	@Column(name = "vacancy_description_id", nullable = false)
+	@OneToOne
+	@JoinColumn(name = "vacancy_description_id", nullable = false)
 	private VacancyDescription vacancyDescription;
 
 	public String getVacancyCode() {
