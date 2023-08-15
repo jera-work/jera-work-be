@@ -8,7 +8,6 @@ import com.lawencon.admin.dao.CandidateDao;
 import com.lawencon.admin.dao.JobVacancyDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.appliedvacancy.InsertAppliedVacancyReqDto;
-import com.lawencon.admin.model.Candidate;
 
 @Service
 public class AppliedVacancyService {

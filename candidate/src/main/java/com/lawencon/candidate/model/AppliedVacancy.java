@@ -1,5 +1,6 @@
 package com.lawencon.candidate.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -10,45 +11,51 @@ import com.lawencon.base.BaseEntity;
 @Entity
 @Table(name = "t_applied_vacancy")
 public class AppliedVacancy extends BaseEntity {
-	
+
 	@OneToOne
 	@JoinColumn(name = "candidate_id", nullable = false)
 	private Candidate candidate;
-	
+
 	@OneToOne
 	@JoinColumn(name = "job_vacancy_id", nullable = false)
 	private JobVacancy jobVacancy;
-	
-	@OneToOne
-	@JoinColumn(name = "applied_status_id", nullable = false)
-	private AppliedStatus appliedStatus;
-	
-	@OneToOne
-	@JoinColumn(name = "applied_progress_id", nullable = false)
-	private AppliedProgress appliedProgress;
-	
+
+	@Column(name = "applied_status_id")
+	private String appliedStatus;
+
+	@Column(name = "applied_progress_id")
+	private String appliedProgress;
+
 	public Candidate getCandidate() {
 		return candidate;
 	}
+
 	public void setCandidate(Candidate candidate) {
 		this.candidate = candidate;
 	}
+
 	public JobVacancy getJobVacancy() {
 		return jobVacancy;
 	}
+
 	public void setJobVacancy(JobVacancy jobVacancy) {
 		this.jobVacancy = jobVacancy;
 	}
-	public AppliedStatus getAppliedStatus() {
+
+	public String getAppliedStatus() {
 		return appliedStatus;
 	}
-	public void setAppliedStatus(AppliedStatus appliedStatus) {
+
+	public void setAppliedStatus(String appliedStatus) {
 		this.appliedStatus = appliedStatus;
 	}
-	public AppliedProgress getAppliedProgress() {
+
+	public String getAppliedProgress() {
 		return appliedProgress;
 	}
-	public void setAppliedProgress(AppliedProgress appliedProgress) {
+
+	public void setAppliedProgress(String appliedProgress) {
 		this.appliedProgress = appliedProgress;
 	}
+
 }

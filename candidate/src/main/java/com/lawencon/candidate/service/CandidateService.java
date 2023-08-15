@@ -17,14 +17,7 @@ import com.lawencon.candidate.dao.CandidateDao;
 import com.lawencon.candidate.dao.CandidateDocumentDao;
 import com.lawencon.candidate.dao.CandidateEducationDao;
 import com.lawencon.candidate.dao.CandidateProfileDao;
-import com.lawencon.candidate.dao.DegreeDao;
-import com.lawencon.candidate.dao.DocumentTypeDao;
 import com.lawencon.candidate.dao.FileDao;
-import com.lawencon.candidate.dao.GenderDao;
-import com.lawencon.candidate.dao.MajorDao;
-import com.lawencon.candidate.dao.MaritalDao;
-import com.lawencon.candidate.dao.NationalityDao;
-import com.lawencon.candidate.dao.ReligionDao;
 import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.UpdateResDto;
 import com.lawencon.candidate.dto.document.CandidateDocumentCreateReqDto;
@@ -49,25 +42,11 @@ public class CandidateService implements UserDetailsService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	@Autowired
-	private GenderDao genderDao;
-	@Autowired
-	private MaritalDao maritalDao;
-	@Autowired
-	private NationalityDao nationalityDao;
-	@Autowired
 	private FileDao fileDao;
-	@Autowired
-	private ReligionDao religionDao;
 	@Autowired
 	private PrincipalServiceImpl principalService;
 	@Autowired
-	private DocumentTypeDao typeDao;
-	@Autowired
 	private CandidateDocumentDao docsDao;
-	@Autowired
-	private DegreeDao degreeDao;
-	@Autowired
-	private MajorDao majorDao;
 	@Autowired
 	private CandidateEducationDao educationDao;
 	@Autowired
@@ -78,16 +57,15 @@ public class CandidateService implements UserDetailsService {
 		final InsertResDto response = new InsertResDto();
 		try {
 			ConnHandler.begin();
-			final String passwordEncoded = passwordEncoder.encode(data.getCandidatePassword());
-			final Candidate candidate = new Candidate();
-			candidate.setCandidateEmail(data.getCandidateEmail());
-			candidate.setCandidatePassword(passwordEncoded);
-
 			final CandidateProfile candidateProfile = new CandidateProfile();
 			candidateProfile.setProfileName(data.getProfileName());
 			final Supplier<String> systemId = () -> candidateDao.getSystemId();
 			final CandidateProfile candidateProfileDb = candidateProfileDao.saveNoLogin(candidateProfile, systemId);
-
+			
+			final String passwordEncoded = passwordEncoder.encode(data.getCandidatePassword());
+			final Candidate candidate = new Candidate();
+			candidate.setCandidateEmail(data.getCandidateEmail());
+			candidate.setCandidatePassword(passwordEncoded);
 			candidate.setCandidateProfile(candidateProfileDb);
 			final Candidate candidateDb = candidateDao.saveNoLogin(candidate, systemId);
 
@@ -115,29 +93,27 @@ public class CandidateService implements UserDetailsService {
 
 		try {
 			ConnHandler.begin();
-			final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
-			final CandidateProfile profile = candidateProfileDao.getById(candidate.getCandidateProfile());
-
+			
 			final File photo = new File();
 			photo.setFileContent(data.getFileContent());
 			photo.setFileExt(data.getFileExt());
-			final File photoDb = fileDao.save(photo);
-
+			final File photoDb = fileDao.saveAndFlush(photo);
+			
+			final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
+			final CandidateProfile profile = candidateProfileDao.getById(candidate.getCandidateProfile());
 			profile.setExpectedSalary(data.getExpectedSalary());
-			profile.setGender(genderDao.getByIdRef(data.getGenderId()));
-			profile.setMarital(maritalDao.getByIdRef(data.getMaritalId()));
-			profile.setNationality(nationalityDao.getByIdRef(data.getNationalityId()));
+			profile.setGender(data.getGenderId());
+			profile.setMarital(data.getMaritalId());
+			profile.setNationality(data.getNationalityId());
+			profile.setReligion(data.getReligionId());
 			profile.setPhoneNumber(data.getPhoneNumber());
 			profile.setPhoto(photoDb);
 			profile.setProfileAddress(data.getProfileAddress());
-			profile.setReligion(religionDao.getByIdRef(data.getReligionId()));
-
 			final CandidateProfile profileDb = candidateProfileDao.saveAndFlush(profile);
-
+			
 			final UpdateResDto response = new UpdateResDto();
 			response.setVer(profileDb.getVersion());
 			response.setMessage("Profile has been updated!");
-
 			ConnHandler.commit();
 
 			return response;
@@ -162,7 +138,7 @@ public class CandidateService implements UserDetailsService {
 
 				final CandidateDocument doc = new CandidateDocument();
 				doc.setCandidate(candidate);
-				doc.setDocumentType(typeDao.getByIdRef(data.getDocumentTypeId()));
+				doc.setDocumentType(data.getDocumentTypeId());
 				doc.setFile(fileDb);
 				final CandidateDocument docDb = docsDao.save(doc);
 
@@ -188,13 +164,13 @@ public class CandidateService implements UserDetailsService {
 			for (CandidateEducationCreateReqDto data : datas) {
 				final CandidateEducation education = new CandidateEducation();
 				education.setCandidate(candidate);
-				education.setDegree(degreeDao.getByIdRef(data.getDegreeId()));
+				education.setDegree(data.getDegreeId());
 				education.setEndYear(data.getEndYear());
 				education.setGpa(data.getGpa());
 				education.setStartYear(data.getStartYear());
 				education.setInstitutionAddress(data.getInstitutionAddress());
 				education.setInstitutionName(data.getInstitutionName());
-				education.setMajor(majorDao.getByIdRef(data.getMajorId()));
+				education.setMajor(data.getMajorId());
 
 				final CandidateEducation educationDb = educationDao.saveAndFlush(education);
 

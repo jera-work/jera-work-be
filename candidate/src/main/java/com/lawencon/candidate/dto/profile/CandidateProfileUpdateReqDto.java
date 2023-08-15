@@ -8,11 +8,47 @@ public class CandidateProfileUpdateReqDto {
 	private String photoContent;
 	private String photoExt;
 	private String genderId;
+	private String genderCode;
 	private String maritalId;
+	private String maritalCode;
 	private String nationalityId;
+	private String nationalityCode;
 	private String fileContent;
 	private String fileExt;
 	private String religionId;
+	private String religionCode;
+
+	public String getGenderCode() {
+		return genderCode;
+	}
+
+	public void setGenderCode(String genderCode) {
+		this.genderCode = genderCode;
+	}
+
+	public String getMaritalCode() {
+		return maritalCode;
+	}
+
+	public void setMaritalCode(String maritalCode) {
+		this.maritalCode = maritalCode;
+	}
+
+	public String getNationalityCode() {
+		return nationalityCode;
+	}
+
+	public void setNationalityCode(String nationalityCode) {
+		this.nationalityCode = nationalityCode;
+	}
+
+	public String getReligionCode() {
+		return religionCode;
+	}
+
+	public void setReligionCode(String religionCode) {
+		this.religionCode = religionCode;
+	}
 
 	public String getReligionId() {
 		return religionId;

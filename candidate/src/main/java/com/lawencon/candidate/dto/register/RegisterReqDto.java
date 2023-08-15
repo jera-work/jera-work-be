@@ -5,6 +5,7 @@ public class RegisterReqDto {
 	private String candidateEmail;
 	private String candidatePassword;
 	private String profileName;
+
 	public String getCandidateEmail() {
 		return candidateEmail;
 	}

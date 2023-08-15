@@ -1,6 +1,7 @@
 package com.lawencon.admin.dto.assessmentvacancy;
 
 public class InsertAssessmentVacancyReqDto {
+	
 	private String appliedVacancyId;
 	private Boolean isQuestion;
 	private Float score;

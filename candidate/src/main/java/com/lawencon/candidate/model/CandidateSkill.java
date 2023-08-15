@@ -2,6 +2,7 @@ package com.lawencon.candidate.model;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.Column;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -11,18 +12,17 @@ import com.lawencon.base.BaseEntity;
 @Table(name = "t_candidate_skill")
 public class CandidateSkill extends BaseEntity {
 
-	@OneToOne
-	@JoinColumn(name = "skill_id")
-	private Skill skill;
+	@Column(name = "skill_id")
+	private String skill;
 	@OneToOne
 	@JoinColumn(name = "candidate_id")
 	private Candidate candidate;
 
-	public Skill getSkill() {
+	public String getSkill() {
 		return skill;
 	}
 
-	public void setSkill(Skill skill) {
+	public void setSkill(String skill) {
 		this.skill = skill;
 	}
 

@@ -63,17 +63,16 @@ public class CandidateService {
 	private CandidateEducationDao educationDao;
 
 	/* Register for Candidate */
-	public InsertResDto register(CandidateInsertReqDto data) {
+	public InsertResDto insertCandidate(CandidateInsertReqDto data) {
 		try {
 			ConnHandler.begin();
-			final Candidate candidate = new Candidate();
-			candidate.setCandidateEmail(data.getCandidateEmail());
-
 			final CandidateProfile candidateProfile = new CandidateProfile();
 			candidateProfile.setProfileName(data.getProfileName());
 			final Supplier<String> systemId = () -> candidateDao.getSystemId();
 			final CandidateProfile candidateProfileDb = candidateProfileDao.saveNoLogin(candidateProfile, systemId);
 
+			final Candidate candidate = new Candidate();
+			candidate.setCandidateEmail(data.getCandidateEmail());
 			candidate.setCandidateProfile(candidateProfileDb);
 			final Candidate candidateDb = candidateDao.saveNoLogin(candidate, systemId);
 
