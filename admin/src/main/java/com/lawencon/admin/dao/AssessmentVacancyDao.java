@@ -3,9 +3,14 @@ package com.lawencon.admin.dao;
 import java.util.List;
 import java.util.function.Supplier;
 
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Repository;
+
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.admin.model.AssessmentVacancy;
 
+@Repository
+@Profile(value = { "native-query" })
 public class AssessmentVacancyDao extends AbstractJpaDao {
 	
 	public AssessmentVacancy getById(final Object id) {
