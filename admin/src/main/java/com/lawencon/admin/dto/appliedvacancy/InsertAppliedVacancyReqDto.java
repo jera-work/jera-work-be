@@ -1,7 +1,6 @@
 package com.lawencon.admin.dto.appliedvacancy;
 
 public class InsertAppliedVacancyReqDto {
-
 	private String candidateId;
 	private String candidateEmail;
 	private String jobVacancyId;

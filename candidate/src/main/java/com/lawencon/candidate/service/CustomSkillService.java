@@ -22,7 +22,7 @@ public class CustomSkillService {
 	@Autowired
 	private PrincipalService<String> principalService;
 
-	private InsertResDto createSkill(InsertCustomSkillReqDto data) {
+	public InsertResDto createSkill(InsertCustomSkillReqDto data) {
 		final InsertResDto response = new InsertResDto();
 
 		ConnHandler.begin();

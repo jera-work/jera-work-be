@@ -66,7 +66,7 @@ public class JobVacancyService {
 			desc.setGender(genderDao.getByIdRef(data.getGenderId()));
 			desc.setJobType(typeDao.getByIdRef(data.getJobTypeId()));
 			desc.setSalary(data.getSalary());
-			final VacancyDescription descDb = descDao.save(desc);
+			final VacancyDescription descDb = descDao.saveAndFlush(desc);
 
 			final JobVacancy job = new JobVacancy();
 			job.setAvailableStatus(statusDao.getByIdRef(data.getAvailableStatusId()));
@@ -83,15 +83,16 @@ public class JobVacancyService {
 			job.setVacancyDescription(descDb);
 			final JobVacancy jobDb = jobDao.save(job);
 
-			final HttpStatus status = apiService.writeTo("http://localhost:8080/jobs", data);
+			final HttpStatus candidateResponse = apiService.writeTo("http://localhost:8080/jobs", data);
+
 			final InsertResDto response = new InsertResDto();
-			
-			if(status.equals(HttpStatus.CREATED)) {
+			if(candidateResponse.equals(HttpStatus.CREATED)) {
 				response.setId(jobDb.getId());
-				response.setMessage("Job has been created!");
+				response.setMessage("Job has been created!");	
 				ConnHandler.commit();
 			} else {
 				ConnHandler.rollback();
+				
 				throw new RuntimeException("Insert Failed");
 			}
 			return response;

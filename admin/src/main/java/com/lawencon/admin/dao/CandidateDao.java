@@ -58,8 +58,7 @@ public class CandidateDao extends AbstractJpaDao {
 				+ "tc.candidate_email = :email";
 
 		try {
-			final Object cdtObj = ConnHandler.getManager().createNativeQuery(sql)
-					.setParameter("email", candidateEmail)
+			final Object cdtObj = ConnHandler.getManager().createNativeQuery(sql).setParameter("email", candidateEmail)
 					.getSingleResult();
 
 			final Candidate candidate = new Candidate();
@@ -69,7 +68,6 @@ public class CandidateDao extends AbstractJpaDao {
 			e.printStackTrace();
 			return null;
 		}
-
 	}
 
 }

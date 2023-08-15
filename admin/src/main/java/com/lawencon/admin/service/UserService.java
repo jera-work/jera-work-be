@@ -11,12 +11,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.admin.dao.ProfileDao;
+import com.lawencon.admin.dao.RoleDao;
 import com.lawencon.admin.dao.UserDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.login.LoginReqDto;
 import com.lawencon.admin.dto.user.UserCreateReqDto;
 import com.lawencon.admin.dto.user.UserResDto;
 import com.lawencon.admin.model.Profile;
+import com.lawencon.admin.model.Role;
 import com.lawencon.admin.model.User;
 
 @Service
@@ -26,6 +28,8 @@ public class UserService implements UserDetailsService {
 	private UserDao userDao;
 	@Autowired
 	private ProfileDao profileDao;
+	@Autowired
+	private RoleDao roleDao;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -40,11 +44,14 @@ public class UserService implements UserDetailsService {
 		final Profile profileDb = profileDao.save(profile);
 
 		user.setProfile(profileDb);
+		
+		final Role role = roleDao.getByIdRef(data.getRoleId());
+		user.setRole(role);
 		final User userDb = userDao.save(user);
 
 		final InsertResDto response = new InsertResDto();
 		response.setId(userDb.getId());
-		response.setMessage("Your profile : " + userDb.getProfile().getProfileName() + " has been created!");
+		response.setMessage("User created successfully");
 
 		return response;
 	}

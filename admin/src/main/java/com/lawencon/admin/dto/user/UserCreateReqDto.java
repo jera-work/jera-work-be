@@ -5,6 +5,7 @@ public class UserCreateReqDto {
 	private String userEmail;
 	private String userPassword;
 	private String profileName;
+	private String roleId;
 
 	public String getUserEmail() {
 		return userEmail;
@@ -30,4 +31,12 @@ public class UserCreateReqDto {
 		this.profileName = profileName;
 	}
 
+	public String getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
+	}
+	
 }
