@@ -45,7 +45,7 @@ public class AppliedVacancyService {
 		final InsertResDto response = new InsertResDto();
 		data.setCandidateEmail(candidate.getCandidateEmail());
 		data.setJobVacancyCode(job.getVacancyCode());
-		final HttpStatus status = apiService.writeTo("https://localhost:8081/applied/apply", data);
+		final HttpStatus status = apiService.writeTo("http://localhost:8081/applied/apply", data);
 
 		if(status.equals(HttpStatus.CREATED)) {
 			response.setId(appliedVacancyDb.getId());
