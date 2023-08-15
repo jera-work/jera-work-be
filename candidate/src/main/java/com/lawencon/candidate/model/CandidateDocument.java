@@ -12,7 +12,8 @@ import com.lawencon.base.BaseEntity;
 @Table(name = "t_candidate_document")
 public class CandidateDocument extends BaseEntity {
 
-	@Column(name = "candidate_id")
+	@OneToOne
+	@JoinColumn(name = "candidate_id")
 	private Candidate candidate;
 
 	@OneToOne

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -14,7 +15,7 @@ import com.lawencon.base.BaseEntity;
 public class CandidateEducation extends BaseEntity {
 
 	@OneToOne
-	@Column(name = "candidate_id")
+	@JoinColumn(name = "candidate_id")
 	private Candidate candidate;
 	@Column(name = "institution_name", length = 50, nullable = false)
 	private String institutionName;
