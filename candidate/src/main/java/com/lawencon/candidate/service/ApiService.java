@@ -2,6 +2,7 @@ package com.lawencon.candidate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class ApiService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
-	public <T> String writeTo(String url, T data) {
+	public <T> HttpStatus writeTo(String url, T data) {
 		
 		final HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -29,7 +30,7 @@ public class ApiService {
 		
 		final ResponseEntity<String> response = restTemplate.exchange(request, String.class);
 		
-		return response.getBody();
+		return response.getStatusCode();
 	}
 
 }

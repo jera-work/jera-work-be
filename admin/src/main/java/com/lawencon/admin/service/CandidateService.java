@@ -76,16 +76,15 @@ public class CandidateService {
 
 			candidate.setCandidateProfile(candidateProfileDb);
 			final Candidate candidateDb = candidateDao.saveNoLogin(candidate, systemId);
-			ConnHandler.commit();
 
 			final InsertResDto response = new InsertResDto();
 			response.setId(candidateDb.getId());
-			response.setMessage(
-					"Your profile : " + candidateDb.getCandidateProfile().getProfileName() + " has been created!");
+			response.setMessage("Account created successfully");
 
 			ConnHandler.commit();
 			return response;
 		} catch (Exception e) {
+			e.printStackTrace();
 			ConnHandler.rollback();
 			return null;
 		}

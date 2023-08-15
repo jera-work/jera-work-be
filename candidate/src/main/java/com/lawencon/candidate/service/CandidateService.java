@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -69,9 +70,12 @@ public class CandidateService implements UserDetailsService {
 	private MajorDao majorDao;
 	@Autowired
 	private CandidateEducationDao educationDao;
+	@Autowired
+	private ApiService apiService;
 
 	/* Register for Candidate */
 	public InsertResDto register(RegisterReqDto data) {
+		final InsertResDto response = new InsertResDto();
 		try {
 			ConnHandler.begin();
 			final String passwordEncoded = passwordEncoder.encode(data.getCandidatePassword());
@@ -86,14 +90,19 @@ public class CandidateService implements UserDetailsService {
 
 			candidate.setCandidateProfile(candidateProfileDb);
 			final Candidate candidateDb = candidateDao.saveNoLogin(candidate, systemId);
-			ConnHandler.commit();
 
-			final InsertResDto response = new InsertResDto();
-			response.setId(candidateDb.getId());
-			response.setMessage(
-					"Your profile : " + candidateDb.getCandidateProfile().getProfileName() + " has been created!");
+			final HttpStatus adminResponse = apiService.writeTo("http://localhost:8081/candidates/register", data);
 
-			ConnHandler.commit();
+			if(adminResponse.equals(HttpStatus.CREATED)) {
+				response.setId(candidateDb.getId());
+				response.setMessage("Account created succesfully");
+				
+				ConnHandler.commit();
+			} else {
+				ConnHandler.rollback();
+				
+				throw new RuntimeException("Insert Failed");
+			}
 			return response;
 		} catch (Exception e) {
 			ConnHandler.rollback();

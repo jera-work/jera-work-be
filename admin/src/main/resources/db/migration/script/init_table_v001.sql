@@ -1,3 +1,44 @@
+DROP TABLE IF EXISTS t_offering;
+--DROP TABLE IF EXISTS t_mcu_vacancy;
+--DROP TABLE IF EXISTS t_interview_vacancy;
+--DROP TABLE IF EXISTS t_assessment_vacancy;
+--DROP TABLE IF EXISTS t_question_answer;
+--DROP TABLE IF EXISTS t_applied_vacancy;
+--DROP TABLE IF EXISTS t_blacklist_employee;
+--DROP TABLE IF EXISTS t_hired_employee;
+--DROP TABLE IF EXISTS t_custom_candidate_skill;
+--DROP TABLE IF EXISTS t_candidate_skill;
+--DROP TABLE IF EXISTS t_candidate_experience;
+--DROP TABLE IF EXISTS t_candidate_document;
+--DROP TABLE IF EXISTS t_candidate_education;
+--DROP TABLE IF EXISTS t_candidate;
+--DROP TABLE IF EXISTS t_candidate_profile;
+--DROP TABLE IF EXISTS t_question_option;
+--DROP TABLE IF EXISTS t_question;
+--DROP TABLE IF EXISTS t_job_vacancy;
+--DROP TABLE IF EXISTS t_vacancy_description;
+--DROP TABLE IF EXISTS t_applied_status;
+--DROP TABLE IF EXISTS t_applied_progress;
+--DROP TABLE IF EXISTS t_user;
+--DROP TABLE IF EXISTS t_skill;
+--DROP TABLE IF EXISTS t_profile;
+--DROP TABLE IF EXISTS t_company;
+--DROP TABLE IF EXISTS t_experience_level;
+--DROP TABLE IF EXISTS t_document_type;
+--DROP TABLE IF EXISTS t_city;
+--DROP TABLE IF EXISTS t_degree;
+--DROP TABLE IF EXISTS t_major;
+--DROP TABLE IF EXISTS t_gender;
+--DROP TABLE IF EXISTS t_marital;
+--DROP TABLE IF EXISTS t_religion;
+--DROP TABLE IF EXISTS t_job_type;
+--DROP TABLE IF EXISTS t_available_status;
+--DROP TABLE IF EXISTS t_age_vacancy;
+--DROP TABLE IF EXISTS t_nationality;
+--DROP TABLE IF EXISTS t_role;
+--DROP TABLE IF EXISTS t_file;
+
+
 CREATE TABLE t_file (
 	id VARCHAR(36) NOT NULL,
 	file_content TEXT NOT NULL,
@@ -27,8 +68,8 @@ CREATE TABLE t_role (
 
 CREATE TABLE t_nationality (
 	id varchar(36) NOT NULL,
-	nationality_name varchar(36) NOT NULL,
 	nationality_code varchar(8) NOT NULL,
+	nationality_name varchar(36) NOT NULL,
 	created_by varchar NOT NULL,
 	created_at timestamp NOT NULL,
 	updated_by varchar,
@@ -281,7 +322,7 @@ CREATE TABLE t_profile (
 CREATE TABLE t_user (
 	id varchar(36) NOT NULL,
 	user_email varchar(40) NOT NULL,
-	user_password varchar(8) NOT NULL,
+	user_password text NOT NULL,
 	profile_id varchar NOT NULL,
 	role_id varchar NOT NULL,
 	created_by varchar NOT NULL,
@@ -292,6 +333,7 @@ CREATE TABLE t_user (
 	ver int NOT NULL,
 	
 	PRIMARY KEY(id),
+	UNIQUE (user_email),
 	FOREIGN KEY(profile_id)
 		REFERENCES t_profile(id),
 	FOREIGN KEY(role_id)
@@ -329,12 +371,12 @@ CREATE TABLE t_vacancy_description (
 
 CREATE TABLE t_job_vacancy (
 	id VARCHAR(36) NOT NULL,
-	vancacy_code VARCHAR(8) NOT NULL,
+	vacancy_code VARCHAR(8) NOT NULL,
 	vacancy_title VARCHAR(36) NOT NULL,
 	pic_hr_id VARCHAR NOT NULL,
 	pic_user_id VARCHAR NOT NULL,
-	start_date DATE NOT NULL,
-	end_date DATE NOT NULL,
+	start_date TIMESTAMP NOT NULL,
+	end_date TIMESTAMP NOT NULL,
 	exp_level_id VARCHAR NOT NULL,
 	available_status_id VARCHAR NOT NULL,
 	candidate_total INT,
@@ -396,14 +438,14 @@ CREATE TABLE t_question_option(
 CREATE TABLE t_candidate_profile (
 	id varchar(36) NOT NULL,
 	profile_name varchar(50) NOT NULL,
-	profile_address varchar(50) NOT NULL,
-	phone_number varchar(14) NOT NULL,
-	expected_salary varchar,
-	gender_id varchar NOT NULL,
-	nationality_id varchar NOT NULL,
+	profile_address varchar(50),
+	phone_number varchar(14),
+	expected_salary varchar(12),
+	gender_id varchar,
+	nationality_id varchar,
 	photo_id varchar,
-	marital_id varchar NOT NULL,
-	religion_id varchar NOT NULL,
+	marital_id varchar,
+	religion_id varchar,
 	created_by varchar NOT NULL,
 	created_at timestamp NOT NULL,
 	updated_by varchar,
@@ -436,6 +478,7 @@ CREATE TABLE t_candidate (
 	ver int NOT NULL,
 	
 	PRIMARY KEY(id),
+	UNIQUE (candidate_email),
 	FOREIGN KEY(candidate_profile_id)
 		REFERENCES t_candidate_profile(id)
 );
@@ -456,7 +499,6 @@ CREATE TABLE t_candidate_education (
 	updated_at timestamp,
 	is_active boolean NOT NULL,
 	ver int NOT NULL,
-	
 	PRIMARY KEY(id),
 	FOREIGN KEY(candidate_id)
 		REFERENCES t_candidate(id)
@@ -473,7 +515,6 @@ CREATE TABLE t_candidate_document (
 	updated_at timestamp,
 	is_active boolean NOT NULL,
 	ver int NOT NULL,
-	
 	PRIMARY KEY (id),
 	FOREIGN KEY (candidate_id)
 		REFERENCES t_candidate(id),
@@ -498,7 +539,6 @@ CREATE TABLE t_candidate_experience (
 	updated_at timestamp,
 	is_active boolean NOT NULL,
 	ver int NOT NULL,
-	
 	PRIMARY KEY (id),
 	FOREIGN KEY (candidate_id)
 		REFERENCES t_candidate(id)
@@ -514,12 +554,26 @@ CREATE TABLE t_candidate_skill (
 	updated_at timestamp,
 	is_active boolean NOT NULL,
 	ver int NOT NULL,
-	
 	PRIMARY KEY (id),
 	FOREIGN KEY (candidate_id)
 		REFERENCES t_candidate(id),
 	FOREIGN KEY (skill_id)
 		REFERENCES t_skill(id)
+);
+
+CREATE TABLE t_custom_candidate_skill (
+	id varchar(36) NOT NULL,
+	candidate_id varchar NOT NULL,
+	skill_name varchar(50) NOT NULL,
+	created_by varchar NOT NULL,
+	created_at timestamp NOT NULL,
+	updated_by varchar,
+	updated_at timestamp,
+	is_active boolean NOT NULL,
+	ver int NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (candidate_id)
+		REFERENCES t_candidate(id)
 );
 
 CREATE TABLE t_hired_employee (
