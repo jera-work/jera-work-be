@@ -48,11 +48,11 @@ public class CandidateDao extends AbstractJpaDao {
 	
 	public String getSystemId() {
 		final String sql = "SELECT "
-				+ "tc.id "
+				+ "tu.id "
 				+ "FROM "
-				+ "t_candidate tc "
+				+ "t_user tu "
 				+ "WHERE "
-				+ "tc.candidate_email = 'system-cdt@email.com' ";
+				+ "tu.user_email = 'system-adm@email.com' ";
 		
 		return (String) ConnHandler.getManager().createNativeQuery(sql).getSingleResult();
 	}

@@ -9,7 +9,7 @@ import javax.persistence.Table;
 import com.lawencon.base.BaseEntity;
 
 @Entity
-@Table(name = "candidate")
+@Table(name = "t_candidate")
 public class Candidate extends BaseEntity {
 	
 	@Column(name = "candidate_email", nullable = false, unique = true, length = 30)
