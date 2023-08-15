@@ -83,6 +83,7 @@ public class CandidateService implements UserDetailsService {
 			}
 			return response;
 		} catch (Exception e) {
+			e.printStackTrace();
 			ConnHandler.rollback();
 			return null;
 		}

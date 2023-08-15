@@ -26,7 +26,7 @@ public class CandidateController {
 	@Autowired
 	private CandidateService cdtService;
 
-	@PostMapping()
+	@PostMapping("/register")
 	public ResponseEntity<InsertResDto> register(@RequestBody CandidateInsertReqDto data) {
 		final InsertResDto response = cdtService.insertCandidate(data);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);

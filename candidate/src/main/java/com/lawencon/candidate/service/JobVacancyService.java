@@ -37,7 +37,6 @@ public class JobVacancyService {
 
 			final JobVacancy job = new JobVacancy();
 			job.setAvailableStatus(data.getAvailableStatusId());
-//			job.setCandidateTotal(data.get);
 			job.setCompany(data.getCompanyId());
 			job.setEndDate(data.getEndDate());
 			job.setExpLevel(data.getExpLevelId());

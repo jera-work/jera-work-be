@@ -20,7 +20,7 @@ public class CustomSkillService {
 	@Autowired
 	private CandidateDao candidateDao;
 
-	private InsertResDto createSkill(InsertCustomSkillReqDto data) {
+	public InsertResDto createSkill(InsertCustomSkillReqDto data) {
 		final InsertResDto response = new InsertResDto();
 
 		ConnHandler.begin();
