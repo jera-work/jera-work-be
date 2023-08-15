@@ -25,7 +25,7 @@ public class CandidateExperienceService {
 	@Autowired
 	private CandidateDao candidateDao;
 	
-	private InsertResDto createExperience(List<CandidateExperienceReqDto> data) {
+	public InsertResDto createExperience(List<CandidateExperienceReqDto> data) {
 		final InsertResDto response = new InsertResDto();
 		
 		ConnHandler.begin();
@@ -47,7 +47,6 @@ public class CandidateExperienceService {
 						final CandidateExperience inserted = candidateExperienceDao.save(candidateExperience);
 				}
 			}
-			
 			
 			response.setMessage("Experience(s) successfully created");
 			

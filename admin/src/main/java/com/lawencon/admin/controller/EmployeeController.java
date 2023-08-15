@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.blacklistemployee.InsertBlacklistEmployeeReqDto;
 import com.lawencon.admin.dto.hiredemployee.InsertHiredEmployeeReqDto;
-import com.lawencon.admin.service.EmployeeService;
+import com.lawencon.admin.service.BlacklistService;
 
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
 
 	@Autowired
-	private EmployeeService employeeService;
+	private BlacklistService employeeService;
 
 	@PostMapping("/hired")
 	public ResponseEntity<InsertResDto> hireEmployee(@RequestBody InsertHiredEmployeeReqDto data) {

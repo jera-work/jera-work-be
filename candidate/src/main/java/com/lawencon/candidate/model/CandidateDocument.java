@@ -1,5 +1,6 @@
 package com.lawencon.candidate.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -8,18 +9,18 @@ import javax.persistence.Table;
 import com.lawencon.base.BaseEntity;
 
 @Entity
-@Table(name="t_candidate_document")
+@Table(name = "t_candidate_document")
 public class CandidateDocument extends BaseEntity {
-	
-	@OneToOne
-	@JoinColumn(name="candidate_id")
+
+	@Column(name = "candidate_id")
 	private Candidate candidate;
+
 	@OneToOne
-	@JoinColumn(name="file_id")
+	@JoinColumn(name = "file_id")
 	private File file;
-	@OneToOne
-	@JoinColumn(name="document_type_id")
-	private DocumentType documentType;
+
+	@Column(name = "document_type_id")
+	private String documentType;
 
 	public Candidate getCandidate() {
 		return candidate;
@@ -37,11 +38,12 @@ public class CandidateDocument extends BaseEntity {
 		this.file = file;
 	}
 
-	public DocumentType getDocumentType() {
+	public String getDocumentType() {
 		return documentType;
 	}
 
-	public void setDocumentType(DocumentType documentType) {
+	public void setDocumentType(String documentType) {
 		this.documentType = documentType;
 	}
+
 }

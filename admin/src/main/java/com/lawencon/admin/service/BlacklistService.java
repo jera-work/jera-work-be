@@ -15,7 +15,7 @@ import com.lawencon.admin.model.HiredEmployee;
 import com.lawencon.base.ConnHandler;
 
 @Service
-public class EmployeeService {
+public class BlacklistService {
 
 	@Autowired
 	private HiredEmployeeDao hiredDao;
