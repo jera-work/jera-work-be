@@ -5,8 +5,6 @@ import java.time.LocalDate;
 public class InsertMcuVacancyReqDto {
 
 	private String appliedVacancy;
-	private String fileContent;
-	private String fileExt;
 	private LocalDate startDate;
 	private LocalDate endDate;
 
@@ -16,22 +14,6 @@ public class InsertMcuVacancyReqDto {
 
 	public void setAppliedVacancy(String appliedVacancy) {
 		this.appliedVacancy = appliedVacancy;
-	}
-
-	public String getFileContent() {
-		return fileContent;
-	}
-
-	public void setFileContent(String fileContent) {
-		this.fileContent = fileContent;
-	}
-
-	public String getFileExt() {
-		return fileExt;
-	}
-
-	public void setFileExt(String fileExt) {
-		this.fileExt = fileExt;
 	}
 
 	public LocalDate getStartDate() {

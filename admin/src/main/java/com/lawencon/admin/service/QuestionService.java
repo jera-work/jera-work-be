@@ -1,5 +1,7 @@
 package com.lawencon.admin.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,35 +27,40 @@ public class QuestionService {
 	@Autowired
 	private QuestionOptionDao questionOptionDao;
 	
-	public InsertResDto createQuestion(InsertQuestionReqDto data) {
+	public InsertResDto createQuestion(List<InsertQuestionReqDto> data) {
 		final InsertResDto response = new InsertResDto();
 		
 		ConnHandler.begin();
 		try {
-			final Question question = new Question();
-			question.setQuestionCode(data.getQuestionCode());
-			question.setQuestionBody(data.getQuestionBody());
-			
-			final JobVacancy jobVacancy = jobVacancyDao.getByIdRef(data.getJobVacancyId());
-			question.setJobVacancy(jobVacancy);
-			
-			final Question insertedQuestion = questionDao.saveAndFlush(question);
-			
-			if(data.getOptions().size() > 0) {
-				for(int i = 0; i < data.getOptions().size(); i++) {
-					final QuestionOption questionOption = new QuestionOption();
+			if(data.size() > 0) {
+				for(int i = 0; i < data.size(); i++) {
+					final Question question = new Question();
+					question.setQuestionCode(data.get(i).getQuestionCode());
+					question.setQuestionBody(data.get(i).getQuestionBody());
 					
-					questionOption.setQuestion(insertedQuestion);
-					questionOption.setOptionLabel(data.getOptions().get(i).getOptionLabel());
-					questionOption.setIsCorrect(data.getOptions().get(i).getIsCorrect());
+					final JobVacancy jobVacancy = jobVacancyDao.getByIdRef(data.get(i).getJobVacancyId());
+					question.setJobVacancy(jobVacancy);
 					
-					questionOptionDao.save(questionOption);
+					final Question insertedQuestion = questionDao.saveAndFlush(question);
+					
+					if(data.get(i).getOptions().size() > 0) {
+						for(int j = 0; j < data.get(i).getOptions().size(); j++) {
+							final QuestionOption questionOption = new QuestionOption();
+							
+							questionOption.setQuestion(insertedQuestion);
+							questionOption.setOptionLabel(data.get(i).getOptions().get(j).getOptionLabel());
+							questionOption.setIsCorrect(data.get(i).getOptions().get(j).getIsCorrect());
+							
+							questionOptionDao.save(questionOption);
+						}
+					}
 				}
 			}
 			
 			response.setMessage("Question created successfully");
 			ConnHandler.commit();
 		} catch (Exception e) {
+			e.printStackTrace();
 			ConnHandler.rollback();
 		}
 		

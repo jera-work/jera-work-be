@@ -1,7 +1,5 @@
 package com.lawencon.admin.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,19 +9,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.admin.dto.InsertResDto;
-import com.lawencon.admin.dto.question.InsertQuestionReqDto;
-import com.lawencon.admin.service.QuestionService;
+import com.lawencon.admin.dto.assessmentvacancy.InsertAssessmentVacancyReqDto;
+import com.lawencon.admin.service.AssessmentVacancyService;
 
 @RestController
-@RequestMapping("/questions")
-public class QuestionController {
+@RequestMapping("/assessments")
+public class AssessmentVacancyController {
 
 	@Autowired
-	private QuestionService questionService;
-	
+	private AssessmentVacancyService assessmentService;
+
 	@PostMapping
-	public ResponseEntity<InsertResDto> createQuestion(@RequestBody List<InsertQuestionReqDto> data){
-		final InsertResDto response = questionService.createQuestion(data);
+	public ResponseEntity<InsertResDto> insertAssessment(@RequestBody InsertAssessmentVacancyReqDto data) {
+		final InsertResDto response = assessmentService.insertAssessment(data);
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
 	}
+
 }

@@ -2,52 +2,23 @@ package com.lawencon.candidate.dto.profile;
 
 public class CandidateProfileUpdateReqDto {
 
+	private String candidateEmail;
 	private String profileAddress;
 	private String phoneNumber;
 	private String expectedSalary;
 	private String photoContent;
 	private String photoExt;
 	private String genderId;
-	private String genderCode;
 	private String maritalId;
-	private String maritalCode;
 	private String nationalityId;
-	private String nationalityCode;
-	private String fileContent;
-	private String fileExt;
 	private String religionId;
-	private String religionCode;
 
-	public String getGenderCode() {
-		return genderCode;
+	public String getCandidateEmail() {
+		return candidateEmail;
 	}
 
-	public void setGenderCode(String genderCode) {
-		this.genderCode = genderCode;
-	}
-
-	public String getMaritalCode() {
-		return maritalCode;
-	}
-
-	public void setMaritalCode(String maritalCode) {
-		this.maritalCode = maritalCode;
-	}
-
-	public String getNationalityCode() {
-		return nationalityCode;
-	}
-
-	public void setNationalityCode(String nationalityCode) {
-		this.nationalityCode = nationalityCode;
-	}
-
-	public String getReligionCode() {
-		return religionCode;
-	}
-
-	public void setReligionCode(String religionCode) {
-		this.religionCode = religionCode;
+	public void setCandidateEmail(String candidateEmail) {
+		this.candidateEmail = candidateEmail;
 	}
 
 	public String getReligionId() {
@@ -56,22 +27,6 @@ public class CandidateProfileUpdateReqDto {
 
 	public void setReligionId(String religionId) {
 		this.religionId = religionId;
-	}
-
-	public String getFileContent() {
-		return fileContent;
-	}
-
-	public void setFileContent(String fileContent) {
-		this.fileContent = fileContent;
-	}
-
-	public String getFileExt() {
-		return fileExt;
-	}
-
-	public void setFileExt(String fileExt) {
-		this.fileExt = fileExt;
 	}
 
 	public String getNationalityId() {
