@@ -18,7 +18,7 @@ public class InterviewVacancy extends BaseEntity {
 	@JoinColumn(name = "applied_vacancy_id", nullable = false)
 	private AppliedVacancy appliedVacancy;
 	
-	@Column(name = "notes", nullable = false)
+	@Column(name = "notes", nullable = true)
 	private String notes;
 	
 	@Column(name = "start_date", nullable = false)

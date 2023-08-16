@@ -3,6 +3,7 @@ package com.lawencon.admin.dto.offering;
 import java.time.LocalDate;
 
 public class InsertOfferingReqDto {
+
 	private String appliedVacancyId;
 	private Boolean isApprove;
 	private LocalDate startDate;

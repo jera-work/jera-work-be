@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 public class CandidateEducationCreateReqDto {
 
+	private String candidateEmail;
 	private String institutionName;
 	private String degreeId;
 	private String majorId;
@@ -11,6 +12,14 @@ public class CandidateEducationCreateReqDto {
 	private LocalDate startYear;
 	private LocalDate endYear;
 	private String institutionAddress;
+
+	public String getCandidateEmail() {
+		return candidateEmail;
+	}
+
+	public void setCandidateEmail(String candidateEmail) {
+		this.candidateEmail = candidateEmail;
+	}
 
 	public String getInstitutionName() {
 		return institutionName;

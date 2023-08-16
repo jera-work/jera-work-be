@@ -36,20 +36,20 @@ public class AppliedVacancyService {
 		ConnHandler.begin();
 		final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
 		final JobVacancy job = jobVacancyDao.getById(data.getJobVacancyId());
-		
+
 		final AppliedVacancy appliedVacancy = new AppliedVacancy();
 		appliedVacancy.setCandidate(candidate);
 		appliedVacancy.setAppliedProgress(data.getAppliedProgressId());
 		appliedVacancy.setAppliedStatus(data.getAppliedStatusId());
 		appliedVacancy.setJobVacancy(job);
 		final AppliedVacancy appliedVacancyDb = appliedVacancyDao.save(appliedVacancy);
-		
+
 		final InsertResDto response = new InsertResDto();
 		data.setCandidateEmail(candidate.getCandidateEmail());
 		data.setJobVacancyCode(job.getVacancyCode());
 		final HttpStatus status = apiService.writeTo("http://localhost:8081/applied/apply", data);
 
-		if(status.equals(HttpStatus.CREATED)) {
+		if (status.equals(HttpStatus.CREATED)) {
 			response.setId(appliedVacancyDb.getId());
 			response.setMessage("You have applied to this job!");
 			ConnHandler.commit();
@@ -57,10 +57,10 @@ public class AppliedVacancyService {
 			ConnHandler.rollback();
 			throw new RuntimeException("Insert Failed");
 		}
-		
+
 		return response;
 	}
-	
+
 	public UpdateResDto changeAppliedStatusProgress(UpdateProgressReqDto data) {
 
 		ConnHandler.begin();
