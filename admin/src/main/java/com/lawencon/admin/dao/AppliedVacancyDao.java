@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.lawencon.admin.model.AppliedVacancy;
 import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.base.ConnHandler;
 
 @Repository
 @Profile(value = { "native-query" })
@@ -45,21 +46,31 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 		return super.deleteById(AppliedVacancy.class, entityId);
 	}
 	
-//	public AppliedVacancy get(String id) {
-//		final String sql = "SELECT id, candidate_id, job_vacancy_id, applied_status_id, applied_progress_id FROM t_applied_vacancy tav WHERE id LIKE :id ;";
-//		
-//		try {
-//			final Object appObj = ConnHandler.getManager().createNativeQuery(sql)
-//					.setParameter("id", id)
-//					.getSingleResult();
-//			
-//			final AppliedVacancy app = new AppliedVacancy();
-//			app.setId(appObj.toString());
-//			return app;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return null;
-//		}
-//	}
+	public AppliedVacancy getByJobVacancyAndCandidate(String jobId, String candidateId){
+		final String sql = "SELECT "
+				+ "	tav.id "
+				+ "FROM "
+				+ "	t_applied_vacancy tav "
+				+ "INNER JOIN "
+				+ "	t_candidate tc ON tav.candidate_id = tc.id "
+				+ "INNER JOIN "
+				+ "	t_job_vacancy tjv ON tav.job_vacancy_id = tjv.id "
+				+ "WHERE "
+				+ "	tc.id LIKE :candidate_id AND tjv.id LIKE :job_id ";
+		
+		try {
+			final Object appJobObj = ConnHandler.getManager().createNativeQuery(sql)
+					.setParameter("job_id", jobId)
+					.setParameter("candidate_id", candidateId)
+					.getSingleResult();
+
+				AppliedVacancy appliedVacancy = new AppliedVacancy();
+				appliedVacancy.setId(appJobObj.toString());
+			return appliedVacancy;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 }

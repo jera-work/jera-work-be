@@ -57,7 +57,6 @@ public class JobVacancyService {
 			ConnHandler.rollback();
 			return null;
 		}
-
 	}
 
 }
