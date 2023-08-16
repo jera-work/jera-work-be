@@ -1,4 +1,4 @@
-package com.lawencon.candidate.dto.experience;
+package com.lawencon.admin.dto.experience;
 
 import java.time.LocalDate;
 

@@ -19,9 +19,9 @@ public class CandidateEducation extends BaseEntity {
 	private Candidate candidate;
 	@Column(name = "institution_name", length = 50, nullable = false)
 	private String institutionName;
-	@Column(name = "degree_id")
+	@Column(name = "degree_id", nullable = false)
 	private String degree;
-	@Column(name = "major_id")
+	@Column(name = "major_id", nullable = false)
 	private String major;
 	@Column(name = "gpa", nullable = false)
 	private Float gpa;
@@ -29,7 +29,7 @@ public class CandidateEducation extends BaseEntity {
 	private LocalDate startYear;
 	@Column(name = "end_year", nullable = false)
 	private LocalDate endYear;
-	@Column(name = "institution_", nullable = false)
+	@Column(name = "institution_adress", nullable = false)
 	private String institutionAddress;
 
 	public Candidate getCandidate() {

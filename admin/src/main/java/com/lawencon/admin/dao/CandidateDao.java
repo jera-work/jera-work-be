@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.admin.model.Candidate;
+import com.lawencon.admin.model.CandidateProfile;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
@@ -54,16 +55,35 @@ public class CandidateDao extends AbstractJpaDao {
 	}
 
 	public Candidate getByEmail(String candidateEmail) {
-		final String sql = "SELECT " + "tc.id " + "FROM " + "t_candidate tc " + "WHERE "
-				+ "tc.candidate_email = :email";
+		final String sql = 
+				"SELECT " 
+					+ "tc.id, tc.candidate_profile_id " 
+				+ "FROM " 
+					+ "t_candidate tc "
+//				+ "INNER JOIN "
+//					+ "t_candidate_profile tcp ON tcp.id = tc.candidate_profile_id"
+				+ "WHERE "
+					+ "tc.candidate_email = :email";
 
 		try {
-			final Object cdtObj = ConnHandler.getManager().createNativeQuery(sql).setParameter("email", candidateEmail)
+			
+			final Object cdtObj = ConnHandler.getManager().createNativeQuery(sql)
+					.setParameter("email", candidateEmail)
 					.getSingleResult();
-
-			final Candidate candidate = new Candidate();
-			candidate.setId(cdtObj.toString());
-			return candidate;
+			
+			final Object[] cdtArr = (Object[]) cdtObj;
+			Candidate cdt = null;
+			if(cdtArr.length > 0) {
+				
+				final CandidateProfile profile = new CandidateProfile();
+				profile.setId(cdtArr[1].toString());
+				
+				cdt = new Candidate();
+				cdt.setId(cdtArr[0].toString());
+				cdt.setCandidateProfile(profile);
+			}
+			
+			return cdt;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

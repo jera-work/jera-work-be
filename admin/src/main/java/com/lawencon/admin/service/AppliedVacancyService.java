@@ -14,7 +14,6 @@ import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.appliedvacancy.InsertAppliedVacancyReqDto;
 import com.lawencon.admin.dto.appliedvacancy.UpdateProgressReqDto;
 import com.lawencon.admin.model.AppliedProgress;
-import com.lawencon.admin.model.AppliedStatus;
 import com.lawencon.admin.model.AppliedVacancy;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.JobVacancy;
@@ -25,13 +24,6 @@ public class AppliedVacancyService {
 	
 	@Autowired
 	private ApiService apiService;
-	
-	@Autowired
-	private AppliedProgressDao appliedProgressDao;
-	
-	@Autowired
-	private AppliedStatusDao appliedStatusDao;
-
 	@Autowired
 	private AppliedVacancyDao appliedVacancyDao;
 	@Autowired
@@ -45,39 +37,46 @@ public class AppliedVacancyService {
 
 	public InsertResDto insertAppliedVacancy(InsertAppliedVacancyReqDto data) {
 
-		ConnHandler.begin();
-		System.out.println(data.getJobVacancyCode());
-		final JobVacancy job = jobVacancyDao.getByCode(data.getJobVacancyCode());
-		final Candidate candidate = candidateDao.getByEmail(data.getCandidateEmail());
+		try {
+			ConnHandler.begin();
+			System.out.println(data.getJobVacancyCode());
+			final JobVacancy job = jobVacancyDao.getByCode(data.getJobVacancyCode());
+			final Candidate candidate = candidateDao.getByEmail(data.getCandidateEmail());
+			
+			final AppliedVacancy appliedVacancy = new AppliedVacancy();
+			appliedVacancy.setCandidate(candidate);
+			appliedVacancy.setAppliedProgress(progressDao.getByIdRef(data.getAppliedProgressId()));
+			appliedVacancy.setAppliedStatus(statusDao.getByIdRef(data.getAppliedStatusId()));
+			appliedVacancy.setJobVacancy(job);
+			final AppliedVacancy appliedVacancyDb = appliedVacancyDao.save(appliedVacancy);
+			ConnHandler.commit();
+			
+			final InsertResDto response = new InsertResDto();
+			response.setId(appliedVacancyDb.getId());
+			response.setMessage("You have applied to this job!");
+			return response;
+		} catch (Exception e) {
+			e.printStackTrace();
+			ConnHandler.rollback();
+			return null;
+		}
 		
-		final AppliedVacancy appliedVacancy = new AppliedVacancy();
-		appliedVacancy.setCandidate(candidate);
-		appliedVacancy.setAppliedProgress(progressDao.getByIdRef(data.getAppliedProgressId()));
-		appliedVacancy.setAppliedStatus(statusDao.getByIdRef(data.getAppliedStatusId()));
-		appliedVacancy.setJobVacancy(job);
-		final AppliedVacancy appliedVacancyDb = appliedVacancyDao.save(appliedVacancy);
-		ConnHandler.commit();
-		
-		final InsertResDto response = new InsertResDto();
-		response.setId(appliedVacancyDb.getId());
-		response.setMessage("You have applied to this job!");
-		return response;
 	}
 
 	public UpdateResDto changeAppliedStatusProgress(UpdateProgressReqDto data) {
 		final UpdateResDto response = new UpdateResDto();
 		
 		ConnHandler.begin();
-		final AppliedVacancy appliedVacancy = appliedVacancyDao.getById(data.getAppliedVacancyId());
+		final AppliedProgress appliedProgress = progressDao.getById(data.getAppliedProgressId());
 		
-		final AppliedProgress appliedProgress = appliedProgressDao.getById(data.getAppliedProgressId());
+		final AppliedVacancy appliedVacancy = appliedVacancyDao.getById(data.getAppliedVacancyId());
 		appliedVacancy.setAppliedProgress(appliedProgress);
 		
 		final AppliedVacancy updatedAppliedVacancy = appliedVacancyDao.saveAndFlush(appliedVacancy);
 		
 		data.setJobVacancyCode(appliedVacancy.getJobVacancy().getVacancyCode());
 		
-		final HttpStatus responseCandidate = apiService.patchTo("http://localhost:8080/applied-jobs", data);
+		final HttpStatus responseCandidate = apiService.patchTo("http://localhost:8080/applied", data);
 		
 		if(responseCandidate.equals(HttpStatus.OK)) {
 			response.setVer(updatedAppliedVacancy.getVersion());

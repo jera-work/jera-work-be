@@ -10,7 +10,7 @@ import com.lawencon.base.BaseEntity;
 @Table(name = "t_applied_progress")
 public class AppliedProgress extends BaseEntity{
 	
-	@Column(name = "progres_code", nullable = false, unique = true, length = 8)
+	@Column(name = "progress_code", nullable = false, unique = true, length = 8)
 	private String progressCode;
 	
 	@Column(name = "progress_name", nullable = false, length = 30)

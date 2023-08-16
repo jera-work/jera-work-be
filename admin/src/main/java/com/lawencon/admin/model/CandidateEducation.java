@@ -38,7 +38,7 @@ public class CandidateEducation extends BaseEntity{
 	@Column(name = "end_year", nullable = false)
 	private LocalDate endYear;
 	
-	@Column(name = "institution_address", nullable = false)
+	@Column(name = "institution_adress", nullable = false)
 	private String institutionAddress;
 	
 	public Candidate getCandidate() {
