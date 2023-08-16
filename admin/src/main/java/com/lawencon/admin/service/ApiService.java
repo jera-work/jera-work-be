@@ -33,14 +33,14 @@ public class ApiService {
 		return response.getStatusCode();
 	}
 	
-	public <T> HttpStatus patchTo(String url, T data) {
+	public <T> HttpStatus putTo(String url, T data) {
 		
 		final HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setBearerAuth(JwtConfig.get());
 		
 		final RequestEntity<T> request = RequestEntity
-				.patch(url)
+				.put(url)
 				.headers(headers)
 				.body(data);
 		

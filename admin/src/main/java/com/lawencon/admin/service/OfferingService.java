@@ -35,7 +35,7 @@ public class OfferingService {
 		final Offering offeringDb = offeringDao.saveAndFlush(offering);
 		ConnHandler.commit();
 		
-		mailService.sendEmail(appliedVacancy.getCandidate().getCandidateEmail());
+//		mailService.sendEmail(appliedVacancy.getCandidate().getCandidateEmail());
 		
 		final InsertResDto response = new InsertResDto();
 		response.setId(offeringDb.getId());

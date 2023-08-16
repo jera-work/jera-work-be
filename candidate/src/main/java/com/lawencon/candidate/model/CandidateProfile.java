@@ -14,27 +14,27 @@ public class CandidateProfile extends BaseEntity {
 
 	@Column(name = "profile_name", length = 50, nullable = false)
 	private String profileName;
-	@Column(name = "profile_address", length = 50)
+	@Column(name = "profile_address", length = 50, nullable = true)
 	private String profileAddress;
-	@Column(name = "phone_number", length = 14)
+	@Column(name = "phone_number", length = 14, nullable = true)
 	private String phoneNumber;
-	@Column(name = "expected_salary")
+	@Column(name = "expected_salary", nullable = true)
 	private String expectedSalary;
 
-	@Column(name = "gender_id")
+	@Column(name = "gender_id", nullable = true)
 	private String gender;
 
-	@Column(name = "nationality_id")
+	@Column(name = "nationality_id", nullable = true)
 	private String nationality;
 
 	@OneToOne
-	@JoinColumn(name = "photo_id")
+	@JoinColumn(name = "photo_id", nullable = true)
 	private File photo;
 
-	@Column(name = "marital_id")
+	@Column(name = "marital_id", nullable = true)
 	private String marital;
 
-	@Column(name = "religion_id")
+	@Column(name = "religion_id", nullable = true)
 	private String religion;
 
 	public String getProfileName() {
