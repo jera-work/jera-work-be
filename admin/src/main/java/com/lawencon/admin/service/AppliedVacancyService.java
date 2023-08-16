@@ -75,9 +75,10 @@ public class AppliedVacancyService {
 		final AppliedVacancy updatedAppliedVacancy = appliedVacancyDao.saveAndFlush(appliedVacancy);
 		
 		data.setJobVacancyCode(appliedVacancy.getJobVacancy().getVacancyCode());
-		
-		final HttpStatus responseCandidate = apiService.patchTo("http://localhost:8080/applied", data);
-		
+		data.setCandidateEmail(appliedVacancy.getCandidate().getCandidateEmail());
+
+		final HttpStatus responseCandidate = apiService.putTo("http://localhost:8080/applied", data);
+
 		if(responseCandidate.equals(HttpStatus.OK)) {
 			response.setVer(updatedAppliedVacancy.getVersion());
 			response.setMessage("Progress updated successfully");

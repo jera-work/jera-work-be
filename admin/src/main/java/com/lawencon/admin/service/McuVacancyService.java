@@ -33,7 +33,7 @@ public class McuVacancyService {
 			final McuVacancy mcuDb = mcuDao.saveAndFlush(mcu);
 			ConnHandler.commit();
 
-			mailService.sendEmail(appliedVacancy.getCandidate().getCandidateEmail());
+//			mailService.sendEmail(appliedVacancy.getCandidate().getCandidateEmail());
 			
 			final InsertResDto response = new InsertResDto();
 			response.setId(mcuDb.getId());

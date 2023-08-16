@@ -64,7 +64,14 @@ public class AppliedVacancyService {
 	public UpdateResDto changeAppliedStatusProgress(UpdateProgressReqDto data) {
 
 		ConnHandler.begin();
-		final AppliedVacancy appliedVacancy = appliedVacancyDao.getById(data.getAppliedVacancyId());
+		
+		final JobVacancy jobVacancy = jobVacancyDao.getByCode(data.getJobVacancyCode());
+		
+		final Candidate candidate = candidateDao.getByEmail(data.getCandidateEmail());
+		
+		final AppliedVacancy appliedVacancyId = appliedVacancyDao.getByJobVacancyAndCandidate(jobVacancy.getId(), candidate.getId());
+		
+		final AppliedVacancy appliedVacancy = appliedVacancyDao.getById(appliedVacancyId.getId());
 		appliedVacancy.setAppliedProgress(data.getAppliedProgressId());
 		final AppliedVacancy updatedAppliedVacancy = appliedVacancyDao.saveAndFlush(appliedVacancy);
 		ConnHandler.commit();

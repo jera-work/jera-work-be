@@ -27,11 +27,10 @@ public class AppliedVacancyController {
 		final InsertResDto response = appliedVacancyService.insertAppliedVacancy(data);
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping
 	public ResponseEntity<UpdateResDto> changeStatus(@RequestBody UpdateProgressReqDto data) {
 		final UpdateResDto response = appliedVacancyService.changeAppliedStatusProgress(data);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
 }

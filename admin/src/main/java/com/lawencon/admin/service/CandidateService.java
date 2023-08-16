@@ -33,7 +33,6 @@ import com.lawencon.admin.model.CandidateExperience;
 import com.lawencon.admin.model.CandidateProfile;
 import com.lawencon.admin.model.File;
 import com.lawencon.base.ConnHandler;
-import com.lawencon.security.principal.PrincipalServiceImpl;
 
 @Service
 public class CandidateService {
@@ -52,8 +51,6 @@ public class CandidateService {
 	private FileDao fileDao;
 	@Autowired
 	private ReligionDao religionDao;
-	@Autowired
-	private PrincipalServiceImpl principalService;
 	@Autowired
 	private DocumentTypeDao typeDao;
 	@Autowired

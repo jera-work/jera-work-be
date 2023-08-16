@@ -39,7 +39,7 @@ public class AssessmentVacancyService {
 
 		ConnHandler.commit();
 
-		mailService.sendEmail(appliedVacancy.getCandidate().getCandidateEmail());
+//		mailService.sendEmail(appliedVacancy.getCandidate().getCandidateEmail());
 		final InsertResDto response = new InsertResDto();
 		response.setId(assessmentVacancyDb.getId());
 		response.setMessage("Assessment has been created!");
