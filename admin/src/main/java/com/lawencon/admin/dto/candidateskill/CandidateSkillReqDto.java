@@ -1,4 +1,4 @@
-package com.lawencon.candidate.dto.candidateskill;
+package com.lawencon.admin.dto.candidateskill;
 
 public class CandidateSkillReqDto {
 

@@ -15,6 +15,7 @@ import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.candidate.CandidateInsertReqDto;
 import com.lawencon.admin.dto.candidateprofile.CandidateProfileUpdateReqDto;
+import com.lawencon.admin.dto.candidateskill.CandidateSkillReqDto;
 import com.lawencon.admin.dto.document.CandidateDocumentCreateReqDto;
 import com.lawencon.admin.dto.education.CandidateEducationCreateReqDto;
 import com.lawencon.admin.dto.experience.CandidateExperienceReqDto;
@@ -54,6 +55,12 @@ public class CandidateController {
 	@PostMapping("/experiences")
 	public ResponseEntity<InsertResDto> insertCandidateExperiences(@RequestBody List<CandidateExperienceReqDto> data) {
 		final InsertResDto response = cdtService.createExperience(data);
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/skills")
+	public ResponseEntity<InsertResDto> insertCandidateSkills(@RequestBody List<CandidateSkillReqDto> data) {
+		final InsertResDto response = cdtService.createSkill(data);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
