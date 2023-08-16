@@ -30,11 +30,11 @@ public class SendMailService {
 	
 	private TemplateEngine templateEngine;
 
-	public void sendEmail(String email) {
+	public void sendEmail(String emailTo, String subject, String body) {
 		SimpleMailMessage msg = new SimpleMailMessage();
-		msg.setTo(email);
-		msg.setSubject("Password Notification");
-		msg.setText("Thanks for creating an account! Your password is : ");
+		msg.setTo(emailTo);
+		msg.setSubject(subject);
+		msg.setText(body);
 
 		javaMailSender.send(msg);
 	}

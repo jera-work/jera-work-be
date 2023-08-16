@@ -1,8 +1,8 @@
 package com.lawencon.admin.dto.appliedvacancy;
 
 public class UpdateProgressReqDto {
-
 	private String jobVacancyCode;
+	private String candidateEmail;
 	private String appliedVacancyId;
 	private String appliedProgressId;
 
@@ -15,7 +15,7 @@ public class UpdateProgressReqDto {
 	}
 
 	public String getAppliedVacancyId() {
-		return appliedVacancyId;
+		return this.appliedVacancyId;
 	}
 
 	public void setAppliedVacancyId(String appliedVacancyId) {
@@ -29,6 +29,13 @@ public class UpdateProgressReqDto {
 	public void setAppliedProgressId(String appliedProgressId) {
 		this.appliedProgressId = appliedProgressId;
 	}
-	
+
+	public String getCandidateEmail() {
+		return candidateEmail;
+	}
+
+	public void setCandidateEmail(String candidateEmail) {
+		this.candidateEmail = candidateEmail;
+	}
 	
 }

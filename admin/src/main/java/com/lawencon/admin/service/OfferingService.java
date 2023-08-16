@@ -60,7 +60,7 @@ public class OfferingService {
 		ConnHandler.commit();
 		sendOffering(offeringDb, appliedVacancy.getCandidate().getCandidateEmail());
 		
-		mailService.sendEmail(appliedVacancy.getCandidate().getCandidateEmail());
+//		mailService.sendEmail(appliedVacancy.getCandidate().getCandidateEmail());
 		
 		final InsertResDto response = new InsertResDto();
 		response.setId(offeringDb.getId());

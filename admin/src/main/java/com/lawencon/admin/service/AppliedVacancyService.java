@@ -68,6 +68,9 @@ public class AppliedVacancyService {
 		final UpdateResDto response = new UpdateResDto();
 		
 		ConnHandler.begin();
+		System.out.println(data.getAppliedVacancyId());
+		System.out.println(appliedProgressDao.getById(data.getAppliedProgressId()));
+		
 		final AppliedVacancy appliedVacancy = appliedVacancyDao.getById(data.getAppliedVacancyId());
 		
 		final AppliedProgress appliedProgress = appliedProgressDao.getById(data.getAppliedProgressId());
@@ -76,8 +79,9 @@ public class AppliedVacancyService {
 		final AppliedVacancy updatedAppliedVacancy = appliedVacancyDao.saveAndFlush(appliedVacancy);
 		
 		data.setJobVacancyCode(appliedVacancy.getJobVacancy().getVacancyCode());
+		data.setCandidateEmail(appliedVacancy.getCandidate().getCandidateEmail());
 		
-		final HttpStatus responseCandidate = apiService.patchTo("http://localhost:8080/applied-jobs", data);
+		final HttpStatus responseCandidate = apiService.putTo("http://localhost:8080/applied", data);
 		
 		if(responseCandidate.equals(HttpStatus.OK)) {
 			response.setVer(updatedAppliedVacancy.getVersion());

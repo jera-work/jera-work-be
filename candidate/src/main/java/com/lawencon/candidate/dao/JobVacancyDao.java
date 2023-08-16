@@ -48,16 +48,17 @@ public class JobVacancyDao extends AbstractJpaDao {
 
 	public JobVacancy getByCode(String vacancyCode)  {
 		final String sql = "SELECT "
-				+ "jv.id "
+				+ "tjv.id "
 				+ "FROM "
-				+ "JobVacancy jv "
-				+ "WHERE jv.vacancyCode = :vacancyCode";
-		final Object jobObj = ConnHandler.getManager().createQuery(sql)
+				+ "t_job_vacancy tjv "
+				+ "WHERE tjv.vacancy_code = :vacancyCode";
+		
+		final Object jobObj = ConnHandler.getManager().createNativeQuery(sql)
 				.setParameter("vacancyCode", vacancyCode)
 				.getSingleResult();
 		
 		final JobVacancy jobVacancy = new JobVacancy();
-		jobVacancy.setVacancyCode(jobObj.toString());
+		jobVacancy.setId(jobObj.toString());
 		
 		return jobVacancy;
 	}
