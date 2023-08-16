@@ -44,5 +44,4 @@ public class QuestionOptionDao extends AbstractJpaDao {
 	public boolean deleteById(final Object entityId) {
 		return super.deleteById(QuestionOption.class, entityId);
 	}
-
 }

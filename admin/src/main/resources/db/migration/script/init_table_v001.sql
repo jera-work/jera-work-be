@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS t_offering;
+--DROP TABLE IF EXISTS t_offering;
 --DROP TABLE IF EXISTS t_mcu_vacancy;
 --DROP TABLE IF EXISTS t_interview_vacancy;
 --DROP TABLE IF EXISTS t_assessment_vacancy;
@@ -389,6 +389,7 @@ CREATE TABLE t_job_vacancy (
 	is_active boolean NOT NULL,
 	ver int NOT NULL,
 	PRIMARY KEY (id),
+	UNIQUE(vacancy_code),
 	FOREIGN KEY (pic_hr_id)
 		REFERENCES t_user (id),
 	FOREIGN KEY (pic_user_id)

@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.base.ConnHandler;
+import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.admin.model.Question;
 
 @Repository
@@ -44,5 +46,4 @@ public class QuestionDao extends AbstractJpaDao {
 	public boolean deleteById(final Object entityId) {
 		return super.deleteById(Question.class, entityId);
 	}
-
 }

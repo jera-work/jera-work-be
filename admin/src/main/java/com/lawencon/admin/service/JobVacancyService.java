@@ -1,5 +1,8 @@
 package com.lawencon.admin.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,7 @@ import com.lawencon.admin.dao.UserDao;
 import com.lawencon.admin.dao.VacancyDescriptionDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.jobvacancy.InsertJobVacancyReqDto;
+import com.lawencon.admin.dto.jobvacancy.JobSearchResDto;
 import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.admin.model.User;
 import com.lawencon.admin.model.VacancyDescription;
@@ -103,6 +107,25 @@ public class JobVacancyService {
 			return null;
 		}
 
+	}
+	
+	public List<JobSearchResDto> filter(int startIndex, int endIndex, String vacancyTitle, 
+			String degreeId, String cityId, String jobTypeId) {
+		final List<JobSearchResDto> responses = new ArrayList<>();
+		
+		jobDao.getAllWithLimit(startIndex, endIndex, vacancyTitle, degreeId, cityId, jobTypeId).forEach(jv -> {
+			final JobSearchResDto response = new JobSearchResDto();
+			response.setCityName(jv.getVacancyDescription().getCity().getCityName());
+			response.setCompanyName(jv.getCompany().getCompanyName());
+			response.setDegreeName(jv.getVacancyDescription().getDegree().getDegreeName());
+			response.setJobTypeName(jv.getVacancyDescription().getJobType().getTypeName());
+			response.setSalary(jv.getVacancyDescription().getSalary());
+			response.setVacancyTitle(jv.getVacancyTitle());
+			
+			responses.add(response);
+		});
+		
+		return responses;
 	}
 }
 

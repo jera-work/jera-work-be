@@ -62,17 +62,5 @@ public class JobVacancyDao extends AbstractJpaDao {
 		
 		return jobVacancy;
 	}
-	
-//	public List<JobVacancy> getAllWithLimit(int limit){
-//		final String sql = "SELECT "
-//				+ "	tjv.id, tjv.vancacy_code, tjv.vacancy_title, tvd.salary, tvd.degree_id, tvd.job_type_id, tvd.city_id "
-//				+ "FROM "
-//				+ "	t_job_vacancy tjv "
-//				+ "INNER JOIN "
-//				+ "	t_vacancy_description tvd ON tjv.vacancy_description_id = tvd.id ";
-//		
-//		final Object jobObj = ConnHandler.getManager().createQuery(sql).setMaxResults(limit);
-//		
-//		
-//	}
+
 }
