@@ -11,6 +11,7 @@ import com.lawencon.admin.dao.CandidateDocumentDao;
 import com.lawencon.admin.dao.CandidateEducationDao;
 import com.lawencon.admin.dao.CandidateExperienceDao;
 import com.lawencon.admin.dao.CandidateProfileDao;
+import com.lawencon.admin.dao.CandidateSkillDao;
 import com.lawencon.admin.dao.DegreeDao;
 import com.lawencon.admin.dao.DocumentTypeDao;
 import com.lawencon.admin.dao.FileDao;
@@ -19,10 +20,12 @@ import com.lawencon.admin.dao.MajorDao;
 import com.lawencon.admin.dao.MaritalDao;
 import com.lawencon.admin.dao.NationalityDao;
 import com.lawencon.admin.dao.ReligionDao;
+import com.lawencon.admin.dao.SkillDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.candidate.CandidateInsertReqDto;
 import com.lawencon.admin.dto.candidateprofile.CandidateProfileUpdateReqDto;
+import com.lawencon.admin.dto.candidateskill.CandidateSkillReqDto;
 import com.lawencon.admin.dto.document.CandidateDocumentCreateReqDto;
 import com.lawencon.admin.dto.education.CandidateEducationCreateReqDto;
 import com.lawencon.admin.dto.experience.CandidateExperienceReqDto;
@@ -31,6 +34,7 @@ import com.lawencon.admin.model.CandidateDocument;
 import com.lawencon.admin.model.CandidateEducation;
 import com.lawencon.admin.model.CandidateExperience;
 import com.lawencon.admin.model.CandidateProfile;
+import com.lawencon.admin.model.CandidateSkill;
 import com.lawencon.admin.model.File;
 import com.lawencon.base.ConnHandler;
 
@@ -63,6 +67,10 @@ public class CandidateService {
 	private CandidateEducationDao educationDao;
 	@Autowired
 	private CandidateExperienceDao candidateExperienceDao;
+	@Autowired
+	private CandidateSkillDao candidateSkillDao;
+	@Autowired
+	private SkillDao skillDao;
 
 	/* Register for Candidate */
 	public InsertResDto insertCandidate(CandidateInsertReqDto data) {
@@ -227,6 +235,31 @@ public class CandidateService {
 			ConnHandler.rollback();
 		}
 
+		return response;
+	}
+	
+	/* insert skills for candidate */
+	public InsertResDto createSkill(List<CandidateSkillReqDto> datas) {
+		final InsertResDto response = new InsertResDto();
+		
+		ConnHandler.begin();
+		try {
+			for (CandidateSkillReqDto data : datas) {
+				final Candidate candidate = candidateDao.getByEmail(data.getCandidateEmail());
+				final CandidateSkill skill = new CandidateSkill();
+				skill.setCandidate(candidate);
+				skill.setSkill(skillDao.getById(data.getSkillId()));
+				final CandidateSkill skillDb = candidateSkillDao.save(skill);
+				
+				data.setCandidateEmail(candidate.getCandidateEmail());
+				response.setId(skillDb.getId());
+			}
+			response.setMessage("Skill choosen successfully");
+			ConnHandler.commit();
+			
+		} catch (Exception e) {
+			ConnHandler.rollback();
+		}
 		return response;
 	}
 

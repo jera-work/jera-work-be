@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.UpdateResDto;
+import com.lawencon.candidate.dto.candidateskill.CandidateSkillReqDto;
 import com.lawencon.candidate.dto.document.CandidateDocumentCreateReqDto;
 import com.lawencon.candidate.dto.education.CandidateEducationCreateReqDto;
 import com.lawencon.candidate.dto.experience.CandidateExperienceReqDto;
@@ -54,6 +55,12 @@ public class CandidateController {
 	@PostMapping("/experiences")
 	public ResponseEntity<InsertResDto> insertCandidateExperiences(@RequestBody List<CandidateExperienceReqDto> data) {
 		final InsertResDto response = cdtService.createExperience(data);
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/skills")
+	public ResponseEntity<InsertResDto> insertCandidateSkills(@RequestBody List<CandidateSkillReqDto> data) {
+		final InsertResDto response = cdtService.createSkill(data);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
