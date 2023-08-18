@@ -1,4 +1,5 @@
 /core/target
 /admin/target
-/admin/src/main/resources/application.properties
+/admin/src/main/resources/
 /candidate/target
+/candidate/src/main/resources/
