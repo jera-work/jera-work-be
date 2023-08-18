@@ -1,7 +1,5 @@
 package com.lawencon.candidate.dto.education;
 
-import java.time.LocalDate;
-
 public class CandidateEducationCreateReqDto {
 
 	private String candidateEmail;
@@ -9,8 +7,8 @@ public class CandidateEducationCreateReqDto {
 	private String degreeId;
 	private String majorId;
 	private Float gpa;
-	private LocalDate startYear;
-	private LocalDate endYear;
+	private String startYear;
+	private String endYear;
 	private String institutionAddress;
 
 	public String getCandidateEmail() {
@@ -53,19 +51,19 @@ public class CandidateEducationCreateReqDto {
 		this.gpa = gpa;
 	}
 
-	public LocalDate getStartYear() {
+	public String getStartYear() {
 		return startYear;
 	}
 
-	public void setStartYear(LocalDate startYear) {
+	public void setStartYear(String startYear) {
 		this.startYear = startYear;
 	}
 
-	public LocalDate getEndYear() {
+	public String getEndYear() {
 		return endYear;
 	}
 
-	public void setEndYear(LocalDate endYear) {
+	public void setEndYear(String endYear) {
 		this.endYear = endYear;
 	}
 

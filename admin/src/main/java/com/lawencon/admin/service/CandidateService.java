@@ -36,6 +36,7 @@ import com.lawencon.admin.model.CandidateExperience;
 import com.lawencon.admin.model.CandidateProfile;
 import com.lawencon.admin.model.CandidateSkill;
 import com.lawencon.admin.model.File;
+import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.ConnHandler;
 
 @Service
@@ -184,9 +185,9 @@ public class CandidateService {
 				final CandidateEducation education = new CandidateEducation();
 				education.setCandidate(candidate);
 				education.setDegree(degreeDao.getByIdRef(data.getDegreeId()));
-				education.setEndYear(data.getEndYear());
+				education.setEndYear(DateUtil.dateParse(data.getEndYear()));
 				education.setGpa(data.getGpa());
-				education.setStartYear(data.getStartYear());
+				education.setStartYear(DateUtil.dateParse(data.getStartYear()));
 				education.setInstitutionAddress(data.getInstitutionAddress());
 				education.setInstitutionName(data.getInstitutionName());
 				education.setMajor(majorDao.getByIdRef(data.getMajorId()));
@@ -223,8 +224,8 @@ public class CandidateService {
 					candidateExperience.setFormerPosition(data.get(i).getFormerPosition());
 					candidateExperience.setFormerJobdesk(data.get(i).getFormerJobdesk());
 					candidateExperience.setFormerLocation(data.get(i).getFormerLocation());
-					candidateExperience.setStartDate(data.get(i).getStartDate());
-					candidateExperience.setEndDate(data.get(i).getEndDate());
+					candidateExperience.setStartDate(DateUtil.dateParse(data.get(i).getStartDate()));
+					candidateExperience.setEndDate(DateUtil.dateParse(data.get(i).getEndDate()));
 
 					candidateExperienceDao.save(candidateExperience);
 					data.get(i).setCandidateEmail(candidate.getCandidateEmail());

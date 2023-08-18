@@ -24,6 +24,7 @@ import com.lawencon.admin.dto.jobvacancy.JobSearchResDto;
 import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.admin.model.User;
 import com.lawencon.admin.model.VacancyDescription;
+import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.ConnHandler;
 import com.lawencon.security.principal.PrincipalServiceImpl;
 
@@ -77,9 +78,9 @@ public class JobVacancyService {
 
 			final User user = userDao.getById(principalService.getAuthPrincipal());
 			job.setCompany(companyDao.getByIdRef(user.getProfile().getCompany().getId()));
-			job.setEndDate(data.getEndDate());
+			job.setEndDate(DateUtil.dateParse(data.getEndDate()));
 			job.setExpLevel(levelDao.getByIdRef(data.getExpLevelId()));
-			job.setStartDate(data.getStartDate());
+			job.setStartDate(DateUtil.dateParse(data.getStartDate()));
 			job.setVacancyCode(data.getVacancyCode());
 			job.setVacancyTitle(data.getVacancyTitle());
 			job.setPicHr(userDao.getByIdRef(data.getPicHrId()));

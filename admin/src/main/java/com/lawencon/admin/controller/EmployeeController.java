@@ -12,23 +12,26 @@ import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.blacklistemployee.InsertBlacklistEmployeeReqDto;
 import com.lawencon.admin.dto.hiredemployee.InsertHiredEmployeeReqDto;
 import com.lawencon.admin.service.BlacklistService;
+import com.lawencon.admin.service.HiredEmployeeService;
 
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
 
 	@Autowired
-	private BlacklistService employeeService;
+	private BlacklistService blacklistService;
+	@Autowired
+	private HiredEmployeeService hiredService;
 
 	@PostMapping("/hired")
 	public ResponseEntity<InsertResDto> hireEmployee(@RequestBody InsertHiredEmployeeReqDto data) {
-		final InsertResDto response = employeeService.hireEmployee(data);
+		final InsertResDto response = hiredService.hireEmployee(data);
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
 	}
 
 	@PostMapping("/blacklisted")
 	public ResponseEntity<InsertResDto> blacklistEmployee(@RequestBody InsertBlacklistEmployeeReqDto data) {
-		final InsertResDto response = employeeService.blacklistEmployee(data);
+		final InsertResDto response = blacklistService.blacklistEmployee(data);
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
 	}
 
