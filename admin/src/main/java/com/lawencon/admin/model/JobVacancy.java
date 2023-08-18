@@ -43,9 +43,6 @@ public class JobVacancy extends BaseEntity{
 	@JoinColumn(name = "available_status_id", nullable = false)
 	private AvailableStatus availableStatus;
 	
-	@Column(name = "candidate_total", nullable = false)
-	private Long candidateTotal;
-	
 	@OneToOne
 	@JoinColumn(name = "company_id", nullable = false)
 	private Company company;
@@ -101,12 +98,6 @@ public class JobVacancy extends BaseEntity{
 	}
 	public void setAvailableStatus(AvailableStatus availableStatus) {
 		this.availableStatus = availableStatus;
-	}
-	public Long getCandidateTotal() {
-		return candidateTotal;
-	}
-	public void setCandidateTotal(Long candidateTotal) {
-		this.candidateTotal = candidateTotal;
 	}
 	public Company getCompany() {
 		return company;

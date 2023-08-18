@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.admin.dao.AppliedVacancyDao;
+import com.lawencon.admin.dao.AssessmentVacancyDao;
 import com.lawencon.admin.dao.CandidateDao;
 import com.lawencon.admin.dao.JobVacancyDao;
 import com.lawencon.admin.dao.QuestionAnswerDao;
@@ -14,6 +15,7 @@ import com.lawencon.admin.dao.QuestionOptionDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.questionanswer.InsertQuestionAnswerReqDto;
 import com.lawencon.admin.model.AppliedVacancy;
+import com.lawencon.admin.model.AssessmentVacancy;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.admin.model.Question;
@@ -42,6 +44,9 @@ public class QuestionAnswerService {
 	@Autowired
 	private JobVacancyDao jobVacancyDao;
 	
+	@Autowired
+	private AssessmentVacancyDao assessmentVacancyDao;
+	
 	public InsertResDto submitAnswer(List<InsertQuestionAnswerReqDto> data) {
 		final InsertResDto response = new InsertResDto();
 		
@@ -68,6 +73,14 @@ public class QuestionAnswerService {
 				
 				questionAnswerDao.save(questionAnswer);
 			}
+			
+			final AssessmentVacancy assessmentVacancy = assessmentVacancyDao.getById(data.get(0).getAssesmentVacancyId());
+			
+			final Candidate candidate = candidateDao.getByEmail(data.get(0).getCandidateEmail());
+			
+			final JobVacancy jobVacancy = jobVacancyDao.getByCode(data.get(0).getJobVacancyCode());
+			
+			assessmentVacancy.setScore(questionAnswerDao.countScore(jobVacancy.getId(), candidate.getId()));
 			
 			response.setMessage("Answer submitted successfully");
 			ConnHandler.commit();

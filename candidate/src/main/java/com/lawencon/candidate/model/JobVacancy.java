@@ -32,9 +32,6 @@ public class JobVacancy extends BaseEntity {
 	@Column(name = "available_status_id", nullable = false)
 	private String availableStatus;
 
-	@Column(name = "candidate_total", nullable = false)
-	private Long candidateTotal;
-
 	@Column(name = "company_id", nullable = false)
 	private String company;
 
@@ -72,14 +69,6 @@ public class JobVacancy extends BaseEntity {
 
 	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
-	}
-
-	public Long getCandidateTotal() {
-		return candidateTotal;
-	}
-
-	public void setCandidateTotal(Long candidateTotal) {
-		this.candidateTotal = candidateTotal;
 	}
 
 	public String getExpLevel() {

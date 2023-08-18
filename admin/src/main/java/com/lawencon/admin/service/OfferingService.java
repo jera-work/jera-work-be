@@ -7,8 +7,10 @@ import com.lawencon.admin.dao.AppliedVacancyDao;
 import com.lawencon.admin.dao.OfferingDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.offering.InsertOfferingReqDto;
+import com.lawencon.admin.dto.offering.OfferingResDto;
 import com.lawencon.admin.model.AppliedVacancy;
 import com.lawencon.admin.model.Offering;
+import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.ConnHandler;
 
 @Service
@@ -44,4 +46,16 @@ public class OfferingService {
 		return response;
 	}
 
+	public OfferingResDto getByAppliedId(String appliedVacancyId) {
+		final Offering offering = offeringDao.getByAppliedVacancyId(appliedVacancyId);
+		
+		final OfferingResDto response = new OfferingResDto();
+		response.setApprove(offering.getIsApprove());
+		response.setDescription(offering.getDescription());
+		response.setStartDate(DateUtil.dateFormat(offering.getStartDate()));
+		response.setEndDate(DateUtil.dateFormat(offering.getEndDate()));
+		response.setLocation(offering.getOfferingLocation());
+		
+		return response;
+	}
 }

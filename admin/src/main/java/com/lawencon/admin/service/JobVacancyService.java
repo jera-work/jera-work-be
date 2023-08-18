@@ -21,9 +21,12 @@ import com.lawencon.admin.dao.VacancyDescriptionDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.jobvacancy.InsertJobVacancyReqDto;
 import com.lawencon.admin.dto.jobvacancy.JobSearchResDto;
+import com.lawencon.admin.dto.jobvacancy.JobVacancyResDto;
+import com.lawencon.admin.model.Company;
 import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.admin.model.User;
 import com.lawencon.admin.model.VacancyDescription;
+import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.ConnHandler;
 import com.lawencon.security.principal.PrincipalServiceImpl;
 
@@ -58,7 +61,7 @@ public class JobVacancyService {
 	private ApiService apiService;
 
 	public InsertResDto insertJob(InsertJobVacancyReqDto data) {
-		
+
 		try {
 			ConnHandler.begin();
 			final VacancyDescription desc = new VacancyDescription();
@@ -90,13 +93,13 @@ public class JobVacancyService {
 			final HttpStatus candidateResponse = apiService.writeTo("http://localhost:8080/jobs", data);
 
 			final InsertResDto response = new InsertResDto();
-			if(candidateResponse.equals(HttpStatus.CREATED)) {
+			if (candidateResponse.equals(HttpStatus.CREATED)) {
 				response.setId(jobDb.getId());
-				response.setMessage("Job has been created!");	
+				response.setMessage("Job has been created!");
 				ConnHandler.commit();
 			} else {
 				ConnHandler.rollback();
-				
+
 				throw new RuntimeException("Insert Failed");
 			}
 			return response;
@@ -108,11 +111,11 @@ public class JobVacancyService {
 		}
 
 	}
-	
-	public List<JobSearchResDto> filter(int startIndex, int endIndex, String vacancyTitle, 
-			String degreeId, String cityId, String jobTypeId) {
+
+	public List<JobSearchResDto> filter(int startIndex, int endIndex, String vacancyTitle, String degreeId,
+			String cityId, String jobTypeId) {
 		final List<JobSearchResDto> responses = new ArrayList<>();
-		
+
 		jobDao.getAllWithLimit(startIndex, endIndex, vacancyTitle, degreeId, cityId, jobTypeId).forEach(jv -> {
 			final JobSearchResDto response = new JobSearchResDto();
 			response.setCityName(jv.getVacancyDescription().getCity().getCityName());
@@ -121,11 +124,94 @@ public class JobVacancyService {
 			response.setJobTypeName(jv.getVacancyDescription().getJobType().getTypeName());
 			response.setSalary(jv.getVacancyDescription().getSalary());
 			response.setVacancyTitle(jv.getVacancyTitle());
-			
+			response.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
+
 			responses.add(response);
 		});
-		
+
 		return responses;
 	}
-}
 
+	public List<JobSearchResDto> getAll(int startIndex, int endIndex) {
+		final List<JobSearchResDto> responses = new ArrayList<>();
+
+		jobDao.getAll(startIndex, endIndex).forEach(jv -> {
+			final JobSearchResDto response = new JobSearchResDto();
+			response.setCityName(jv.getVacancyDescription().getCity().getCityName());
+			response.setCompanyName(jv.getCompany().getCompanyName());
+			response.setDegreeName(jv.getVacancyDescription().getDegree().getDegreeName());
+			response.setJobTypeName(jv.getVacancyDescription().getJobType().getTypeName());
+			response.setSalary(jv.getVacancyDescription().getSalary());
+			response.setVacancyTitle(jv.getVacancyTitle());
+			response.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
+
+			responses.add(response);
+		});
+
+		return responses;
+	}
+
+	public List<JobSearchResDto> latestJob(int startIndex, int endIndex) {
+		final List<JobSearchResDto> responses = new ArrayList<>();
+
+		jobDao.getLatestJob(startIndex, endIndex).forEach(jv -> {
+			final JobSearchResDto response = new JobSearchResDto();
+			response.setCityName(jv.getVacancyDescription().getCity().getCityName());
+			response.setCompanyName(jv.getCompany().getCompanyName());
+			response.setDegreeName(jv.getVacancyDescription().getDegree().getDegreeName());
+			response.setJobTypeName(jv.getVacancyDescription().getJobType().getTypeName());
+			response.setSalary(jv.getVacancyDescription().getSalary());
+			response.setVacancyTitle(jv.getVacancyTitle());
+			response.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
+
+			responses.add(response);
+		});
+
+		return responses;
+	}
+
+	public List<JobVacancyResDto> jobByCompany(int startIndex, int endIndex) {
+		final List<JobVacancyResDto> responses = new ArrayList<>();
+
+		final Company company = companyDao
+				.getById(userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId());
+
+		jobDao.getJobByCompany(startIndex, endIndex, company.getId()).forEach(jv -> {
+			final JobVacancyResDto response = new JobVacancyResDto();
+			response.setCompanyName(jv.getCompany().getCompanyName());
+			response.setDescriptionId(jv.getVacancyDescription().getId());
+			response.setEndDate(DateUtil.dateFormat(jv.getEndDate()));
+			response.setStartDate(DateUtil.dateFormat(jv.getStartDate()));
+			response.setHrName(jv.getPicHr().getProfile().getProfileName());
+			response.setUserName(jv.getPicUser().getProfile().getProfileName());
+			response.setLevelName(jv.getExpLevel().getLevelName());
+			response.setStatusName(jv.getAvailableStatus().getStatusname());
+			response.setVacancyTitle(jv.getVacancyTitle());
+			response.setVacancyCode(jv.getVacancyCode());
+			response.setVacancyId(jv.getId());
+
+			responses.add(response);
+		});
+
+		return responses;
+	}
+
+	public JobVacancyResDto getJobDetail(String jobId) {
+		final JobVacancy jv = jobDao.getById(jobId);
+
+		final JobVacancyResDto response = new JobVacancyResDto();
+		response.setCompanyName(jv.getCompany().getCompanyName());
+		response.setDescriptionId(jv.getVacancyDescription().getId());
+		response.setEndDate(DateUtil.dateFormat(jv.getEndDate()));
+		response.setStartDate(DateUtil.dateFormat(jv.getStartDate()));
+		response.setHrName(jv.getPicHr().getProfile().getProfileName());
+		response.setUserName(jv.getPicUser().getProfile().getProfileName());
+		response.setLevelName(jv.getExpLevel().getLevelName());
+		response.setStatusName(jv.getAvailableStatus().getStatusname());
+		response.setVacancyTitle(jv.getVacancyTitle());
+		response.setVacancyCode(jv.getVacancyCode());
+		response.setVacancyId(jv.getId());
+
+		return response;
+	}
+}
