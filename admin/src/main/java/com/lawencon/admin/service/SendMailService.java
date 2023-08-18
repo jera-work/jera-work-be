@@ -27,7 +27,7 @@ public class SendMailService {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
-	
+	@Autowired
 	private TemplateEngine templateEngine;
 
 	public void sendEmail(String emailTo, String subject, String body) {

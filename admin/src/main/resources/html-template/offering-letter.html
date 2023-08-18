@@ -397,7 +397,7 @@
                       <td>
                         <img th:src="|cid:logo|" alt="Logo Jera-Work">
                         <h2>Surat Penawaran Kerja</h2>
-                        <p>Halo, <span th:text="${data.getFullName()}"></span></p>
+                        <p>Halo, <span th:text="${data.getCandidateName()}"></span></p>
                         <p>Selamat! Lamaran pekerjaanmu diterima oleh :
 
                         <div class="company-job">
@@ -418,17 +418,17 @@
                                     <tr>
                                         <td class="table-header">Lokasi</td>
                                         <td class="table-operator">:</td>
-                                        <td><span th:text="${data.getAddress()}"></span></td>
+                                        <td><span th:text="${data.getOfferingLocation()}"></span></td>
                                     </tr>
                                     <tr>
                                         <td class="table-header">Waktu Mulai</td>
                                         <td class="table-operator">:</td>
-                                        <td><span th:text="${data.getDate()}"></span></td>
+                                        <td><span th:text="${data.getStartDate()}"></span></td>
                                     </tr>
                                     <tr>
                                       <td class="table-header">Waktu Berakhir</td>
                                       <td class="table-operator">:</td>
-                                      <td><span th:text="${data.getDate()}"></span></td>
+                                      <td><span th:text="${data.getEndDate()}"></span></td>
                                   </tr>
                                   </tbody>
                                 </table>

@@ -44,6 +44,9 @@ public class OfferingService {
 	private CandidateDao candidateDao;
 	@Autowired
 	private SendMailService mailService;
+	
+	@Autowired
+	private JasperUtil jasperUtil;
 
 	public InsertResDto insertOffering(InsertOfferingReqDto data) {
 		
@@ -89,7 +92,7 @@ public class OfferingService {
 		offering.setSalary(jobDesc.getSalary());	
 		offering.setStartDate(offeringDb.getStartDate());
 		offering.setEndDate(offeringDb.getEndDate());
-		offering.setOfferingLocation(offeringDb.getOfferingLocation());
+		offering.setOfferingLocation(offeringDb.getOfferingLocation());		
 		
 		final Map<String, Object> parameters = new HashMap<>();
 		parameters.put("img", offering.getCompanyPhoto());
@@ -98,7 +101,6 @@ public class OfferingService {
         result.add(offering);
         
         try {				
-        	final JasperUtil jasperUtil = new JasperUtil();
         	byte[] dataOut = jasperUtil.responseToByteArray(result, parameters, "jasper-offering");
 
 	        final EmailReqDto emailReqDto = new EmailReqDto();

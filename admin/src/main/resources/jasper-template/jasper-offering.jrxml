@@ -18,7 +18,7 @@
 		<property name="com.jaspersoft.studio.field.label" value="picHrName"/>
 		<property name="com.jaspersoft.studio.field.name" value="picHrName"/>
 	</field>
-	<field name="startDate" class="java.lang.String">
+	<field name="startDate" class="java.time.LocalDate">
 		<property name="com.jaspersoft.studio.field.label" value="startDate"/>
 		<property name="com.jaspersoft.studio.field.name" value="startDate"/>
 	</field>
@@ -41,10 +41,6 @@
 	<field name="salary" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="salary"/>
 		<property name="com.jaspersoft.studio.field.name" value="salary"/>
-	</field>
-	<field name="benefit" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="benefit"/>
-		<property name="com.jaspersoft.studio.field.name" value="benefit"/>
 	</field>
 	<background>
 		<band splitType="Stretch"/>
@@ -73,7 +69,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA["Form     : " + "FM/HRD/12"]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="dd-MM-yyyy" isBlankWhenNull="false">
 				<reportElement x="407" y="50" width="104" height="15" uuid="554a5548-5edd-458e-b439-8069dda0c83b">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
