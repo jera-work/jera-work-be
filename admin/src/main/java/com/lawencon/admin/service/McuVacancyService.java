@@ -7,6 +7,7 @@ import com.lawencon.admin.dao.AppliedVacancyDao;
 import com.lawencon.admin.dao.McuVacancyDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.mcuvacancy.InsertMcuVacancyReqDto;
+import com.lawencon.admin.dto.mcuvacancy.McuVacancyResDto;
 import com.lawencon.admin.model.AppliedVacancy;
 import com.lawencon.admin.model.McuVacancy;
 import com.lawencon.admin.util.DateUtil;
@@ -48,4 +49,13 @@ public class McuVacancyService {
 		}
 	}
 
+	public McuVacancyResDto getByAppliedId(String appliedVacancyId) {
+		final McuVacancy mcuVacancy = mcuDao.getByAppliedVacancyId(appliedVacancyId);
+		
+		final McuVacancyResDto response = new McuVacancyResDto();
+		response.setStartDate(DateUtil.dateFormat(mcuVacancy.getStartDate()));
+		response.setEndDate(DateUtil.dateFormat(mcuVacancy.getEndDate()));
+		
+		return response;
+	}
 }

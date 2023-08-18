@@ -1,13 +1,13 @@
 package com.lawencon.admin.dto.jobvacancy;
 
 public class JobSearchResDto {
-
 	private String vacancyTitle;
 	private String companyName;
 	private String salary;
 	private String degreeName;
 	private String jobTypeName;
 	private String cityName;
+	private String createdAt;
 
 	public String getVacancyTitle() {
 		return vacancyTitle;
@@ -55,6 +55,14 @@ public class JobSearchResDto {
 
 	public void setCityName(String cityName) {
 		this.cityName = cityName;
+	}
+
+	public String getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
 	}
 
 }

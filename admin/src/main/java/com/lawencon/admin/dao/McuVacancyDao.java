@@ -1,13 +1,15 @@
 package com.lawencon.admin.dao;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
-import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.admin.model.McuVacancy;
+import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.base.ConnHandler;
 
 @Repository
 @Profile(value = { "native-query" })
@@ -45,4 +47,31 @@ public class McuVacancyDao extends AbstractJpaDao {
 		return super.deleteById(McuVacancy.class, entityId);
 	}
 
+	public McuVacancy getByAppliedVacancyId(String appliedVacancyId) {
+		final String sql = "SELECT "
+				+ "tmv.id, tmv.start_date, tmv.end_date"
+				+ "FROM "
+				+ "t_mcu_vacancy tmv "
+				+ "WHERE "
+				+ "	tmv.applied_vacancy_id = :appliedVacancyId";
+		
+		final Object mcuObj = ConnHandler.getManager()
+				.createNativeQuery(sql)
+				.setParameter("appliedVacancyId", appliedVacancyId)
+				.getSingleResult();
+		
+		final Object[] mcuObjArr = (Object[]) mcuObj;
+		
+		try {
+			final McuVacancy mcuVacancy = new McuVacancy();
+			mcuVacancy.setId(mcuObjArr[0].toString());
+			mcuVacancy.setStartDate(LocalDate.parse(mcuObjArr[1].toString()));
+			mcuVacancy.setEndDate(LocalDate.parse(mcuObjArr[2].toString()));
+			
+			return mcuVacancy;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

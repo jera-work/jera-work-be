@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.jobvacancy.InsertJobVacancyReqDto;
 import com.lawencon.admin.dto.jobvacancy.JobSearchResDto;
+import com.lawencon.admin.dto.jobvacancy.JobVacancyResDto;
 import com.lawencon.admin.service.JobVacancyService;
 
 @RestController
@@ -22,17 +23,35 @@ public class JobVacancyController {
 
 	@Autowired
 	private JobVacancyService jobService;
-
+	
 	@PostMapping
 	public ResponseEntity<InsertResDto> insertJob(@RequestBody InsertJobVacancyReqDto data) {
 		final InsertResDto response = jobService.insertJob(data);
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
+	}
+	
+	@GetMapping
+	public ResponseEntity<List<JobSearchResDto>> getAll(int startIndex, int endIndex)  {
+		final List<JobSearchResDto> responses = jobService.getAll(startIndex, endIndex);
+		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}
 
 	@GetMapping("/search")
 	public ResponseEntity<List<JobSearchResDto>> filter(int startIndex, int endIndex, String vacancyTitle, 
 			String degreeId, String cityId, String jobTypeId)  {
 		final List<JobSearchResDto> responses = jobService.filter(startIndex, endIndex, vacancyTitle, degreeId, cityId, jobTypeId);
-		return new ResponseEntity<List<JobSearchResDto>>(responses, HttpStatus.OK);
+		return new ResponseEntity<>(responses, HttpStatus.OK);
+	}
+	
+	@GetMapping("/latest")
+	public ResponseEntity<List<JobSearchResDto>> latestJob(int startIndex, int endIndex)  {
+		final List<JobSearchResDto> responses = jobService.latestJob(startIndex, endIndex);
+		return new ResponseEntity<>(responses, HttpStatus.OK);
+	}
+	
+	@GetMapping("/company-vacancy")
+	public ResponseEntity<List<JobVacancyResDto>> filter(int startIndex, int endIndex)  {
+		final List<JobVacancyResDto> responses = jobService.jobByCompany(startIndex, endIndex);
+		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}
 }

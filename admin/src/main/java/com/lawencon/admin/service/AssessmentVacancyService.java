@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.lawencon.admin.dao.AppliedVacancyDao;
 import com.lawencon.admin.dao.AssessmentVacancyDao;
 import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.assessmentvacancy.AssessmentVacancyResDto;
 import com.lawencon.admin.dto.assessmentvacancy.InsertAssessmentVacancyReqDto;
 import com.lawencon.admin.model.AppliedVacancy;
 import com.lawencon.admin.model.AssessmentVacancy;
@@ -48,5 +49,18 @@ public class AssessmentVacancyService {
 		return response;
 
 	}
-
+	
+	public AssessmentVacancyResDto getByAppliedId(String appliedVacancyId) {
+		final AssessmentVacancy assessmentVacancy = assessmentVacancyDao.getByAppliedVacancyId(appliedVacancyId);
+		
+		final AssessmentVacancyResDto response = new AssessmentVacancyResDto();
+		response.setStartDate(DateUtil.dateFormat(assessmentVacancy.getStartDate()));
+		response.setEndDate(DateUtil.dateFormat(assessmentVacancy.getEndDate()));
+		response.setIsQuestion(assessmentVacancy.getIsQuestion());
+		response.setLocation(assessmentVacancy.getAssessmentLocation());
+		response.setNotes(assessmentVacancy.getNotes());
+		response.setScore(assessmentVacancy.getScore());
+		
+		return response;
+	}
 }

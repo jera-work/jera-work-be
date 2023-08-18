@@ -7,6 +7,7 @@ import com.lawencon.admin.dao.AppliedVacancyDao;
 import com.lawencon.admin.dao.InterviewVacancyDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.interviewvacancy.InsertInterviewVacancyReqDto;
+import com.lawencon.admin.dto.interviewvacancy.InterviewVacancyResDto;
 import com.lawencon.admin.model.AppliedVacancy;
 import com.lawencon.admin.model.InterviewVacancy;
 import com.lawencon.admin.util.DateUtil;
@@ -44,5 +45,17 @@ public class InterviewVacancyService {
 		
 		return response;
 		
+	}
+	
+	public InterviewVacancyResDto getByAppliedId(String appliedVacancyId) {
+		final InterviewVacancy interviewVacancy = interviewDao.getByAppliedVacancyId(appliedVacancyId);
+		
+		final InterviewVacancyResDto response = new InterviewVacancyResDto();
+		response.setStartDate(DateUtil.dateFormat(interviewVacancy.getStartDate()));
+		response.setEndDate(DateUtil.dateFormat(interviewVacancy.getEndDate()));
+		response.setNotes(interviewVacancy.getNotes());
+		response.setLocation(interviewVacancy.getInterviewLocation());
+		
+		return response;
 	}
 }
