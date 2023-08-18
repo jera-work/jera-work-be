@@ -39,7 +39,7 @@ public class SendMailService {
 
 		javaMailSender.send(msg);
 	}
-
+	
 	public void sendOffering(EmailReqDto email, OfferingReqDto data, byte[] file)  throws MessagingException, IOException {
 		MimeMessage msg = javaMailSender.createMimeMessage();
 		

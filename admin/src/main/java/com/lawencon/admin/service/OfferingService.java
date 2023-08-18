@@ -36,8 +36,6 @@ public class OfferingService {
 	@Autowired
 	private AppliedVacancyDao appliedVacancyDao;
 	@Autowired
-	private SendMailService mailService;
-	@Autowired
 	private JobVacancyDao jobVacancyDao;
 	@Autowired
 	private VacancyDescriptionDao vacancyDescriptionDao;
@@ -45,6 +43,8 @@ public class OfferingService {
 	private UserDao userDao;
 	@Autowired
 	private CandidateDao candidateDao;
+	@Autowired
+	private SendMailService mailService;
 	@Autowired
 	private JasperUtil jasperUtil;
 
@@ -61,6 +61,7 @@ public class OfferingService {
 		offering.setStartDate(DateUtil.dateParse(data.getStartDate()));
 		final Offering offeringDb = offeringDao.saveAndFlush(offering);
 		ConnHandler.commit();
+		sendOffering(offeringDb, appliedVacancy.getCandidate().getCandidateEmail());
 		
 //		mailService.sendEmail(appliedVacancy.getCandidate().getCandidateEmail());
 		
