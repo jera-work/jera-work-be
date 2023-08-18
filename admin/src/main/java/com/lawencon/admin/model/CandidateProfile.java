@@ -15,21 +15,21 @@ public class CandidateProfile extends BaseEntity{
 	@Column(name = "profile_name", nullable = false, length = 50)
 	private String profileName;
 	
-	@Column(name = "profile_address", nullable = false, length = 50)
+	@Column(name = "profile_address", nullable = true, length = 50)
 	private String profileAddress;
 	
-	@Column(name = "phone_number", nullable = false, length = 14)
+	@Column(name = "phone_number", nullable = true, length = 14)
 	private String phoneNumber;
 	
-	@Column(name = "expected_salary", nullable = false)
+	@Column(name = "expected_salary", nullable = true)
 	private String expectedSalary;
 	
 	@OneToOne
-	@JoinColumn(name = "gender_id", nullable = false)
+	@JoinColumn(name = "gender_id", nullable = true)
 	private Gender gender;
 	
 	@OneToOne
-	@JoinColumn(name = "nationality_id", nullable = false)
+	@JoinColumn(name = "nationality_id", nullable = true)
 	private Nationality nationality;
 	
 	@OneToOne
@@ -37,11 +37,11 @@ public class CandidateProfile extends BaseEntity{
 	private File photo;
 	
 	@OneToOne
-	@JoinColumn(name = "marital_id", nullable = false)
+	@JoinColumn(name = "marital_id", nullable = true)
 	private Marital marital;
 	
 	@OneToOne
-	@JoinColumn(name = "religion_id", nullable = false)
+	@JoinColumn(name = "religion_id", nullable = true)
 	private Religion religion;
 	
 	public String getProfileName() {

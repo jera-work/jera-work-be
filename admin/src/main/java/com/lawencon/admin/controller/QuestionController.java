@@ -1,5 +1,7 @@
 package com.lawencon.admin.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +22,7 @@ public class QuestionController {
 	private QuestionService questionService;
 	
 	@PostMapping
-	public ResponseEntity<InsertResDto> createQuestion(@RequestBody InsertQuestionReqDto data){
+	public ResponseEntity<InsertResDto> createQuestion(@RequestBody List<InsertQuestionReqDto> data){
 		final InsertResDto response = questionService.createQuestion(data);
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
 	}

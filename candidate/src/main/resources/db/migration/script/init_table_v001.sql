@@ -222,7 +222,31 @@ CREATE TABLE t_saved_jobs (
 	id VARCHAR(36) NOT NULL,
 	candidate_id VARCHAR NOT NULL,
 	job_vacancy_id VARCHAR NOT NULL,
+	created_by varchar NOT NULL,
+	created_at timestamp NOT NULL,
+	updated_by varchar,
+	updated_at timestamp,
+	is_active boolean NOT NULL,
+	ver int NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (candidate_id)
-		REFERENCES t_candidate (id)
+		REFERENCES t_candidate (id),
+	FOREIGN KEY (job_vacancy_id)
+		REFERENCES t_job_vacancy (id)
+);
+
+CREATE TABLE t_question_answer (
+	id VARCHAR(36) NOT NULL,
+	applied_vacancy_id VARCHAR NOT NULL,
+	question_option_id VARCHAR NOT NULL,
+	question_id VARCHAR NOT NULL,
+	created_by varchar NOT NULL,
+	created_at timestamp NOT NULL,
+	updated_by varchar,
+	updated_at timestamp,
+	is_active boolean NOT NULL,
+	ver int NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (applied_vacancy_id)
+		REFERENCES t_applied_vacancy (id)
 );

@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS t_offering;
+--DROP TABLE IF EXISTS t_offering;
 --DROP TABLE IF EXISTS t_mcu_vacancy;
 --DROP TABLE IF EXISTS t_interview_vacancy;
 --DROP TABLE IF EXISTS t_assessment_vacancy;
@@ -389,6 +389,7 @@ CREATE TABLE t_job_vacancy (
 	is_active boolean NOT NULL,
 	ver int NOT NULL,
 	PRIMARY KEY (id),
+	UNIQUE(vacancy_code),
 	FOREIGN KEY (pic_hr_id)
 		REFERENCES t_user (id),
 	FOREIGN KEY (pic_user_id)
@@ -696,7 +697,6 @@ CREATE TABLE t_interview_vacancy (
 CREATE TABLE t_mcu_vacancy (
 	id VARCHAR(36) NOT NULL,
 	applied_vacancy_id VARCHAR NOT NULL,
-	file_id VARCHAR,
 	start_date DATE NOT NULL,
 	end_date DATE NOT NULL,
 	created_by varchar NOT NULL,
@@ -705,11 +705,7 @@ CREATE TABLE t_mcu_vacancy (
 	updated_at timestamp,
 	is_active boolean NOT NULL,
 	ver int NOT NULL,
-	PRIMARY KEY (id),
-	FOREIGN KEY (applied_vacancy_id)
-		REFERENCES t_applied_vacancy (id),
-	FOREIGN KEY (file_id)
-		REFERENCES t_file (id)
+	PRIMARY KEY (id)
 );
 
 CREATE TABLE t_offering(

@@ -32,5 +32,21 @@ public class ApiService {
 		
 		return response.getStatusCode();
 	}
+	
+	public <T> HttpStatus putTo(String url, T data) {
+		
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setBearerAuth(JwtConfig.get());
+		
+		final RequestEntity<T> request = RequestEntity
+				.put(url)
+				.headers(headers)
+				.body(data);
+		
+		final ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+		
+		return response.getStatusCode();
+	}
 
 }

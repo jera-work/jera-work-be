@@ -35,7 +35,7 @@ public class InterviewVacancyService {
 		
 		ConnHandler.commit();
 		
-		mailService.sendEmail(appliedVacancy.getCandidate().getCandidateEmail());
+//		mailService.sendEmail(appliedVacancy.getCandidate().getCandidateEmail());
 		
 		final InsertResDto response = new InsertResDto();
 		response.setId(interviewDb.getId());

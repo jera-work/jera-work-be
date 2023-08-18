@@ -16,19 +16,25 @@ import com.lawencon.base.ConnHandler;
 import com.lawencon.candidate.dao.CandidateDao;
 import com.lawencon.candidate.dao.CandidateDocumentDao;
 import com.lawencon.candidate.dao.CandidateEducationDao;
+import com.lawencon.candidate.dao.CandidateExperienceDao;
 import com.lawencon.candidate.dao.CandidateProfileDao;
+import com.lawencon.candidate.dao.CandidateSkillDao;
 import com.lawencon.candidate.dao.FileDao;
 import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.UpdateResDto;
+import com.lawencon.candidate.dto.candidateskill.CandidateSkillReqDto;
 import com.lawencon.candidate.dto.document.CandidateDocumentCreateReqDto;
 import com.lawencon.candidate.dto.education.CandidateEducationCreateReqDto;
+import com.lawencon.candidate.dto.experience.CandidateExperienceReqDto;
 import com.lawencon.candidate.dto.profile.CandidateProfileUpdateReqDto;
 import com.lawencon.candidate.dto.register.RegisterReqDto;
 import com.lawencon.candidate.login.LoginReqDto;
 import com.lawencon.candidate.model.Candidate;
 import com.lawencon.candidate.model.CandidateDocument;
 import com.lawencon.candidate.model.CandidateEducation;
+import com.lawencon.candidate.model.CandidateExperience;
 import com.lawencon.candidate.model.CandidateProfile;
+import com.lawencon.candidate.model.CandidateSkill;
 import com.lawencon.candidate.model.File;
 import com.lawencon.security.principal.PrincipalServiceImpl;
 
@@ -50,7 +56,11 @@ public class CandidateService implements UserDetailsService {
 	@Autowired
 	private CandidateEducationDao educationDao;
 	@Autowired
+	private CandidateExperienceDao candidateExperienceDao;
+	@Autowired
 	private ApiService apiService;
+	@Autowired
+	private CandidateSkillDao candidateSkillDao;
 
 	/* Register for Candidate */
 	public InsertResDto register(RegisterReqDto data) {
@@ -59,9 +69,10 @@ public class CandidateService implements UserDetailsService {
 			ConnHandler.begin();
 			final CandidateProfile candidateProfile = new CandidateProfile();
 			candidateProfile.setProfileName(data.getProfileName());
+
 			final Supplier<String> systemId = () -> candidateDao.getSystemId();
 			final CandidateProfile candidateProfileDb = candidateProfileDao.saveNoLogin(candidateProfile, systemId);
-			
+
 			final String passwordEncoded = passwordEncoder.encode(data.getCandidatePassword());
 			final Candidate candidate = new Candidate();
 			candidate.setCandidateEmail(data.getCandidateEmail());
@@ -71,18 +82,19 @@ public class CandidateService implements UserDetailsService {
 
 			final HttpStatus adminResponse = apiService.writeTo("http://localhost:8081/candidates/register", data);
 
-			if(adminResponse.equals(HttpStatus.CREATED)) {
+			if (adminResponse.equals(HttpStatus.CREATED)) {
 				response.setId(candidateDb.getId());
 				response.setMessage("Account created succesfully");
-				
+
 				ConnHandler.commit();
 			} else {
 				ConnHandler.rollback();
-				
+
 				throw new RuntimeException("Insert Failed");
 			}
 			return response;
 		} catch (Exception e) {
+			e.printStackTrace();
 			ConnHandler.rollback();
 			return null;
 		}
@@ -93,31 +105,44 @@ public class CandidateService implements UserDetailsService {
 
 		try {
 			ConnHandler.begin();
-			
-			final File photo = new File();
-			photo.setFileContent(data.getFileContent());
-			photo.setFileExt(data.getFileExt());
-			final File photoDb = fileDao.saveAndFlush(photo);
-			
+
 			final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
-			final CandidateProfile profile = candidateProfileDao.getById(candidate.getCandidateProfile());
+			final CandidateProfile profile = candidateProfileDao.getById(candidate.getCandidateProfile().getId());
 			profile.setExpectedSalary(data.getExpectedSalary());
 			profile.setGender(data.getGenderId());
 			profile.setMarital(data.getMaritalId());
 			profile.setNationality(data.getNationalityId());
 			profile.setReligion(data.getReligionId());
 			profile.setPhoneNumber(data.getPhoneNumber());
-			profile.setPhoto(photoDb);
 			profile.setProfileAddress(data.getProfileAddress());
+
+			if (data.getPhotoContent() != null) {
+				final File photo = new File();
+				photo.setFileContent(data.getPhotoContent());
+				photo.setFileExt(data.getPhotoExt());
+				final File photoDb = fileDao.saveAndFlush(photo);
+				profile.setPhoto(photoDb);
+			}
+
 			final CandidateProfile profileDb = candidateProfileDao.saveAndFlush(profile);
-			
+
+			data.setCandidateEmail(candidate.getCandidateEmail());
+			final HttpStatus status = apiService.putTo("http://localhost:8081/candidates/profile", data);
 			final UpdateResDto response = new UpdateResDto();
-			response.setVer(profileDb.getVersion());
-			response.setMessage("Profile has been updated!");
-			ConnHandler.commit();
+
+			if (status.equals(HttpStatus.OK)) {
+				response.setVer(profileDb.getVersion());
+				response.setMessage("Profile has been updated!");
+				ConnHandler.commit();
+			} else {
+				ConnHandler.rollback();
+
+				throw new RuntimeException("Update Failed");
+			}
 
 			return response;
 		} catch (Exception e) {
+			e.printStackTrace();
 			ConnHandler.rollback();
 			return null;
 		}
@@ -142,10 +167,15 @@ public class CandidateService implements UserDetailsService {
 				doc.setFile(fileDb);
 				final CandidateDocument docDb = docsDao.save(doc);
 
+				data.setCandidateEmail(candidate.getCandidateEmail());
+
 				response = new InsertResDto();
 				response.setId(docDb.getId());
 				response.setMessage("Documents has been added!");
 			}
+
+			apiService.writeTo("http://localhost:8081/candidates/documents", datas);
+			ConnHandler.commit();
 			return response;
 		} catch (Exception e) {
 			ConnHandler.rollback();
@@ -172,17 +202,94 @@ public class CandidateService implements UserDetailsService {
 				education.setInstitutionName(data.getInstitutionName());
 				education.setMajor(data.getMajorId());
 
-				final CandidateEducation educationDb = educationDao.saveAndFlush(education);
-
-				response = new InsertResDto();
-				response.setId(educationDb.getId());
-				response.setMessage("Educations has been added!");
+				data.setCandidateEmail(candidate.getCandidateEmail());
+				educationDao.saveAndFlush(education);
 			}
-			return response;
+
+			final HttpStatus status = apiService.writeTo("http://localhost:8081/candidates/educations", datas);
+			if (status.equals(HttpStatus.CREATED)) {
+				response = new InsertResDto();
+//				response.setId(educationDb.getId());
+				response.setMessage("Educations has been added!");
+				ConnHandler.commit();
+				return response;
+			} else {
+				ConnHandler.rollback();
+				return null;
+			}
+
 		} catch (Exception e) {
+			e.printStackTrace();
 			ConnHandler.rollback();
 			return null;
 		}
+	}
+
+	/* Insert experiences for candidate */
+	public InsertResDto createExperience(List<CandidateExperienceReqDto> data) {
+		final InsertResDto response = new InsertResDto();
+
+		ConnHandler.begin();
+		try {
+			if (data.size() > 0) {
+				for (int i = 0; i < data.size(); i++) {
+					final CandidateExperience candidateExperience = new CandidateExperience();
+
+					final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
+					candidateExperience.setCandidate(candidate);
+
+					candidateExperience.setFormerInstitution(data.get(i).getFormerInstitution());
+					candidateExperience.setFormerPosition(data.get(i).getFormerPosition());
+					candidateExperience.setFormerJobdesk(data.get(i).getFormerJobdesk());
+					candidateExperience.setFormerLocation(data.get(i).getFormerLocation());
+					candidateExperience.setStartDate(data.get(i).getStartDate());
+					candidateExperience.setEndDate(data.get(i).getEndDate());
+
+					candidateExperienceDao.save(candidateExperience);
+					data.get(i).setCandidateEmail(candidate.getCandidateEmail());
+				}
+			}
+
+			final HttpStatus status = apiService.writeTo("http://localhost:8081/candidates/experiences", data);
+			if (status.equals(HttpStatus.CREATED)) {
+				response.setMessage("Experience(s) successfully created");
+				ConnHandler.commit();
+			} else {
+				ConnHandler.rollback();
+			}
+
+		} catch (Exception e) {
+			ConnHandler.rollback();
+		}
+
+		return response;
+	}
+
+	/* insert skills for candidate */
+	public InsertResDto createSkill(List<CandidateSkillReqDto> datas) {
+		final InsertResDto response = new InsertResDto();
+		
+		ConnHandler.begin();
+		try {
+			for (CandidateSkillReqDto data : datas) {
+				final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
+				final CandidateSkill skill = new CandidateSkill();
+				skill.setCandidate(candidate);
+				skill.setSkill(data.getSkillId());
+				final CandidateSkill skillDb = candidateSkillDao.save(skill);
+				
+				data.setCandidateEmail(candidate.getCandidateEmail());
+				response.setId(skillDb.getId());
+			}
+			response.setMessage("Skill choosen successfully");
+			
+			apiService.writeTo("http://localhost:8081/candidates/skills", datas);
+			ConnHandler.commit();
+			
+		} catch (Exception e) {
+			ConnHandler.rollback();
+		}
+		return response;
 	}
 
 	/* Login for candidate */

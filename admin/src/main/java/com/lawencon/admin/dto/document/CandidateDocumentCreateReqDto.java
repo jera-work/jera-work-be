@@ -2,9 +2,18 @@ package com.lawencon.admin.dto.document;
 
 public class CandidateDocumentCreateReqDto {
 
+	private String candidateEmail;
 	private String documentTypeId;
 	private String fileContent;
 	private String fileExt;
+
+	public String getCandidateEmail() {
+		return candidateEmail;
+	}
+
+	public void setCandidateEmail(String candidateEmail) {
+		this.candidateEmail = candidateEmail;
+	}
 
 	public String getDocumentTypeId() {
 		return documentTypeId;

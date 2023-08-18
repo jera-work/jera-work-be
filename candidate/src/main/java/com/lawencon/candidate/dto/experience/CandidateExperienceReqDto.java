@@ -4,12 +4,21 @@ import java.time.LocalDate;
 
 public class CandidateExperienceReqDto {
 
+	private String candidateEmail;
 	private String formerPosition;
 	private String formerInstitution;
 	private String formerLocation;
 	private String formerJobdesk;
 	private LocalDate startDate;
 	private LocalDate endDate;
+
+	public String getCandidateEmail() {
+		return candidateEmail;
+	}
+
+	public void setCandidateEmail(String candidateEmail) {
+		this.candidateEmail = candidateEmail;
+	}
 
 	public String getFormerPosition() {
 		return formerPosition;
