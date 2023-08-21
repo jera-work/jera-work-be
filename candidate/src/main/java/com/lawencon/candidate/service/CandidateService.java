@@ -1,7 +1,6 @@
 package com.lawencon.candidate.service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,29 +13,17 @@ import org.springframework.stereotype.Service;
 
 import com.lawencon.base.ConnHandler;
 import com.lawencon.candidate.dao.CandidateDao;
-import com.lawencon.candidate.dao.CandidateDocumentDao;
-import com.lawencon.candidate.dao.CandidateEducationDao;
-import com.lawencon.candidate.dao.CandidateExperienceDao;
 import com.lawencon.candidate.dao.CandidateProfileDao;
-import com.lawencon.candidate.dao.CandidateSkillDao;
 import com.lawencon.candidate.dao.FileDao;
 import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.UpdateResDto;
-import com.lawencon.candidate.dto.candidateskill.CandidateSkillReqDto;
-import com.lawencon.candidate.dto.document.CandidateDocumentCreateReqDto;
-import com.lawencon.candidate.dto.education.CandidateEducationCreateReqDto;
-import com.lawencon.candidate.dto.experience.CandidateExperienceReqDto;
+import com.lawencon.candidate.dto.candidate.CandidatePasswordUpdateReqDto;
 import com.lawencon.candidate.dto.profile.CandidateProfileUpdateReqDto;
 import com.lawencon.candidate.dto.register.RegisterReqDto;
 import com.lawencon.candidate.login.LoginReqDto;
 import com.lawencon.candidate.model.Candidate;
-import com.lawencon.candidate.model.CandidateDocument;
-import com.lawencon.candidate.model.CandidateEducation;
-import com.lawencon.candidate.model.CandidateExperience;
 import com.lawencon.candidate.model.CandidateProfile;
-import com.lawencon.candidate.model.CandidateSkill;
 import com.lawencon.candidate.model.File;
-import com.lawencon.candidate.util.DateUtil;
 import com.lawencon.security.principal.PrincipalServiceImpl;
 
 @Service
@@ -53,15 +40,7 @@ public class CandidateService implements UserDetailsService {
 	@Autowired
 	private PrincipalServiceImpl principalService;
 	@Autowired
-	private CandidateDocumentDao docsDao;
-	@Autowired
-	private CandidateEducationDao educationDao;
-	@Autowired
-	private CandidateExperienceDao candidateExperienceDao;
-	@Autowired
 	private ApiService apiService;
-	@Autowired
-	private CandidateSkillDao candidateSkillDao;
 
 	/* Register for Candidate */
 	public InsertResDto register(RegisterReqDto data) {
@@ -148,149 +127,23 @@ public class CandidateService implements UserDetailsService {
 			return null;
 		}
 	}
+	
+	/* change password for candidate */
+	public UpdateResDto changePassword(CandidatePasswordUpdateReqDto data) {
+		final String id = principalService.getAuthPrincipal();
+		final Candidate cdt = candidateDao.getById(id);
+		if (cdt != null) {
 
-	/* Insert documents for candidate */
-	public InsertResDto insertCandidateDocs(List<CandidateDocumentCreateReqDto> datas) {
-		final Candidate candidate = candidateDao.getByIdRef(principalService.getAuthPrincipal());
-
-		try {
-			ConnHandler.begin();
-			InsertResDto response = null;
-			for (CandidateDocumentCreateReqDto data : datas) {
-				final File file = new File();
-				file.setFileContent(data.getFileContent());
-				file.setFileExt(data.getFileExt());
-				final File fileDb = fileDao.save(file);
-
-				final CandidateDocument doc = new CandidateDocument();
-				doc.setCandidate(candidate);
-				doc.setDocumentType(data.getDocumentTypeId());
-				doc.setFile(fileDb);
-				final CandidateDocument docDb = docsDao.save(doc);
-
-				data.setCandidateEmail(candidate.getCandidateEmail());
-
-				response = new InsertResDto();
-				response.setId(docDb.getId());
-				response.setMessage("Documents has been added!");
-			}
-
-			apiService.writeTo("http://localhost:8081/candidates/documents", datas);
-			ConnHandler.commit();
-			return response;
-		} catch (Exception e) {
-			ConnHandler.rollback();
-			return null;
-		}
-
-	}
-
-	/* Insert educations for candidate */
-	public InsertResDto insertCandidateEducations(List<CandidateEducationCreateReqDto> datas) {
-		final Candidate candidate = candidateDao.getByIdRef(principalService.getAuthPrincipal());
-
-		try {
-			ConnHandler.begin();
-			InsertResDto response = null;
-			for (CandidateEducationCreateReqDto data : datas) {
-				final CandidateEducation education = new CandidateEducation();
-				education.setCandidate(candidate);
-				education.setDegree(data.getDegreeId());
-				education.setEndYear(DateUtil.dateParse(data.getEndYear()));
-				education.setGpa(data.getGpa());
-				education.setStartYear(DateUtil.dateParse(data.getStartYear()));
-				education.setInstitutionAddress(data.getInstitutionAddress());
-				education.setInstitutionName(data.getInstitutionName());
-				education.setMajor(data.getMajorId());
-
-				data.setCandidateEmail(candidate.getCandidateEmail());
-				educationDao.saveAndFlush(education);
-			}
-
-			final HttpStatus status = apiService.writeTo("http://localhost:8081/candidates/educations", datas);
-			if (status.equals(HttpStatus.CREATED)) {
-				response = new InsertResDto();
-//				response.setId(educationDb.getId());
-				response.setMessage("Educations has been added!");
-				ConnHandler.commit();
+			if (passwordEncoder.matches(data.getOldPassword(), cdt.getCandidatePassword())) {
+				cdt.setCandidatePassword(passwordEncoder.encode(data.getNewPassword()));
+				final UpdateResDto response = new UpdateResDto();
+				response.setMessage("Update Password Berhasil");
+				response.setVer(cdt.getVersion());
 				return response;
-			} else {
-				ConnHandler.rollback();
-				return null;
 			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			ConnHandler.rollback();
-			return null;
 		}
-	}
+		throw new UsernameNotFoundException("Email / password salah");
 
-	/* Insert experiences for candidate */
-	public InsertResDto createExperience(List<CandidateExperienceReqDto> data) {
-		final InsertResDto response = new InsertResDto();
-
-		ConnHandler.begin();
-		try {
-			if (data.size() > 0) {
-				for (int i = 0; i < data.size(); i++) {
-					final CandidateExperience candidateExperience = new CandidateExperience();
-
-					final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
-					candidateExperience.setCandidate(candidate);
-
-					candidateExperience.setFormerInstitution(data.get(i).getFormerInstitution());
-					candidateExperience.setFormerPosition(data.get(i).getFormerPosition());
-					candidateExperience.setFormerJobdesk(data.get(i).getFormerJobdesk());
-					candidateExperience.setFormerLocation(data.get(i).getFormerLocation());
-					candidateExperience.setStartDate(DateUtil.dateParse(data.get(i).getStartDate()));
-					candidateExperience.setEndDate(DateUtil.dateParse(data.get(i).getEndDate()));
-
-					candidateExperienceDao.save(candidateExperience);
-					data.get(i).setCandidateEmail(candidate.getCandidateEmail());
-				}
-			}
-
-			final HttpStatus status = apiService.writeTo("http://localhost:8081/candidates/experiences", data);
-			if (status.equals(HttpStatus.CREATED)) {
-				response.setMessage("Experience(s) successfully created");
-				ConnHandler.commit();
-			} else {
-				ConnHandler.rollback();
-			}
-
-		} catch (Exception e) {
-			ConnHandler.rollback();
-		}
-
-		return response;
-	}
-
-	/* insert skills for candidate */
-	public InsertResDto createSkill(List<CandidateSkillReqDto> datas) {
-		final InsertResDto response = new InsertResDto();
-		
-		ConnHandler.begin();
-		try {
-			for (CandidateSkillReqDto data : datas) {
-				final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
-				final CandidateSkill skill = new CandidateSkill();
-				skill.setCandidate(candidate);
-				skill.setSkill(data.getSkillId());
-				final CandidateSkill skillDb = candidateSkillDao.save(skill);
-				
-				data.setCandidateEmail(candidate.getCandidateEmail());
-				response.setId(skillDb.getId());
-			}
-			response.setMessage("Skill choosen successfully");
-			
-			apiService.writeTo("http://localhost:8081/candidates/skills", datas);
-			ConnHandler.commit();
-			
-		} catch (Exception e) {
-			ConnHandler.rollback();
-		}
-		return response;
 	}
 
 	/* Login for candidate */
