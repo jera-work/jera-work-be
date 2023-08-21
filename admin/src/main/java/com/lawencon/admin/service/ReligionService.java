@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.admin.dao.ReligionDao;
-import com.lawencon.admin.dto.ReligionResDto;
+import com.lawencon.admin.dto.religion.ReligionResDto;
 
 @Service
 public class ReligionService {
