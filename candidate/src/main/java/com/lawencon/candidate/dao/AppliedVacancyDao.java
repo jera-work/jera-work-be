@@ -3,7 +3,6 @@ package com.lawencon.candidate.dao;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
@@ -11,7 +10,6 @@ import com.lawencon.base.ConnHandler;
 import com.lawencon.candidate.model.AppliedVacancy;
 
 @Repository
-@Profile(value = { "native-query" })
 public class AppliedVacancyDao extends AbstractJpaDao {
 	
 	public AppliedVacancy getById(final Object id) {

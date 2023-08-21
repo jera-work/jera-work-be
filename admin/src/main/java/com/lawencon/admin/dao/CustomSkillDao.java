@@ -3,14 +3,12 @@ package com.lawencon.admin.dao;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
-import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.admin.model.CustomCandidateSkill;
+import com.lawencon.base.AbstractJpaDao;
 
 @Repository
-@Profile(value = { "native-query" })
 public class CustomSkillDao extends AbstractJpaDao {
 	public CustomCandidateSkill getById(final Object id) {
 		return super.getById(CustomCandidateSkill.class, id);

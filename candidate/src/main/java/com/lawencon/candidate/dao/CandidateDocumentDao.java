@@ -3,14 +3,12 @@ package com.lawencon.candidate.dao;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.candidate.model.CandidateDocument;
 
 @Repository
-@Profile(value = { "native-query" })
 public class CandidateDocumentDao extends AbstractJpaDao {
 	
 	public CandidateDocument getById(final Object id) {

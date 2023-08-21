@@ -23,7 +23,6 @@ import com.lawencon.admin.model.AppliedVacancy;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.admin.model.Offering;
-import com.lawencon.admin.util.DateUtil;
 import com.lawencon.admin.model.User;
 import com.lawencon.admin.model.VacancyDescription;
 import com.lawencon.admin.util.DateUtil;
@@ -64,8 +63,6 @@ public class OfferingService {
 		final Offering offeringDb = offeringDao.saveAndFlush(offering);
 		ConnHandler.commit();
 		sendOffering(offeringDb, appliedVacancy.getCandidate().getCandidateEmail());
-		
-//		mailService.sendEmail(appliedVacancy.getCandidate().getCandidateEmail());
 		
 		final InsertResDto response = new InsertResDto();
 		response.setId(offeringDb.getId());

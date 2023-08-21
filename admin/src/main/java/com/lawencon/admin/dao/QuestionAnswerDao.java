@@ -4,15 +4,13 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
+import com.lawencon.admin.model.QuestionAnswer;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
-import com.lawencon.admin.model.QuestionAnswer;
 
 @Repository
-@Profile(value = { "native-query" })
 public class QuestionAnswerDao extends AbstractJpaDao {
 	
 	public QuestionAnswer getById(final Object id) {
