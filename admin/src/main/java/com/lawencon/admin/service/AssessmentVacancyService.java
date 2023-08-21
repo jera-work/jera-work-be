@@ -32,11 +32,11 @@ public class AssessmentVacancyService {
 		final AssessmentVacancy assessmentVacancy = new AssessmentVacancy();
 		assessmentVacancy.setAppliedVacancy(appliedVacancy);
 		assessmentVacancy.setAssessmentLocation(data.getAssessmentLocation());
-		assessmentVacancy.setEndDate(data.getEndDate());
+		assessmentVacancy.setEndDate(DateUtil.dateParse(data.getEndDate()));
 		assessmentVacancy.setIsQuestion(data.getIsQuestion());
 		assessmentVacancy.setNotes(data.getNotes());
 		assessmentVacancy.setScore(data.getScore());
-		assessmentVacancy.setStartDate(data.getStartDate());
+		assessmentVacancy.setStartDate(DateUtil.dateParse(data.getStartDate()));
 		final AssessmentVacancy assessmentVacancyDb = assessmentVacancyDao.saveAndFlush(assessmentVacancy);
 
 		ConnHandler.commit();

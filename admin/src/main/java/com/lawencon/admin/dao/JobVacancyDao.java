@@ -22,7 +22,6 @@ import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
 @Repository
-@org.springframework.context.annotation.Profile(value = { "native-query" })
 public class JobVacancyDao extends AbstractJpaDao {
 	
 	public JobVacancy getById(final Object id) {

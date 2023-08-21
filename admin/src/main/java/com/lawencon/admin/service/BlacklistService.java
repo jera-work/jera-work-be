@@ -31,8 +31,6 @@ public class BlacklistService {
 	private CompanyDao companyDao;
 	@Autowired
 	private BlacklistEmployeeDao blacklistDao;
-
-
 	/* Move employee to blacklist */
 	public InsertResDto blacklistEmployee(InsertBlacklistEmployeeReqDto data) {
 

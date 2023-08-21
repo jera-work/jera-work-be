@@ -29,10 +29,10 @@ public class InterviewVacancyService {
 		final AppliedVacancy appliedVacancy = appliedVacancyDao.getById(data.getAppliedVacancyId());
 		final InterviewVacancy interview = new InterviewVacancy();
 		interview.setAppliedVacancy(appliedVacancy);
-		interview.setEndDate(data.getEndDate());
+		interview.setEndDate(DateUtil.dateParse(data.getEndDate()));
 		interview.setInterviewLocation(data.getInterviewLocation());
 		interview.setNotes(data.getNotes());
-		interview.setStartDate(data.getStartDate());
+		interview.setStartDate(DateUtil.dateParse(data.getStartDate()));
 		final InterviewVacancy interviewDb = interviewDao.saveAndFlush(interview);
 		
 		ConnHandler.commit();

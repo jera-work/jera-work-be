@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.blacklistemployee.BlacklistEmployeeResDto;
 import com.lawencon.admin.dto.blacklistemployee.InsertBlacklistEmployeeReqDto;
-import com.lawencon.admin.dto.hiredemployee.HiredEmployeeResDto;
 import com.lawencon.admin.service.BlacklistService;
 
 @RestController

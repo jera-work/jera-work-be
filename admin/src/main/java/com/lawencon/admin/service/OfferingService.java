@@ -23,9 +23,9 @@ import com.lawencon.admin.model.AppliedVacancy;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.admin.model.Offering;
-import com.lawencon.admin.util.DateUtil;
 import com.lawencon.admin.model.User;
 import com.lawencon.admin.model.VacancyDescription;
+import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.ConnHandler;
 import com.lawencon.util.JasperUtil;
 
@@ -46,7 +46,6 @@ public class OfferingService {
 	private CandidateDao candidateDao;
 	@Autowired
 	private SendMailService mailService;
-	
 	@Autowired
 	private JasperUtil jasperUtil;
 
@@ -57,15 +56,13 @@ public class OfferingService {
 		final Offering offering = new Offering();
 		offering.setAppliedVacancy(appliedVacancy);
 		offering.setDescription(data.getDescription());
-		offering.setEndDate(data.getEndDate());
+		offering.setEndDate(DateUtil.dateParse(data.getEndDate()));
 		offering.setIsApprove(data.getIsApprove());
 		offering.setOfferingLocation(data.getOfferingLocation());
-		offering.setStartDate(data.getStartDate());
+		offering.setStartDate(DateUtil.dateParse(data.getStartDate()));
 		final Offering offeringDb = offeringDao.saveAndFlush(offering);
 		ConnHandler.commit();
 		sendOffering(offeringDb, appliedVacancy.getCandidate().getCandidateEmail());
-		
-//		mailService.sendEmail(appliedVacancy.getCandidate().getCandidateEmail());
 		
 		final InsertResDto response = new InsertResDto();
 		response.setId(offeringDb.getId());

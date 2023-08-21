@@ -22,7 +22,7 @@ import com.lawencon.candidate.dto.register.RegisterReqDto;
 import com.lawencon.candidate.service.CandidateService;
 
 @RestController
-@RequestMapping("candidates")
+@RequestMapping("/candidates")
 public class CandidateController {
 
 	@Autowired

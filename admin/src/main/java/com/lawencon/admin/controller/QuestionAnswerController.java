@@ -15,7 +15,7 @@ import com.lawencon.admin.dto.questionanswer.InsertQuestionAnswerReqDto;
 import com.lawencon.admin.service.QuestionAnswerService;
 
 @RestController
-@RequestMapping("answers")
+@RequestMapping("/answers")
 public class QuestionAnswerController {
 
 	@Autowired

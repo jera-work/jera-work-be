@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.admin.model.Candidate;
@@ -15,7 +14,6 @@ import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
 @Repository
-@Profile(value = { "native-query" })
 public class HiredEmployeeDao extends AbstractJpaDao {
 	
 	public HiredEmployee getById(final Object id) {

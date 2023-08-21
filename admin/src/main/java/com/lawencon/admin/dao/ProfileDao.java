@@ -9,7 +9,6 @@ import com.lawencon.admin.model.Profile;
 import com.lawencon.base.AbstractJpaDao;
 
 @Repository
-@org.springframework.context.annotation.Profile(value = { "native-query" })
 public class ProfileDao extends AbstractJpaDao {
 	
 	public Profile getById(final Object id) {

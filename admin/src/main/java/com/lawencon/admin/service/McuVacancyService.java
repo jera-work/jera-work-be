@@ -30,8 +30,8 @@ public class McuVacancyService {
 			final AppliedVacancy appliedVacancy = appliedVacancyDao.getById(data.getAppliedVacancy()); 
 			final McuVacancy mcu = new McuVacancy();
 			mcu.setAppliedVacancy(appliedVacancy);
-			mcu.setEndDate(data.getEndDate());
-			mcu.setStartDate(data.getStartDate());
+			mcu.setEndDate(DateUtil.dateParse(data.getEndDate()));
+			mcu.setStartDate(DateUtil.dateParse(data.getStartDate()));
 			final McuVacancy mcuDb = mcuDao.saveAndFlush(mcu);
 			ConnHandler.commit();
 

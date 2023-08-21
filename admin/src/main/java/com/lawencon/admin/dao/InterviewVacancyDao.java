@@ -4,16 +4,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
+import com.lawencon.admin.model.InterviewVacancy;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
-import com.lawencon.admin.model.AssessmentVacancy;
-import com.lawencon.admin.model.InterviewVacancy;
 
 @Repository
-@Profile(value = { "native-query" })
 public class InterviewVacancyDao extends AbstractJpaDao {
 	
 	public InterviewVacancy getById(final Object id) {

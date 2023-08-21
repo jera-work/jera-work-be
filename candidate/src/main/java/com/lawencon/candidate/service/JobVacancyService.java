@@ -10,6 +10,7 @@ import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.jobvacancy.InsertJobVacancyReqDto;
 import com.lawencon.candidate.model.JobVacancy;
 import com.lawencon.candidate.model.VacancyDescription;
+import com.lawencon.candidate.util.DateUtil;
 
 @Service
 public class JobVacancyService {
@@ -38,9 +39,9 @@ public class JobVacancyService {
 			final JobVacancy job = new JobVacancy();
 			job.setAvailableStatus(data.getAvailableStatusId());
 			job.setCompany(data.getCompanyId());
-			job.setEndDate(data.getEndDate());
+			job.setEndDate(DateUtil.dateParse(data.getEndDate()));
 			job.setExpLevel(data.getExpLevelId());
-			job.setStartDate(data.getStartDate());
+			job.setStartDate(DateUtil.dateParse(data.getStartDate()));
 			job.setVacancyCode(data.getVacancyCode());
 			job.setVacancyTitle(data.getVacancyTitle());
 			job.setVacancyDescription(descDb);

@@ -4,19 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
-import com.lawencon.base.AbstractJpaDao;
-import com.lawencon.base.ConnHandler;
 import com.lawencon.admin.model.BlacklistEmployee;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.CandidateProfile;
 import com.lawencon.admin.model.Company;
 import com.lawencon.admin.model.HiredEmployee;
+import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.base.ConnHandler;
 
 @Repository
-@Profile(value = { "native-query" })
 public class BlacklistEmployeeDao extends AbstractJpaDao {
 	
 	public BlacklistEmployee getById(final Object id) {
