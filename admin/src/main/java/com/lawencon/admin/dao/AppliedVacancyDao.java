@@ -5,7 +5,11 @@ import java.util.function.Supplier;
 
 import org.springframework.stereotype.Repository;
 
+import com.lawencon.admin.model.AppliedProgress;
+import com.lawencon.admin.model.AppliedStatus;
 import com.lawencon.admin.model.AppliedVacancy;
+import com.lawencon.admin.model.Candidate;
+import com.lawencon.admin.model.CandidateProfile;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
@@ -71,4 +75,52 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 		}
 	}
 
+	public AppliedVacancy getByAppliedVacancyId(String appliedVacancyId) {
+		final String sql = "SELECT "
+				+ "	tav.id, tcp.profile_name, tap.progress_name, tas.status_name "
+				+ "FROM "
+				+ "	t_applied_vacancy tav "
+				+ "INNER JOIN "
+				+ "	t_candidate tc ON tav.candidate_id = tc.id "
+				+ "INNER JOIN "
+				+ "	t_candidate_profile tcp ON tc.candidate_profile_id = tcp.id "
+				+ "INNER JOIN "
+				+ "	t_applied_progress tap ON tav.applied_progress_id = tap.id "
+				+ "INNER JOIN "
+				+ "	t_applied_status tas ON tav.applied_status_id = tas.id "
+				+ "WHERE "
+				+ "	tav.job_vacancy_id = :jobVacancyId";
+		
+		final Object appObj = ConnHandler.getManager()
+				.createNativeQuery(sql)
+				.setParameter("appliedVacancyId", appliedVacancyId)
+				.getSingleResult();
+		
+		final Object[] appObjArr = (Object[]) appObj;
+		
+		try {
+			final AppliedVacancy appliedVacancy = new AppliedVacancy();
+			appliedVacancy.setId(appObjArr[0].toString());
+			
+			final Candidate candidate = new Candidate();
+			
+			final CandidateProfile candidateProfile = new CandidateProfile();
+			candidateProfile.setProfileName(appObjArr[1].toString());
+			candidate.setCandidateProfile(candidateProfile);
+			appliedVacancy.setCandidate(candidate);
+			
+			final AppliedProgress appliedProgress = new AppliedProgress();
+			appliedProgress.setProgressName(appObjArr[2].toString());
+			appliedVacancy.setAppliedProgress(appliedProgress);
+			
+			final AppliedStatus appliedStatus = new AppliedStatus();
+			appliedStatus.setStatusName(appObjArr[3].toString());
+			appliedVacancy.setAppliedStatus(appliedStatus);
+			
+			return appliedVacancy;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }
