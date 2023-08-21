@@ -115,6 +115,7 @@ public class CandidateService {
 			profile.setPhoneNumber(data.getPhoneNumber());
 			profile.setProfileAddress(data.getProfileAddress());
 			profile.setReligion(religionDao.getByIdRef(data.getReligionId()));
+			profile.setProfileName(data.getProfileName());
 			
 			if(data.getPhotoContent() != null) {
 				final File photo = new File();

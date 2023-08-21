@@ -19,8 +19,9 @@ public class ReligionService {
 		
 		religionDao.getAll().forEach(av -> {
 			final ReligionResDto response = new ReligionResDto();
-			//
-			
+			response.setId(av.getId());
+			response.setReligionCode(av.getReligionCode());
+			response.setReligionName(av.getReligionName());
 			responses.add(response);
 		});
 		

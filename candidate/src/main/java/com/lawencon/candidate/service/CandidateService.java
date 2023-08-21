@@ -95,6 +95,7 @@ public class CandidateService implements UserDetailsService {
 			profile.setReligion(data.getReligionId());
 			profile.setPhoneNumber(data.getPhoneNumber());
 			profile.setProfileAddress(data.getProfileAddress());
+			profile.setProfileName(data.getProfileName());
 
 			if (data.getPhotoContent() != null) {
 				final File photo = new File();
