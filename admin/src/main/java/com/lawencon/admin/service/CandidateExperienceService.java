@@ -1,20 +1,18 @@
-package com.lawencon.candidate.service;
+package com.lawencon.admin.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.admin.dao.CandidateDao;
+import com.lawencon.admin.dao.CandidateExperienceDao;
+import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.experience.CandidateExperienceReqDto;
+import com.lawencon.admin.model.Candidate;
+import com.lawencon.admin.model.CandidateExperience;
+import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.ConnHandler;
-import com.lawencon.candidate.dao.CandidateDao;
-import com.lawencon.candidate.dao.CandidateExperienceDao;
-import com.lawencon.candidate.dto.InsertResDto;
-import com.lawencon.candidate.dto.experience.CandidateExperienceReqDto;
-import com.lawencon.candidate.model.Candidate;
-import com.lawencon.candidate.model.CandidateExperience;
-import com.lawencon.candidate.util.DateUtil;
-import com.lawencon.security.principal.PrincipalServiceImpl;
 
 @Service
 public class CandidateExperienceService {
@@ -22,11 +20,7 @@ public class CandidateExperienceService {
 	@Autowired
 	private CandidateDao candidateDao;
 	@Autowired
-	private PrincipalServiceImpl principalService;
-	@Autowired
 	private CandidateExperienceDao candidateExperienceDao;
-	@Autowired
-	private ApiService apiService;
 	
 	/* Insert experiences for candidate */
 	public InsertResDto createExperience(List<CandidateExperienceReqDto> data) {
@@ -38,7 +32,7 @@ public class CandidateExperienceService {
 				for (int i = 0; i < data.size(); i++) {
 					final CandidateExperience candidateExperience = new CandidateExperience();
 
-					final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
+					final Candidate candidate = candidateDao.getByEmail(data.get(i).getCandidateEmail());
 					candidateExperience.setCandidate(candidate);
 
 					candidateExperience.setFormerInstitution(data.get(i).getFormerInstitution());
@@ -51,14 +45,6 @@ public class CandidateExperienceService {
 					candidateExperienceDao.save(candidateExperience);
 					data.get(i).setCandidateEmail(candidate.getCandidateEmail());
 				}
-			}
-
-			final HttpStatus status = apiService.writeTo("http://localhost:8081/experiences", data);
-			if (status.equals(HttpStatus.CREATED)) {
-				response.setMessage("Experience(s) successfully created");
-				ConnHandler.commit();
-			} else {
-				ConnHandler.rollback();
 			}
 
 		} catch (Exception e) {

@@ -42,5 +42,18 @@ public class ApiService {
 
 		return response.getStatusCode();
 	}
+	
+	public <T> String getFrom(String url) {
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setBearerAuth(JwtConfig.get());
+
+		final RequestEntity<Void> request = RequestEntity.get(url).headers(headers).build();
+
+		final ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+
+		return response.getBody();
+	}
 
 }

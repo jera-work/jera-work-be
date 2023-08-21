@@ -1,20 +1,20 @@
-package com.lawencon.candidate.service;
+package com.lawencon.admin.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.admin.dao.CandidateDao;
+import com.lawencon.admin.dao.CandidateEducationDao;
+import com.lawencon.admin.dao.DegreeDao;
+import com.lawencon.admin.dao.MajorDao;
+import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.education.CandidateEducationCreateReqDto;
+import com.lawencon.admin.model.Candidate;
+import com.lawencon.admin.model.CandidateEducation;
+import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.ConnHandler;
-import com.lawencon.candidate.dao.CandidateDao;
-import com.lawencon.candidate.dao.CandidateEducationDao;
-import com.lawencon.candidate.dto.InsertResDto;
-import com.lawencon.candidate.dto.education.CandidateEducationCreateReqDto;
-import com.lawencon.candidate.model.Candidate;
-import com.lawencon.candidate.model.CandidateEducation;
-import com.lawencon.candidate.util.DateUtil;
-import com.lawencon.security.principal.PrincipalServiceImpl;
 
 @Service
 public class CandidateEducationService {
@@ -22,46 +22,38 @@ public class CandidateEducationService {
 	@Autowired
 	private CandidateDao candidateDao;
 	@Autowired
-	private PrincipalServiceImpl principalService;
-	@Autowired
 	private CandidateEducationDao educationDao;
 	@Autowired
-	private ApiService apiService;
+	private DegreeDao degreeDao;
+	@Autowired
+	private MajorDao majorDao;
 	
 	/* Insert educations for candidate */
 	public InsertResDto insertCandidateEducations(List<CandidateEducationCreateReqDto> datas) {
-		final Candidate candidate = candidateDao.getByIdRef(principalService.getAuthPrincipal());
 
 		try {
 			ConnHandler.begin();
 			InsertResDto response = null;
 			for (CandidateEducationCreateReqDto data : datas) {
+				final Candidate candidate = candidateDao.getByEmail(data.getCandidateEmail());
 				final CandidateEducation education = new CandidateEducation();
 				education.setCandidate(candidate);
-				education.setDegree(data.getDegreeId());
+				education.setDegree(degreeDao.getByIdRef(data.getDegreeId()));
 				education.setEndYear(DateUtil.dateParse(data.getEndYear()));
 				education.setGpa(data.getGpa());
 				education.setStartYear(DateUtil.dateParse(data.getStartYear()));
 				education.setInstitutionAddress(data.getInstitutionAddress());
 				education.setInstitutionName(data.getInstitutionName());
-				education.setMajor(data.getMajorId());
+				education.setMajor(majorDao.getByIdRef(data.getMajorId()));
 
-				data.setCandidateEmail(candidate.getCandidateEmail());
-				educationDao.saveAndFlush(education);
-			}
+				final CandidateEducation educationDb = educationDao.saveAndFlush(education);
 
-			final HttpStatus status = apiService.writeTo("http://localhost:8081/educations", datas);
-			if (status.equals(HttpStatus.CREATED)) {
 				response = new InsertResDto();
-//				response.setId(educationDb.getId());
+				response.setId(educationDb.getId());
 				response.setMessage("Educations has been added!");
-				ConnHandler.commit();
-				return response;
-			} else {
-				ConnHandler.rollback();
-				return null;
 			}
-
+			ConnHandler.commit();
+			return response;
 		} catch (Exception e) {
 			e.printStackTrace();
 			ConnHandler.rollback();
