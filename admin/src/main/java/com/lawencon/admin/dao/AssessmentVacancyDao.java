@@ -1,16 +1,16 @@
 package com.lawencon.admin.dao;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
-import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.admin.model.AssessmentVacancy;
+import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.base.ConnHandler;
 
 @Repository
-@Profile(value = { "native-query" })
 public class AssessmentVacancyDao extends AbstractJpaDao {
 	
 	public AssessmentVacancy getById(final Object id) {
@@ -44,5 +44,36 @@ public class AssessmentVacancyDao extends AbstractJpaDao {
 	public boolean deleteById(final Object entityId) {
 		return super.deleteById(AssessmentVacancy.class, entityId);
 	}
-
+	
+	public AssessmentVacancy getByAppliedVacancyId(String appliedVacancyId) {
+		final String sql = "SELECT "
+				+ "	tav.id, tav.is_question, tav.score, tav.notes, tav.start_date, tav.end_date, tav.location "
+				+ "FROM "
+				+ "	t_assessment_vacancy tav "
+				+ "WHERE "
+				+ "	tav.applied_vacancy_id = :appliedVacancyId";
+		
+		final Object assObj = ConnHandler.getManager()
+				.createNativeQuery(sql)
+				.setParameter("appliedVacancyId", appliedVacancyId)
+				.getSingleResult();
+		
+		final Object[] assObjArr = (Object[]) assObj;
+		
+		try {
+			final AssessmentVacancy assessmentVacancy = new AssessmentVacancy();
+			assessmentVacancy.setId(assObjArr[0].toString());
+			assessmentVacancy.setIsQuestion(Boolean.valueOf(assObjArr[1].toString()));
+			assessmentVacancy.setScore(Float.valueOf(assObjArr[2].toString()));
+			assessmentVacancy.setNotes(assObjArr[3].toString());
+			assessmentVacancy.setStartDate(LocalDate.parse(assObjArr[4].toString()));
+			assessmentVacancy.setEndDate(LocalDate.parse(assObjArr[5].toString()));
+			assessmentVacancy.setAssessmentLocation(assObjArr[6].toString());
+			
+			return assessmentVacancy;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

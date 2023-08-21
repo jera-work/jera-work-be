@@ -1,4 +1,4 @@
-package com.lawencon.admin.dto;
+package com.lawencon.admin.dto.religion;
 
 public class ReligionResDto {
 	private String id;

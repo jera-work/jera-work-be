@@ -1,13 +1,11 @@
 package com.lawencon.admin.dto.interviewvacancy;
 
-import java.time.LocalDate;
-
 public class InsertInterviewVacancyReqDto {
 
 	private String appliedVacancyId;
 	private String notes;
-	private LocalDate startDate;
-	private LocalDate endDate;
+	private String startDate;
+	private String endDate;
 	private String interviewLocation;
 
 	public String getAppliedVacancyId() {
@@ -26,19 +24,19 @@ public class InsertInterviewVacancyReqDto {
 		this.notes = notes;
 	}
 
-	public LocalDate getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDate getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDate endDate) {
+	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
 

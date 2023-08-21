@@ -1,48 +1,36 @@
 package com.lawencon.admin.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.admin.dao.BlacklistEmployeeDao;
-import com.lawencon.admin.dao.CandidateDao;
 import com.lawencon.admin.dao.CompanyDao;
 import com.lawencon.admin.dao.HiredEmployeeDao;
+import com.lawencon.admin.dao.UserDao;
 import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.blacklistemployee.BlacklistEmployeeResDto;
 import com.lawencon.admin.dto.blacklistemployee.InsertBlacklistEmployeeReqDto;
-import com.lawencon.admin.dto.hiredemployee.InsertHiredEmployeeReqDto;
 import com.lawencon.admin.model.BlacklistEmployee;
-import com.lawencon.admin.model.HiredEmployee;
 import com.lawencon.base.ConnHandler;
+import com.lawencon.security.principal.PrincipalService;
 
 @Service
 public class BlacklistService {
 
 	@Autowired
-	private HiredEmployeeDao hiredDao;
+	private PrincipalService<String> principalService;
+	
 	@Autowired
-	private CandidateDao candidateDao;
+	private UserDao userDao;
+	@Autowired
+	private HiredEmployeeDao hiredDao;
 	@Autowired
 	private CompanyDao companyDao;
 	@Autowired
 	private BlacklistEmployeeDao blacklistDao;
-
-	/* Move candidate to Hired Stage */
-	public InsertResDto hireEmployee(InsertHiredEmployeeReqDto data) {
-
-		ConnHandler.begin();
-		final HiredEmployee hired = new HiredEmployee();
-		hired.setCandidate(candidateDao.getByIdRef(data.getCandidateId()));
-		hired.setCompany(companyDao.getByIdRef(data.getCompanyId()));
-		final HiredEmployee hiredDb = hiredDao.saveAndFlush(hired);
-		ConnHandler.commit();
-
-		final InsertResDto response = new InsertResDto();
-		response.setId(hiredDb.getId());
-		response.setMessage("Candidate has been moved to Hired!");
-		return response;
-
-	}
-
 	/* Move employee to blacklist */
 	public InsertResDto blacklistEmployee(InsertBlacklistEmployeeReqDto data) {
 
@@ -60,4 +48,22 @@ public class BlacklistService {
 
 	}
 
+	public List<BlacklistEmployeeResDto> getByCompany(int firstIndex, int lastIndex){
+		final List<BlacklistEmployeeResDto> responses = new ArrayList<>();
+		
+		blacklistDao.getByCompany(
+				firstIndex, lastIndex, 
+				userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId())
+					.forEach(be -> {
+			final BlacklistEmployeeResDto response = new BlacklistEmployeeResDto();
+			response.setBlacklistEmployeeId(be.getId());
+			response.setCandidateId(be.getEmployee().getCandidate().getId());
+			response.setCandidateName(be.getEmployee().getCandidate().getCandidateProfile().getProfileName());
+			response.setCompanyName(be.getCompany().getCompanyName());
+			
+			responses.add(response);
+		});
+		
+		return responses;
+	}
 }

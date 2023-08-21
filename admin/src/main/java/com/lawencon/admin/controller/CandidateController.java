@@ -22,7 +22,7 @@ import com.lawencon.admin.dto.experience.CandidateExperienceReqDto;
 import com.lawencon.admin.service.CandidateService;
 
 @RestController
-@RequestMapping("candidates")
+@RequestMapping("/candidates")
 public class CandidateController {
 
 	@Autowired

@@ -6,6 +6,7 @@ public class InsertQuestionAnswerReqDto {
 	private String candidateEmail;
 	private String questionId;
 	private String questionOptionId;
+	private String assesmentVacancyId;
 	
 	public String getJobVacancyCode() {
 		return jobVacancyCode;
@@ -37,4 +38,11 @@ public class InsertQuestionAnswerReqDto {
 	public void setQuestionOptionId(String questionOptionId) {
 		this.questionOptionId = questionOptionId;
 	}
+	public String getAssesmentVacancyId() {
+		return assesmentVacancyId;
+	}
+	public void setAssesmentVacancyId(String assesmentVacancyId) {
+		this.assesmentVacancyId = assesmentVacancyId;
+	}
+	
 }
