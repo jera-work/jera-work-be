@@ -3,6 +3,7 @@ package com.lawencon.candidate.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.lawencon.base.ConnHandler;
 import com.lawencon.candidate.dao.CandidateDao;
@@ -13,6 +14,7 @@ import com.lawencon.candidate.model.Candidate;
 import com.lawencon.candidate.model.CandidateSkill;
 import com.lawencon.security.principal.PrincipalServiceImpl;
 
+@Service
 public class CandidateSkillService {
 
 	@Autowired
