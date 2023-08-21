@@ -58,15 +58,32 @@ public class JobVacancyDao extends AbstractJpaDao {
 	}
 	
 	public JobVacancy getByCode(final String code) {
-		final String sql = "SELECT id FROM t_job_vacancy WHERE vacancy_code LIKE :code";
+		final String sql = "SELECT "
+				+ "tja.id, tc.id as companyId"
+				+ "FROM "
+				+ "t_job_vacancy tja "
+				+ "INNER JOIN "
+				+ "t_company tc ON tja.company_id = tc.id "
+				+ "WHERE "
+				+ "tja.vacancy_code LIKE :code";
 		
 		try {
 			final Object jobObj = ConnHandler.getManager().createNativeQuery(sql)
 					.setParameter("code", code)
 					.getSingleResult();
 			
-			final JobVacancy job = new JobVacancy();
-			job.setId(jobObj.toString());
+			final Object[] jobObjArr = (Object[]) jobObj;
+
+			JobVacancy job = null;
+			if(jobObjArr.length > 0) {
+				job = new JobVacancy();
+				job.setId(jobObjArr[0].toString());
+				
+				final Company company = new Company();
+				company.setId(jobObjArr[1].toString());
+				
+				job.setCompany(company);
+			}
 			return job;
 		} catch (Exception e) {
 			e.printStackTrace();
