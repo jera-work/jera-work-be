@@ -56,7 +56,7 @@ public class CandidateDocumentService {
 				response.setMessage("Documents has been added!");
 			}
 
-			apiService.writeTo("http://localhost:8081/candidates/documents", datas);
+			apiService.writeTo("http://localhost:8081/documents", datas);
 			ConnHandler.commit();
 			return response;
 		} catch (Exception e) {

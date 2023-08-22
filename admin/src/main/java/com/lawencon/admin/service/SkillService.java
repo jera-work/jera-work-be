@@ -19,8 +19,9 @@ public class SkillService {
 		
 		skillDao.getAll().forEach(av -> {
 			final SkillResDto response = new SkillResDto();
-			//
-			
+			response.setId(av.getId());
+			response.setSkillCode(av.getSkillCode());
+			response.setSkillName(av.getSkillName());
 			responses.add(response);
 		});
 		

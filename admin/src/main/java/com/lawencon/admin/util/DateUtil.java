@@ -25,7 +25,7 @@ public class DateUtil {
 	}
 
 	public static LocalDate dateParse(String dateStr) {
-		final LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_DATE);
+		final LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_DATE_TIME);
 
 		return date;
 	}

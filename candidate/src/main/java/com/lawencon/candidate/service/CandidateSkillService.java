@@ -44,7 +44,7 @@ public class CandidateSkillService {
 			}
 			response.setMessage("Skill choosen successfully");
 			
-			apiService.writeTo("http://localhost:8081/candidates/skills", datas);
+			apiService.writeTo("http://localhost:8081/skills", datas);
 			ConnHandler.commit();
 			
 		} catch (Exception e) {

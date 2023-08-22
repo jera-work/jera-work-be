@@ -55,7 +55,7 @@ public class CandidateDao extends AbstractJpaDao {
 	public Candidate getByEmail(String candidateEmail) {
 		final String sql = 
 				"SELECT " 
-					+ "tc.id, tc.candidate_profile_id " 
+					+ "tc.id, tc.candidate_profile_id, tc.candidate_email " 
 				+ "FROM " 
 					+ "t_candidate tc "
 //				+ "INNER JOIN "
@@ -78,6 +78,7 @@ public class CandidateDao extends AbstractJpaDao {
 				
 				cdt = new Candidate();
 				cdt.setId(cdtArr[0].toString());
+				cdt.setCandidateEmail(cdtArr[2].toString());
 				cdt.setCandidateProfile(profile);
 			}
 			

@@ -19,8 +19,9 @@ public class MajorService {
 		
 		majorDao.getAll().forEach(av -> {
 			final MajorResDto response = new MajorResDto();
-			//
-			
+			response.setId(av.getId());
+			response.setMajorCode(av.getMajorCode());
+			response.setMajorName(av.getMajorName());
 			responses.add(response);
 		});
 		

@@ -1,6 +1,7 @@
 package com.lawencon.candidate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.lawencon.base.ConnHandler;
 import com.lawencon.candidate.dao.CandidateDao;
@@ -11,6 +12,7 @@ import com.lawencon.candidate.model.Candidate;
 import com.lawencon.candidate.model.CustomCandidateSkill;
 import com.lawencon.security.principal.PrincipalService;
 
+@Service
 public class CustomSkillService {
 
 	@Autowired

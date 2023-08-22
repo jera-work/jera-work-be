@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.admin.dao.CompanyDao;
@@ -24,9 +23,6 @@ public class CompanyService {
 	
 	@Autowired
 	private FileDao fileDao;
-	
-	@Autowired
-	private ApiService apiService;
 
 	public InsertResDto createCompany(CompanyCreateReqDto data) {
 
@@ -46,23 +42,15 @@ public class CompanyService {
 			logo.setFileExt(data.getFileExt());
 			
 			fileDao.saveAndFlush(logo);
-			
 			company.setPhoto(logo);
+			
 			final Company companyDb = companyDao.save(company);
+			ConnHandler.commit();
 			
-			final HttpStatus status = apiService.writeTo("http://localhost:8080/companies", data);
-			
-			if(status.equals(HttpStatus.CREATED)) {
-				response.setId(companyDb.getId());
-				response.setMessage("Company : " + companyDb.getCompanyName() + " has been created!");
-				
-				ConnHandler.commit();
-			} else {
-				ConnHandler.rollback();
-				
-				throw new RuntimeException("Insert Failed");
-			}
+			response.setId(companyDb.getId());
+			response.setMessage("Company has been created!");
 		} catch (Exception e) {
+			e.printStackTrace();
 			ConnHandler.rollback();
 		}
 		
