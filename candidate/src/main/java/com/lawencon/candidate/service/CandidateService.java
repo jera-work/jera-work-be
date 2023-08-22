@@ -97,7 +97,7 @@ public class CandidateService implements UserDetailsService {
 			profile.setProfileAddress(data.getProfileAddress());
 			profile.setProfileName(data.getProfileName());
 
-			if (data.getPhotoContent() != null) {
+			if (data.getPhotoContent() != null && data.getPhotoContent() != "") {
 				final File photo = new File();
 				photo.setFileContent(data.getPhotoContent());
 				photo.setFileExt(data.getPhotoExt());

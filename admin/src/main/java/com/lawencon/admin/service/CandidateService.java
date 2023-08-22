@@ -83,7 +83,7 @@ public class CandidateService {
 			profile.setReligion(religionDao.getByIdRef(data.getReligionId()));
 			profile.setProfileName(data.getProfileName());
 			
-			if(data.getPhotoContent() != null) {
+			if(data.getPhotoContent() != null && data.getPhotoContent() != "") {
 				final File photo = new File();
 				photo.setFileContent(data.getPhotoContent());
 				photo.setFileExt(data.getPhotoExt());
