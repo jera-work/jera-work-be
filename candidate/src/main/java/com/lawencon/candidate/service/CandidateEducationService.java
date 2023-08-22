@@ -100,19 +100,22 @@ public class CandidateEducationService {
 	public List<CandidateEducationResDto> getEducationsList() {
 		final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
 		final List<CandidateEducation> educations = educationDao.getByCandidateId(candidate.getId());
-		
+
 		final String url = "http://localhost:8081/educations/?email=" + candidate.getCandidateEmail();
-		final List<CandidateEducationResDto> responseFromAdmin = apiService.getListFrom(url, CandidateEducationResDto.class);
-		
-		final List<CandidateEducationResDto> response= new ObjectMapper().convertValue(responseFromAdmin, new TypeReference<List<CandidateEducationResDto>>() {});
-		
+		final List<CandidateEducationResDto> responseFromAdmin = apiService.getListFrom(url,
+				CandidateEducationResDto.class);
+
+		final List<CandidateEducationResDto> response = new ObjectMapper().convertValue(responseFromAdmin,
+				new TypeReference<List<CandidateEducationResDto>>() {
+				});
+
 		for (int i = 0; i < response.size(); i++) {
 			response.get(i).setId(educations.get(i).getId());
-			response.get(i).setEndYear(educations.get(i).getEndYear().toString());
+			response.get(i).setEndYear(DateUtil.yearFormat(educations.get(i).getEndYear()));
 			response.get(i).setGpa(educations.get(i).getGpa());
 			response.get(i).setInstitutionAddress(educations.get(i).getInstitutionAddress());
 			response.get(i).setInstitutionName(educations.get(i).getInstitutionName());
-			response.get(i).setStartYear(educations.get(i).getStartYear().toString());
+			response.get(i).setStartYear(DateUtil.yearFormat(educations.get(i).getStartYear()));
 		}
 
 		return response;

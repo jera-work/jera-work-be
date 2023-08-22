@@ -37,4 +37,10 @@ public class DateUtil {
 		return date;
 	}
 
+	public static String yearFormat(LocalDate date) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
+
+		return date.format(formatter);
+	}
+
 }

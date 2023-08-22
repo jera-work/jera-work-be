@@ -72,8 +72,8 @@ public class CandidateEducationService {
 
 		for (CandidateEducation education : educations) {
 			final CandidateEducationResDto response = new CandidateEducationResDto();
-			response.setDegreeId(education.getDegree().getId());
-			response.setMajorId(education.getMajor().getId());
+			response.setDegreeId(education.getDegree().getDegreeName());
+			response.setMajorId(education.getMajor().getMajorName());
 			responses.add(response);
 		}
 
