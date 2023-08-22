@@ -1,5 +1,7 @@
 package com.lawencon.admin.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -49,4 +51,31 @@ public class ApiService {
 		return response.getStatusCode();
 	}
 
+	public <T> T getFrom(String url, Class<T> type) {
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setBearerAuth(JwtConfig.get());
+
+		final RequestEntity<Void> request = RequestEntity.get(url).headers(headers).build();
+
+		final ResponseEntity<T> response = restTemplate.exchange(request, type);
+
+		return response.getBody();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> List<T> getListFrom(String url, Class<T> type) {
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setBearerAuth(JwtConfig.get());
+
+		final RequestEntity<Void> request = RequestEntity.get(url).headers(headers).build();
+
+		final ResponseEntity<T> response = restTemplate.exchange(request, type);
+
+		return (List<T>)response.getBody();
+	}
+	
 }

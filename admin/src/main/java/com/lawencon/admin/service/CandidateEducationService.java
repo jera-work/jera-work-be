@@ -1,5 +1,6 @@
 package com.lawencon.admin.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.lawencon.admin.dao.DegreeDao;
 import com.lawencon.admin.dao.MajorDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.education.CandidateEducationCreateReqDto;
+import com.lawencon.admin.dto.education.CandidateEducationResDto;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.CandidateEducation;
 import com.lawencon.admin.util.DateUtil;
@@ -46,7 +48,7 @@ public class CandidateEducationService {
 				education.setInstitutionName(data.getInstitutionName());
 				education.setMajor(majorDao.getByIdRef(data.getMajorId()));
 
-				final CandidateEducation educationDb = educationDao.saveAndFlush(education);
+				final CandidateEducation educationDb = educationDao.save(education);
 
 				response = new InsertResDto();
 				response.setId(educationDb.getId());
@@ -59,6 +61,23 @@ public class CandidateEducationService {
 			ConnHandler.rollback();
 			return null;
 		}
+	}
+	
+	/* get educations for candidate */ 
+	public List<CandidateEducationResDto> getEducations(String candidateEmail) {
+		final List<CandidateEducationResDto> responses = new ArrayList<>();
+
+		final Candidate candidate = candidateDao.getByEmail(candidateEmail);
+		final List<CandidateEducation> educations = educationDao.getByCandidateId(candidate.getId());
+
+		for (CandidateEducation education : educations) {
+			final CandidateEducationResDto response = new CandidateEducationResDto();
+			response.setDegreeId(education.getDegree().getId());
+			response.setMajorId(education.getMajor().getId());
+			responses.add(response);
+		}
+
+		return responses;
 	}
 
 }

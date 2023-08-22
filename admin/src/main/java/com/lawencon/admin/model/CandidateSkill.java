@@ -12,7 +12,7 @@ import com.lawencon.base.BaseEntity;
 public class CandidateSkill extends BaseEntity{
 	
 	@OneToOne
-	@JoinColumn(name = "skill_id", nullable = false)
+	@JoinColumn(name = "skill_id")
 	private Skill skill;
 	
 	@OneToOne

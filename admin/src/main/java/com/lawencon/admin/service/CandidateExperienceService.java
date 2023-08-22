@@ -37,7 +37,7 @@ public class CandidateExperienceService {
 
 					candidateExperience.setFormerInstitution(data.get(i).getFormerInstitution());
 					candidateExperience.setFormerPosition(data.get(i).getFormerPosition());
-					candidateExperience.setFormerJobdesk(data.get(i).getFormerJobdesk());
+					candidateExperience.setFormerJobdesk(data.get(i).getFormerJobdesc());
 					candidateExperience.setFormerLocation(data.get(i).getFormerLocation());
 					candidateExperience.setStartDate(DateUtil.dateParse(data.get(i).getStartDate()));
 					candidateExperience.setEndDate(DateUtil.dateParse(data.get(i).getEndDate()));

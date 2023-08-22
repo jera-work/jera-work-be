@@ -25,8 +25,8 @@ import com.lawencon.candidate.service.CandidateService;
 public class SecurityConfig {
 
 	@Bean
-	public AuthenticationManager authManager(HttpSecurity http, CandidateService userService, BCryptPasswordEncoder encoder)
-			throws Exception {
+	public AuthenticationManager authManager(HttpSecurity http, CandidateService userService,
+			BCryptPasswordEncoder encoder) throws Exception {
 
 		return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(userService)
 				.passwordEncoder(encoder).and().build();
@@ -66,10 +66,13 @@ public class SecurityConfig {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-				.allowedOrigins("http://localhost:4200")
-				.allowedMethods(HttpMethod.GET.name(),
-						HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.PATCH.name(),
-						HttpMethod.DELETE.name());
+						.allowedOrigins("http://localhost:4200", "http://localhost:4201")
+						.allowedMethods(
+								HttpMethod.GET.name(),
+								HttpMethod.POST.name(), 
+								HttpMethod.PUT.name(), 
+								HttpMethod.PATCH.name(),
+								HttpMethod.DELETE.name());
 			}
 		};
 	}

@@ -1,6 +1,9 @@
 package com.lawencon.candidate.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,7 +46,7 @@ public class ApiService {
 		return response.getStatusCode();
 	}
 	
-	public <T> String getFrom(String url) {
+	public <T> T getFrom(String url, Class<T> type) {
 
 		final HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -51,9 +54,23 @@ public class ApiService {
 
 		final RequestEntity<Void> request = RequestEntity.get(url).headers(headers).build();
 
-		final ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+		final ResponseEntity<T> response = restTemplate.exchange(request, type);
 
 		return response.getBody();
+	}
+	
+	public <T> List<T> getListFrom(String url, Class<T> type) {
+
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setBearerAuth(JwtConfig.get());
+
+		final RequestEntity<Void> request = RequestEntity.get(url).headers(headers).build();
+
+		final ResponseEntity<List<T>> response = restTemplate.exchange(request, new ParameterizedTypeReference<List<T>>(){});
+		final List<T> result = response.getBody();
+		
+		return result;
 	}
 
 }

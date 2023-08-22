@@ -32,19 +32,17 @@ public class CandidateProfileService {
 	public CandidateProfileResDto getProfile() {
 		
 		final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
-		String url = "http://localhost:8081/candidates/?email=" + candidate.getCandidateEmail();
 		
+		String url = "http://localhost:8081/candidates/?email=" + candidate.getCandidateEmail();
 		final HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setBearerAuth(JwtConfig.get());
-
 		final RequestEntity<Void> request = RequestEntity.get(url).headers(headers).build();
-
 		final ResponseEntity<CandidateProfileResDto> response = restTemplate.exchange(request, CandidateProfileResDto.class);
-
 		final CandidateProfileResDto dto = response.getBody();
+		
 		final CandidateProfile profile = profileDao.getById(candidate.getCandidateProfile().getId());
-		if(dto.getPhotoId() != null) {
+		if(profile.getPhoto() != null) {
 			dto.setPhotoId(profile.getPhoto().getId());			
 		}
 		
