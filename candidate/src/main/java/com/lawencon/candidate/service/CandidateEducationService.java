@@ -102,20 +102,20 @@ public class CandidateEducationService {
 		final List<CandidateEducation> educations = educationDao.getByCandidateId(candidate.getId());
 		
 		final String url = "http://localhost:8081/educations/?email=" + candidate.getCandidateEmail();
-		final List<CandidateEducationResDto> responses = apiService.getListFrom(url, CandidateEducationResDto.class);
+		final List<CandidateEducationResDto> responseFromAdmin = apiService.getListFrom(url, CandidateEducationResDto.class);
 		
-		final List<CandidateEducationResDto> responseCandidateEducation = new ObjectMapper().convertValue(responses, new TypeReference<List<CandidateEducationResDto>>() {});
+		final List<CandidateEducationResDto> response= new ObjectMapper().convertValue(responseFromAdmin, new TypeReference<List<CandidateEducationResDto>>() {});
 		
-//		for (int i = 0; i < responses.size(); i++) {
-//			responses.get(i).setId(educations.get(i).getId());
-//			responses.get(i).setEndYear(educations.get(i).getEndYear().toString());
-//			responses.get(i).setGpa(educations.get(i).getGpa());
-//			responses.get(i).setInstitutionAddress(educations.get(i).getInstitutionAddress());
-//			responses.get(i).setInstitutionName(educations.get(i).getInstitutionName());
-//			responses.get(i).setStartYear(educations.get(i).getStartYear().toString());
-//		}
+		for (int i = 0; i < response.size(); i++) {
+			response.get(i).setId(educations.get(i).getId());
+			response.get(i).setEndYear(educations.get(i).getEndYear().toString());
+			response.get(i).setGpa(educations.get(i).getGpa());
+			response.get(i).setInstitutionAddress(educations.get(i).getInstitutionAddress());
+			response.get(i).setInstitutionName(educations.get(i).getInstitutionName());
+			response.get(i).setStartYear(educations.get(i).getStartYear().toString());
+		}
 
-		return responses;
+		return response;
 	}
 
 }
