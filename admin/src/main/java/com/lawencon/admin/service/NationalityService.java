@@ -19,8 +19,9 @@ public class NationalityService {
 		
 		nationalityDao.getAll().forEach(av -> {
 			final NationalityResDto response = new NationalityResDto();
-			//
-			
+			response.setId(av.getId());
+			response.setNationalityCode(av.getNationalityCode());
+			response.setNationalityName(av.getNationalityName());
 			responses.add(response);
 		});
 		

@@ -20,8 +20,9 @@ public class DocumentTypeService {
 		
 		documentTypeDao.getAll().forEach(av -> {
 			final DocumentTypeResDto response = new DocumentTypeResDto();
-			//
-			
+			response.setId(av.getId());
+			response.setTypeCode(av.getTypeCode());
+			response.setTypeName(av.getTypeName());
 			responses.add(response);
 		});
 		

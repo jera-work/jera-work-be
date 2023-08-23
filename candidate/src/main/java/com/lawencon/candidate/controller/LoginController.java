@@ -57,7 +57,7 @@ public class LoginController {
 		loginRes.setId(user.getId());
 		loginRes.setToken(response.getBody());
 		loginRes.setProfileName(user.getCandidateProfile().getProfileName());
-		if(loginRes.getPhotoId() != null) {
+		if(user.getCandidateProfile().getPhoto() != null) {
 			loginRes.setPhotoId(user.getCandidateProfile().getPhoto().getId());
 		}
 

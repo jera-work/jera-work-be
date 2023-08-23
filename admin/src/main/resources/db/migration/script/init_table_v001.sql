@@ -547,7 +547,8 @@ CREATE TABLE t_candidate_experience (
 CREATE TABLE t_candidate_skill (
 	id varchar(36) NOT NULL,
 	candidate_id varchar NOT NULL,
-	skill_id varchar NOT NULL,
+	skill_id varchar,
+	skill_name varchar(255),
 	created_by varchar NOT NULL,
 	created_at timestamp NOT NULL,
 	updated_by varchar,
@@ -559,21 +560,6 @@ CREATE TABLE t_candidate_skill (
 		REFERENCES t_candidate(id),
 	FOREIGN KEY (skill_id)
 		REFERENCES t_skill(id)
-);
-
-CREATE TABLE t_custom_candidate_skill (
-	id varchar(36) NOT NULL,
-	candidate_id varchar NOT NULL,
-	skill_name varchar(50) NOT NULL,
-	created_by varchar NOT NULL,
-	created_at timestamp NOT NULL,
-	updated_by varchar,
-	updated_at timestamp,
-	is_active boolean NOT NULL,
-	ver int NOT NULL,
-	PRIMARY KEY (id),
-	FOREIGN KEY (candidate_id)
-		REFERENCES t_candidate(id)
 );
 
 CREATE TABLE t_hired_employee (

@@ -23,7 +23,6 @@ public class DegreeService {
 			response.setId(av.getId());
 			response.setDegreeCode(av.getDegreeCode());
 			response.setDegreeName(av.getDegreeName());
-			
 			responses.add(response);
 		});
 		

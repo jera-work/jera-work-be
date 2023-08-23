@@ -45,7 +45,7 @@ public class ApiService {
 
 		return response.getStatusCode();
 	}
-
+	
 	public <T> T getFrom(String url, Class<T> type) {
 
 		final HttpHeaders headers = new HttpHeaders();

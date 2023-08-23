@@ -1,20 +1,17 @@
 package com.lawencon.admin.service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.admin.dao.FileDao;
 import com.lawencon.admin.model.File;
+import com.lawencon.base.ConnHandler;
 
 @Service
 public class FileService {
 
-	private final FileDao fileDao;
-
-	@PersistenceContext
-	private EntityManager em;
+	@Autowired
+	private FileDao fileDao;
 
 	public FileService(FileDao fileDao) {
 		this.fileDao = fileDao;
@@ -22,21 +19,23 @@ public class FileService {
 
 
 	public File getById(String id) {
+		ConnHandler.begin();
 		final File file = fileDao.getById(id);
+		ConnHandler.commit();
 		return file;
 	}
 
 	public File insertFile(File file) {
-		this.em.getTransaction().begin();
+		ConnHandler.begin();
 		final File files = fileDao.save(file);
-		this.em.getTransaction().commit();
+		ConnHandler.commit();
 		return files;
 	}
 
-	public Boolean deleteById(Long id) {
-		this.em.getTransaction().begin();
+	public Boolean deleteById(String id) {
+		ConnHandler.begin();
 		final Boolean delete = fileDao.deleteById(id);
-		this.em.getTransaction().commit();
+		ConnHandler.commit();
 		return delete;
 	}
 

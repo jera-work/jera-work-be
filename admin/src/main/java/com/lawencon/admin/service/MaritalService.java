@@ -19,8 +19,9 @@ public class MaritalService {
 		
 		maritalDao.getAll().forEach(av -> {
 			final MaritalResDto response = new MaritalResDto();
-			//
-			
+			response.setId(av.getId());
+			response.setMaritalName(av.getMaritalName());
+			response.setMartialCode(av.getMartialCode());
 			responses.add(response);
 		});
 		

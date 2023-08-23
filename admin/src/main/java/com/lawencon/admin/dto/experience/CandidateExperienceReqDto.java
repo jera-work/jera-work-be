@@ -6,7 +6,7 @@ public class CandidateExperienceReqDto {
 	private String formerPosition;
 	private String formerInstitution;
 	private String formerLocation;
-	private String formerJobdesk;
+	private String formerJobdesc;
 	private String startDate;
 	private String endDate;
 
@@ -42,12 +42,12 @@ public class CandidateExperienceReqDto {
 		this.formerLocation = formerLocation;
 	}
 
-	public String getFormerJobdesk() {
-		return formerJobdesk;
+	public String getFormerJobdesc() {
+		return formerJobdesc;
 	}
 
-	public void setFormerJobdesk(String formerJobdesk) {
-		this.formerJobdesk = formerJobdesk;
+	public void setFormerJobdesc(String formerJobdesc) {
+		this.formerJobdesc = formerJobdesc;
 	}
 
 	public String getStartDate() {

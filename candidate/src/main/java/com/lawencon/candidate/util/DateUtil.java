@@ -25,9 +25,22 @@ public class DateUtil {
 	}
 	
 	public static LocalDate dateParse(String dateStr) {
-		final LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_DATE);
+		final LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_DATE_TIME);
 		
 		return date;
+	}
+	
+	public static LocalDate educationDateParse(String dateStr) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
+		final LocalDate date = LocalDate.parse(dateStr, formatter);
+		
+		return date;
+	}
+
+	public static String yearFormat(LocalDate date) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
+
+		return date.format(formatter);
 	}
 
 }
