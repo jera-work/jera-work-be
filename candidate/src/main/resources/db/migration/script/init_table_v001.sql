@@ -171,6 +171,7 @@ CREATE TABLE t_candidate_skill (
 	id varchar(36) NOT NULL,
 	candidate_id varchar NOT NULL,
 	skill_id varchar,
+	skill_name varchar(255),
 	created_by varchar NOT NULL,
 	created_at timestamp NOT NULL,
 	updated_by varchar,

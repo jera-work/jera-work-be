@@ -29,6 +29,8 @@ public class CandidateEducationService {
 	private DegreeDao degreeDao;
 	@Autowired
 	private MajorDao majorDao;
+	@Autowired
+	private EmailEncoderService encoderService;
 	
 	/* Insert educations for candidate */
 	public InsertResDto insertCandidateEducations(List<CandidateEducationCreateReqDto> datas) {
@@ -65,9 +67,10 @@ public class CandidateEducationService {
 	
 	/* get educations for candidate */ 
 	public List<CandidateEducationResDto> getEducations(String candidateEmail) {
+		final String email = encoderService.decodeEmail(candidateEmail);
 		final List<CandidateEducationResDto> responses = new ArrayList<>();
 
-		final Candidate candidate = candidateDao.getByEmail(candidateEmail);
+		final Candidate candidate = candidateDao.getByEmail(email);
 		final List<CandidateEducation> educations = educationDao.getByCandidateId(candidate.getId());
 
 		for (CandidateEducation education : educations) {

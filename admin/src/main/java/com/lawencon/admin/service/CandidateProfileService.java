@@ -16,10 +16,13 @@ public class CandidateProfileService {
 	private CandidateProfileDao profileDao;
 	@Autowired
 	private CandidateDao candidateDao;
+	@Autowired
+	private EmailEncoderService encoderService;
 	
 	public CandidateProfileResDto getProfile(String candidateEmail) {
 		
-		final Candidate candidate = candidateDao.getByEmail(candidateEmail);
+		final String email = encoderService.decodeEmail(candidateEmail);
+		final Candidate candidate = candidateDao.getByEmail(email);
 		final CandidateProfile profile = profileDao.getById(candidate.getCandidateProfile().getId());
 		final CandidateProfileResDto response = new CandidateProfileResDto();
 		response.setCandidateEmail(candidate.getCandidateEmail());

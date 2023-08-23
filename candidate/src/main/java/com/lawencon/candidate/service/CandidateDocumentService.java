@@ -5,12 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawencon.base.ConnHandler;
 import com.lawencon.candidate.dao.CandidateDao;
 import com.lawencon.candidate.dao.CandidateDocumentDao;
 import com.lawencon.candidate.dao.FileDao;
 import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.document.CandidateDocumentCreateReqDto;
+import com.lawencon.candidate.dto.document.CandidateDocumentResDto;
 import com.lawencon.candidate.model.Candidate;
 import com.lawencon.candidate.model.CandidateDocument;
 import com.lawencon.candidate.model.File;
@@ -29,6 +32,8 @@ public class CandidateDocumentService {
 	private CandidateDocumentDao docsDao;
 	@Autowired
 	private ApiService apiService;
+	@Autowired
+	private EmailEncoderService encoderService;
 	
 	/* Insert documents for candidate */
 	public InsertResDto insertCandidateDocs(List<CandidateDocumentCreateReqDto> datas) {
@@ -64,6 +69,23 @@ public class CandidateDocumentService {
 			return null;
 		}
 
+	}
+	
+	/* get documents for candidate */
+	public List<CandidateDocumentResDto> getDocuments() {
+		final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
+		final String email = encoderService.encodeEmail(candidate.getCandidateEmail());
+		final List<CandidateDocument> documents = docsDao.getDocuments(candidate.getId());
+		final String url = "http://localhost:8081/documents/?email=" + email;
+		
+		final List<CandidateDocumentResDto> responseFromAdmin = apiService.getListFrom(url, CandidateDocumentResDto.class);
+		final List<CandidateDocumentResDto> responses = new ObjectMapper().convertValue(responseFromAdmin, new TypeReference<List<CandidateDocumentResDto>>() {});
+		
+		for (int i = 0; i < responses.size(); i++) {
+			responses.get(i).setFileId(documents.get(i).getFile().getId());
+			responses.get(i).setId(documents.get(i).getId());
+		}
+		return responses;
 	}
 
 }

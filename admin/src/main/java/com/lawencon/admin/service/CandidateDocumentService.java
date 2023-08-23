@@ -1,5 +1,6 @@
 package com.lawencon.admin.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +12,16 @@ import com.lawencon.admin.dao.DocumentTypeDao;
 import com.lawencon.admin.dao.FileDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.document.CandidateDocumentCreateReqDto;
+import com.lawencon.admin.dto.document.CandidateDocumentResDto;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.CandidateDocument;
+import com.lawencon.admin.model.DocumentType;
 import com.lawencon.admin.model.File;
 import com.lawencon.base.ConnHandler;
 
 @Service
 public class CandidateDocumentService {
-	
+
 	@Autowired
 	private CandidateDao candidateDao;
 	@Autowired
@@ -27,7 +30,9 @@ public class CandidateDocumentService {
 	private CandidateDocumentDao docsDao;
 	@Autowired
 	private DocumentTypeDao typeDao;
-	
+	@Autowired
+	private EmailEncoderService encoderService;
+
 	/* Insert documents for candidate */
 	public InsertResDto insertCandidateDocs(List<CandidateDocumentCreateReqDto> datas) {
 
@@ -61,4 +66,19 @@ public class CandidateDocumentService {
 
 	}
 
+	/* get documents for candidate */
+	public List<CandidateDocumentResDto> getDocuments(String candidateEmail) {
+		final List<CandidateDocumentResDto> responses = new ArrayList<>();
+		final String email = encoderService.decodeEmail(candidateEmail);
+		final Candidate candidate = candidateDao.getByEmail(email);
+		final List<CandidateDocument> documents = docsDao.getDocuments(candidate.getId());
+
+		for (CandidateDocument document : documents) {
+			final CandidateDocumentResDto response = new CandidateDocumentResDto();
+			final DocumentType type = typeDao.getById(document.getDocumentType().getId());
+			response.setTypeName(type.getTypeName());
+			responses.add(response);
+		}
+		return responses;
+	}
 }

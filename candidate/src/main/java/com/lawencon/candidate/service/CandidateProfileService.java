@@ -27,13 +27,16 @@ public class CandidateProfileService {
 	private RestTemplate restTemplate;
 	@Autowired
 	private CandidateProfileDao profileDao;
+	@Autowired
+	private EmailEncoderService encoderService;
 
 	@SuppressWarnings("null")
 	public CandidateProfileResDto getProfile() {
 		
 		final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
+		final String encodedEmail = encoderService.encodeEmail(candidate.getCandidateEmail());
 		
-		String url = "http://localhost:8081/candidates/?email=" + candidate.getCandidateEmail();
+		String url = "http://localhost:8081/candidates/?email=" + encodedEmail;
 		final HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setBearerAuth(JwtConfig.get());
