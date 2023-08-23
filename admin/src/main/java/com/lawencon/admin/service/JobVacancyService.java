@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.admin.constant.AvailableStatusCode;
 import com.lawencon.admin.dao.AgeVacancyDao;
 import com.lawencon.admin.dao.AvailableStatusDao;
 import com.lawencon.admin.dao.CityDao;
@@ -76,6 +77,7 @@ public class JobVacancyService {
 			final VacancyDescription descDb = descDao.saveAndFlush(desc);
 
 			final JobVacancy job = new JobVacancy();
+			data.setAvailableStatusId(statusDao.getByCode(AvailableStatusCode.ACTIVE.statusCode).getId());
 			job.setAvailableStatus(statusDao.getByIdRef(data.getAvailableStatusId()));
 
 			final User user = userDao.getById(principalService.getAuthPrincipal());

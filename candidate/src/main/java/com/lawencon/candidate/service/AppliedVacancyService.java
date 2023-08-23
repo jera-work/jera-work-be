@@ -23,7 +23,6 @@ import com.lawencon.candidate.dto.appliedstatus.AppliedStatusResDto;
 import com.lawencon.candidate.dto.appliedvacancy.AppliedVacancyResDto;
 import com.lawencon.candidate.dto.appliedvacancy.InsertAppliedVacancyReqDto;
 import com.lawencon.candidate.dto.appliedvacancy.UpdateProgressReqDto;
-import com.lawencon.candidate.dto.jobvacancy.JobSearchResDto;
 import com.lawencon.candidate.dto.jobvacancy.JobVacancyResDto;
 import com.lawencon.candidate.exception.CustomException;
 import com.lawencon.candidate.model.AppliedVacancy;
@@ -46,6 +45,8 @@ public class AppliedVacancyService {
 	private PrincipalServiceImpl principalService;
 	@Autowired
 	private JobVacancyService jobVacancyService;
+	@Autowired
+	private EmailEncoderService emailEncoderService;
 
 	public InsertResDto insertAppliedVacancy(InsertAppliedVacancyReqDto data) {
 		final InsertResDto response = new InsertResDto();
@@ -113,7 +114,7 @@ public class AppliedVacancyService {
 	public List<AppliedVacancyResDto> getByCandidateId(){
 		final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
 		
-		final String encodedEmail = Base64.getEncoder().encodeToString(candidate.getCandidateEmail().getBytes());
+		final String encodedEmail = emailEncoderService.encodeEmail(candidate.getCandidateEmail());
 		final String url = "http://localhost:8081/applied/my-applied/?email=" + encodedEmail;
 		final List<AppliedVacancyResDto> responseFromAdmins = apiService.getListFrom(url, AppliedVacancyResDto.class);
 		

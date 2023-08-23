@@ -35,6 +35,9 @@ public class AppliedVacancyService {
 	
 	@Autowired
 	private ApiService apiService;
+	
+	@Autowired
+	private EmailEncoderService emailEncoderService;
 	@Autowired
 	private AppliedVacancyDao appliedVacancyDao;
 	@Autowired
@@ -134,8 +137,7 @@ public class AppliedVacancyService {
 	}
 	
 	public List<AppliedVacancyResDto> getByCandidateId(String email){
-		final byte[] decodeEmail = Base64.getDecoder().decode(email);
-		final String candidateEmail = new String(decodeEmail);
+		final String candidateEmail = emailEncoderService.decodeEmail(email);
 		final Candidate candidate = candidateDao.getByEmail(candidateEmail);
 		
 		final List<AppliedVacancyResDto> responses = new ArrayList<>();
