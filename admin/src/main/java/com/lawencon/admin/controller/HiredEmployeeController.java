@@ -24,7 +24,7 @@ public class HiredEmployeeController {
 	private HiredEmployeeService hiredEmployeeService;
 	
 	@PostMapping
-	public ResponseEntity<InsertResDto> blacklistEmployee(@RequestBody InsertHiredEmployeeReqDto data) {
+	public ResponseEntity<InsertResDto> hireEmployee(@RequestBody InsertHiredEmployeeReqDto data) {
 		final InsertResDto response = hiredEmployeeService.hireEmployee(data);
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
 	}

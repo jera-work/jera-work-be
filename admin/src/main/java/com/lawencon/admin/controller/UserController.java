@@ -35,5 +35,11 @@ public class UserController {
 		final List<UserResDto> response = userService.getUsers(roleCode, companyCode);
 		return new ResponseEntity<List<UserResDto>>(response, HttpStatus.OK);
 	}
+	
+	@GetMapping("/all")
+	public ResponseEntity<List<UserResDto>> getAllUsers() {
+		final List<UserResDto> response = userService.getAllUsers();
+		return new ResponseEntity<List<UserResDto>>(response, HttpStatus.OK);
+	}
 
 }

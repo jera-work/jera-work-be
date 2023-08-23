@@ -83,6 +83,23 @@ public class UserService implements UserDetailsService {
 
 		return response;
 	}
+	
+	public List<UserResDto> getAllUsers() {
+		final List<User> users = userDao.getAll();
+		final List<UserResDto> responses = new ArrayList<>();
+
+		users.forEach(user -> {
+			final UserResDto response = new UserResDto();
+			response.setId(user.getId());
+			response.setProfileName(user.getProfile().getProfileName());
+			response.setCompanyId(user.getProfile().getCompany().getId());
+			response.setCompanyName(user.getProfile().getCompany().getCompanyName());
+			response.setRoleName(user.getRole().getRoleName());
+			responses.add(response);
+		});
+
+		return responses;
+	}
 
 	public List<UserResDto> getUsers(String roleCode, String companyCode) {
 		final List<User> users = userDao.getByRoleCode(roleCode, companyCode);
