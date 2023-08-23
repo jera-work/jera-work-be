@@ -24,4 +24,11 @@ public class AppliedProgressController {
 		
 		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}
+	
+	@GetMapping("/code")
+	public ResponseEntity<AppliedProgressResDto> getByCode(String code){
+		final AppliedProgressResDto responses = appliedProgressService.getByCode(code);
+		
+		return new ResponseEntity<>(responses, HttpStatus.OK);
+	}
 }

@@ -1,13 +1,40 @@
 package com.lawencon.admin.dto.jobvacancy;
 
 public class JobSearchResDto {
+	private String id;
 	private String vacancyTitle;
+	private String vacancyCode;
 	private String companyName;
 	private String salary;
 	private String degreeName;
 	private String jobTypeName;
 	private String cityName;
 	private String createdAt;
+	private String companyPhotoId;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getVacancyCode() {
+		return vacancyCode;
+	}
+
+	public void setVacancyCode(String vacancyCode) {
+		this.vacancyCode = vacancyCode;
+	}
+
+	public String getCompanyPhotoId() {
+		return companyPhotoId;
+	}
+
+	public void setCompanyPhotoId(String companyPhotoId) {
+		this.companyPhotoId = companyPhotoId;
+	}
 
 	public String getVacancyTitle() {
 		return vacancyTitle;

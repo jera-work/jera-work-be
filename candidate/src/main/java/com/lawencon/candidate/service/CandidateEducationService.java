@@ -1,6 +1,5 @@
 package com.lawencon.candidate.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,8 @@ public class CandidateEducationService {
 	private CandidateEducationDao educationDao;
 	@Autowired
 	private ApiService apiService;
+	@Autowired
+	private EmailEncoderService encoderService;
 
 	/* Insert educations for candidate */
 	public InsertResDto insertCandidateEducations(List<CandidateEducationCreateReqDto> datas) {
@@ -74,34 +75,12 @@ public class CandidateEducationService {
 	}
 
 	/* get educations for candidate */
-	public List<CandidateEducationResDto> getEducations() {
-		final List<CandidateEducationResDto> responses = new ArrayList<>();
-
-		final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
-		final List<CandidateEducation> educations = educationDao.getByCandidateId(candidate.getId());
-
-		for (CandidateEducation education : educations) {
-			final CandidateEducationResDto response = new CandidateEducationResDto();
-			response.setDegreeId(education.getDegree());
-			response.setGpa(education.getGpa());
-			response.setEndYear(education.getEndYear().toString());
-			response.setId(education.getId());
-			response.setInstitutionAddress(education.getInstitutionAddress());
-			response.setInstitutionName(education.getInstitutionName());
-			response.setMajorId(education.getMajor());
-			response.setStartYear(education.getStartYear().toString());
-			responses.add(response);
-		}
-
-		return responses;
-	}
-
-	/* get educations for candidate */
 	public List<CandidateEducationResDto> getEducationsList() {
 		final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
 		final List<CandidateEducation> educations = educationDao.getByCandidateId(candidate.getId());
-
-		final String url = "http://localhost:8081/educations/?email=" + candidate.getCandidateEmail();
+		final String encodedEmail = encoderService.encodeEmail(candidate.getCandidateEmail());
+		
+		final String url = "http://localhost:8081/educations/?email=" + encodedEmail;
 		final List<CandidateEducationResDto> responseFromAdmin = apiService.getListFrom(url,
 				CandidateEducationResDto.class);
 

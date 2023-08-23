@@ -5,6 +5,15 @@ public class CandidateSkillReqDto {
 	private String candidateEmail;
 	private String candidateId;
 	private String skillId;
+	private String skillName;
+
+	public String getSkillName() {
+		return skillName;
+	}
+
+	public void setSkillName(String skillName) {
+		this.skillName = skillName;
+	}
 
 	public String getCandidateEmail() {
 		return candidateEmail;

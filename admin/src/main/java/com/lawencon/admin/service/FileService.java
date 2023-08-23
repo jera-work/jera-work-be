@@ -13,6 +13,11 @@ public class FileService {
 	@Autowired
 	private FileDao fileDao;
 
+	public FileService(FileDao fileDao) {
+		this.fileDao = fileDao;
+	}
+
+
 	public File getById(String id) {
 		ConnHandler.begin();
 		final File file = fileDao.getById(id);

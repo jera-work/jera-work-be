@@ -13,7 +13,7 @@ import com.lawencon.admin.dto.skill.SkillResDto;
 import com.lawencon.admin.service.SkillService;
 
 @RestController
-@RequestMapping("/skills")
+@RequestMapping("/master-skills")
 public class SkillController {
 	@Autowired
 	private SkillService skillService;

@@ -19,11 +19,21 @@ public class AppliedProgressService {
 		
 		appliedProgressDao.getAll().forEach(av -> {
 			final AppliedProgressResDto response = new AppliedProgressResDto();
-			//
+			response.setId(av.getId());
+			response.setProgressCode(av.getProgressCode());
+			response.setProgressName(av.getProgressName());
 			
 			responses.add(response);
 		});
 		
 		return responses;
+	}
+	
+	public AppliedProgressResDto getByCode(String code) {
+		final AppliedProgressResDto response = new AppliedProgressResDto();
+		
+		response.setId(appliedProgressDao.getByCode(code).getId());
+		
+		return response;
 	}
 }

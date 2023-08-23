@@ -6,7 +6,10 @@ import java.util.function.Supplier;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.admin.model.AppliedProgress;
+import com.lawencon.admin.model.Company;
+import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.base.ConnHandler;
 
 @Repository
 public class AppliedProgressDao extends AbstractJpaDao {
@@ -43,4 +46,22 @@ public class AppliedProgressDao extends AbstractJpaDao {
 		return super.deleteById(AppliedProgress.class, entityId);
 	}
 
+	public AppliedProgress getByCode(final String code) {
+		final String sql = "SELECT "
+				+ "tap.id "
+				+ "FROM "
+				+ "t_applied_progress tap "
+				+ "WHERE "
+				+ "tap.progress_code LIKE :code";
+		
+		final Object appObj = ConnHandler.getManager()
+				.createNativeQuery(sql)
+				.setParameter("code", code)
+				.getSingleResult();
+		
+		final AppliedProgress appliedProgress = new AppliedProgress();
+		appliedProgress.setId(appObj.toString());
+		
+		return appliedProgress;
+	}
 }

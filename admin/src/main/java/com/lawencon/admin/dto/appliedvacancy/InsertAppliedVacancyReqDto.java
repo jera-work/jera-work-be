@@ -5,8 +5,6 @@ public class InsertAppliedVacancyReqDto {
 	private String candidateEmail;
 	private String jobVacancyId;
 	private String jobVacancyCode;
-	private String appliedStatusId;
-	private String appliedProgressId;
 
 	public String getCandidateEmail() {
 		return candidateEmail;
@@ -39,21 +37,4 @@ public class InsertAppliedVacancyReqDto {
 	public void setJobVacancyId(String jobVacancyId) {
 		this.jobVacancyId = jobVacancyId;
 	}
-
-	public String getAppliedStatusId() {
-		return appliedStatusId;
-	}
-
-	public void setAppliedStatusId(String appliedStatusId) {
-		this.appliedStatusId = appliedStatusId;
-	}
-
-	public String getAppliedProgressId() {
-		return appliedProgressId;
-	}
-
-	public void setAppliedProgressId(String appliedProgressId) {
-		this.appliedProgressId = appliedProgressId;
-	}
-
 }

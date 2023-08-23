@@ -5,11 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawencon.base.ConnHandler;
 import com.lawencon.candidate.dao.CandidateDao;
 import com.lawencon.candidate.dao.CandidateSkillDao;
 import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.candidateskill.CandidateSkillReqDto;
+import com.lawencon.candidate.dto.candidateskill.CandidateSkillResDto;
 import com.lawencon.candidate.model.Candidate;
 import com.lawencon.candidate.model.CandidateSkill;
 import com.lawencon.security.principal.PrincipalServiceImpl;
@@ -25,6 +28,8 @@ public class CandidateSkillService {
 	private PrincipalServiceImpl principalService;
 	@Autowired
 	private ApiService apiService;
+	@Autowired
+	private EmailEncoderService encoderService;
 	
 	/* insert skills for candidate */
 	public InsertResDto createSkill(List<CandidateSkillReqDto> datas) {
@@ -36,7 +41,10 @@ public class CandidateSkillService {
 				final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
 				final CandidateSkill skill = new CandidateSkill();
 				skill.setCandidate(candidate);
-				skill.setSkill(data.getSkillId());
+				if(data.getSkillId() != null && data.getSkillId() != "") {
+					skill.setSkill(data.getSkillId());
+					skill.setSkillName(data.getSkillId());
+				}
 				final CandidateSkill skillDb = candidateSkillDao.save(skill);
 				
 				data.setCandidateEmail(candidate.getCandidateEmail());
@@ -51,5 +59,22 @@ public class CandidateSkillService {
 			ConnHandler.rollback();
 		}
 		return response;
+	}
+	
+	/* get skills for candidate */
+	public List<CandidateSkillResDto> getSkills() {
+		final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
+		final List<CandidateSkill> skills = candidateSkillDao.getByCandidateId(candidate.getId());
+		final String encodedEmail = encoderService.encodeEmail(candidate.getCandidateEmail());
+		
+		final String url = "http://localhost:8081/skills/?email=" + encodedEmail;
+		final List<CandidateSkillResDto> responseFromAdmin = apiService.getListFrom(url, CandidateSkillResDto.class);
+		final List<CandidateSkillResDto> responses = new ObjectMapper().convertValue(responseFromAdmin, new TypeReference<List<CandidateSkillResDto>>() {});
+		
+		for (int i = 0; i < responses.size(); i++) {
+			responses.get(i).setSkillId(skills.get(i).getId());
+		}
+		
+		return responses;
 	}
 }

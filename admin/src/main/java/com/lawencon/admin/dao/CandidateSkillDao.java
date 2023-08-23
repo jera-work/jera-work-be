@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.lawencon.admin.model.CandidateSkill;
 import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.base.ConnHandler;
 
 @Repository
 public class CandidateSkillDao extends AbstractJpaDao {
@@ -41,6 +42,16 @@ public class CandidateSkillDao extends AbstractJpaDao {
 
 	public boolean deleteById(final Object entityId) {
 		return super.deleteById(CandidateSkill.class, entityId);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CandidateSkill> getByCandidateId(String candidateId){
+		final String sql = "SELECT * FROM t_candidate_skill WHERE candidate_id LIKE :candidateId ; ";
+		
+		final List<CandidateSkill> results = ConnHandler.getManager().createNativeQuery(sql, CandidateSkill.class)
+				.setParameter("candidateId", candidateId)
+				.getResultList();
+		return results;
 	}
 
 }

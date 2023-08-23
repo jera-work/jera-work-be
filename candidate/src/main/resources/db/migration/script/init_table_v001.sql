@@ -1,4 +1,6 @@
 --DROP TABLE IF EXISTS t_saved_jobs;
+--DROP TABLE IF EXISTS t_question_answer;
+--DROP TABLE IF EXISTS t_applied_vacancy;
 --DROP TABLE IF EXISTS t_custom_candidate_skill;
 --DROP TABLE IF EXISTS t_candidate_skill;
 --DROP TABLE IF EXISTS t_candidate_experience;
@@ -171,6 +173,7 @@ CREATE TABLE t_candidate_skill (
 	id varchar(36) NOT NULL,
 	candidate_id varchar NOT NULL,
 	skill_id varchar,
+	skill_name varchar(255),
 	created_by varchar NOT NULL,
 	created_at timestamp NOT NULL,
 	updated_by varchar,

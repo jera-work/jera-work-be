@@ -1,5 +1,6 @@
 package com.lawencon.admin.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -10,6 +11,7 @@ import com.lawencon.admin.model.AppliedStatus;
 import com.lawencon.admin.model.AppliedVacancy;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.CandidateProfile;
+import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
@@ -75,7 +77,7 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 		}
 	}
 
-	public AppliedVacancy getByAppliedVacancyId(String appliedVacancyId) {
+	public AppliedVacancy getByJobVacancyId(String jobVacancyId) {
 		final String sql = "SELECT "
 				+ "	tav.id, tcp.profile_name, tap.progress_name, tas.status_name "
 				+ "FROM "
@@ -93,7 +95,7 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 		
 		final Object appObj = ConnHandler.getManager()
 				.createNativeQuery(sql)
-				.setParameter("appliedVacancyId", appliedVacancyId)
+				.setParameter("jobVacancyId", jobVacancyId)
 				.getSingleResult();
 		
 		final Object[] appObjArr = (Object[]) appObj;
@@ -122,5 +124,53 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public List<AppliedVacancy> getByCandidateId(String candidateId){
+		final String sql = "SELECT "
+				+ "	tav.id, tav.job_vacancy_id, tjv.vacancy_code, tap.progress_name , tas.status_name "
+				+ "FROM "
+				+ "	t_applied_vacancy tav "
+				+ "INNER JOIN "
+				+ "	t_job_vacancy tjv ON tav.job_vacancy_id = tjv.id "
+				+ "INNER JOIN "
+				+ "	t_applied_progress tap ON tav.applied_progress_id = tap.id "
+				+ "INNER JOIN "
+				+ "	t_applied_status tas ON tav.applied_status_id = tas.id "
+				+ "WHERE "
+				+ "	tav.candidate_id = :candidateId";
+		
+		final List<?> appObjs = ConnHandler.getManager()
+				.createNativeQuery(sql)
+				.setParameter("candidateId", candidateId)
+				.getResultList();
+		
+		final List<AppliedVacancy> appliedVacancies = new ArrayList<>();
+		
+		if(appObjs.size() > 0) {
+			for(Object appObj: appObjs) {
+				final Object[] appObjArr = (Object[]) appObj;
+				
+				final AppliedVacancy appliedVacancy = new AppliedVacancy();
+				appliedVacancy.setId(appObjArr[0].toString());
+				
+				final JobVacancy jobVacancy = new JobVacancy();
+				jobVacancy.setId(appObjArr[1].toString());
+				jobVacancy.setVacancyCode(appObjArr[2].toString());
+				appliedVacancy.setJobVacancy(jobVacancy);
+				
+				final AppliedProgress appliedProgress = new AppliedProgress();
+				appliedProgress.setProgressName(appObjArr[3].toString());
+				appliedVacancy.setAppliedProgress(appliedProgress);
+				
+				final AppliedStatus appliedStatus = new AppliedStatus();
+				appliedStatus.setStatusName(appObjArr[4].toString());
+				appliedVacancy.setAppliedStatus(appliedStatus);
+				
+				appliedVacancies.add(appliedVacancy);
+			}
+		}
+		
+		return appliedVacancies;
 	}
 }

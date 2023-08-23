@@ -110,17 +110,27 @@ public class BlacklistEmployeeDao extends AbstractJpaDao {
 				+ "WHERE "
 				+ "	tbe.company_id = :companyId AND tbe.employee_id = :employeeId";
 		
-		final Object blkObj = ConnHandler.getManager()
-				.createNativeQuery(sql)
-				.setParameter("companyId", companyId)
-				.setParameter("employeeId", employeeId)
-				.getSingleResult();
+		try {
+			final Object blkObj = ConnHandler.getManager()
+					.createNativeQuery(sql)
+					.setParameter("companyId", companyId)
+					.setParameter("employeeId", employeeId)
+					.getSingleResult();
+
+			BlacklistEmployee blacklistEmployee = null;
+			if(blkObj != null) {
+				final Object[] blkObjArr = (Object[]) blkObj;
+
+				if(blkObjArr.length > 0) {
+					blacklistEmployee =  new BlacklistEmployee();
+					blacklistEmployee.setId(blkObjArr[0].toString());
+				}
+			}
+			return blacklistEmployee;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 		
-		final Object[] blkObjArr = (Object[]) blkObj;
-		
-		final BlacklistEmployee blacklistEmployee = new BlacklistEmployee();
-		blacklistEmployee.setId(blkObjArr[0].toString());
-		
-		return blacklistEmployee;
 	}
 }

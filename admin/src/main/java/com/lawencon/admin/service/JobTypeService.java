@@ -19,7 +19,9 @@ public class JobTypeService {
 		
 		jobTypeDao.getAll().forEach(av -> {
 			final JobTypeResDto response = new JobTypeResDto();
-			//
+			response.setId(av.getId());
+			response.setTypeCode(av.getTypeCode());
+			response.setTypeName(av.getTypeName());
 			
 			responses.add(response);
 		});

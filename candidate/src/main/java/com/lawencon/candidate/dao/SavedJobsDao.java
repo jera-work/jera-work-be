@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.base.ConnHandler;
 import com.lawencon.candidate.model.SavedJobs;
 
 @Repository
@@ -43,4 +44,32 @@ public class SavedJobsDao extends AbstractJpaDao {
 		return super.deleteById(SavedJobs.class, entityId);
 	}
 
+	public SavedJobs getbyJobAndCandidate(String jobId, String candidateId) {
+		final String sql = "SELECT "
+				+ "	tsj.id "
+				+ "FROM "
+				+ "	t_saved_jobs tsj "
+				+ "INNER JOIN "
+				+ "	t_candidate tc ON tsj.candidate_id = tc.id "
+				+ "INNER JOIN "
+				+ "	t_job_vacancy tjv ON tsj.job_vacancy_id = tjv.id "
+				+ "WHERE "
+				+ "	tsj.candidate_id = :candidateId AND tsj.job_vacancy_id = :jobId";
+		
+		try {
+			final Object savObj = ConnHandler.getManager()
+					.createNativeQuery(sql)
+					.setParameter("candidateId", candidateId)
+					.setParameter("jobId", jobId)
+					.getSingleResult();
+			
+			final SavedJobs jobs = new SavedJobs();
+			jobs.setId(savObj.toString());
+			
+			return jobs;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

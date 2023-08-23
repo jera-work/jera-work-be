@@ -1,9 +1,15 @@
 package com.lawencon.admin.service;
 
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.admin.constant.AppliedProgressCode;
+import com.lawencon.admin.constant.AppliedStatusCode;
 import com.lawencon.admin.dao.AppliedProgressDao;
 import com.lawencon.admin.dao.AppliedStatusDao;
 import com.lawencon.admin.dao.AppliedVacancyDao;
@@ -13,6 +19,7 @@ import com.lawencon.admin.dao.HiredEmployeeDao;
 import com.lawencon.admin.dao.JobVacancyDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.UpdateResDto;
+import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyResDto;
 import com.lawencon.admin.dto.appliedvacancy.InsertAppliedVacancyReqDto;
 import com.lawencon.admin.dto.appliedvacancy.UpdateProgressReqDto;
 import com.lawencon.admin.exception.CustomException;
@@ -46,31 +53,48 @@ public class AppliedVacancyService {
 	public InsertResDto insertAppliedVacancy(InsertAppliedVacancyReqDto data) {
 
 		final InsertResDto response = new InsertResDto();
-		
+
+		ConnHandler.begin();
 		try {
-			ConnHandler.begin();
 			final JobVacancy job = jobVacancyDao.getByCode(data.getJobVacancyCode());
 			final Candidate candidate = candidateDao.getByEmail(data.getCandidateEmail());
-			final HiredEmployee hiredEmployee = hiredEmployeeDao.getByCandidate(job.getCompany().getId(), candidate.getId());
-
-			if (hiredEmployee != null) {
-				if(blacklistEmployeeDao.getByCompanyAndEmployee(job.getCompany().getId(), hiredEmployee.getId()) != null) {
+			
+			if (hiredEmployeeDao.getByCandidate(job.getCompany().getId(), candidate.getId()) != null) {
+				final HiredEmployee hiredEmployee = hiredEmployeeDao.getByCandidate(job.getCompany().getId(), candidate.getId());
+				if(blacklistEmployeeDao.getByCompanyAndEmployee(job.getCompany().getId(), hiredEmployee.getId()) == null) {
 					final AppliedVacancy appliedVacancy = new AppliedVacancy();
 					appliedVacancy.setCandidate(candidate);
-					appliedVacancy.setAppliedProgress(progressDao.getByIdRef(data.getAppliedProgressId()));
-					appliedVacancy.setAppliedStatus(statusDao.getByIdRef(data.getAppliedStatusId()));
+					appliedVacancy.setAppliedProgress(progressDao.getByCode(AppliedProgressCode.APPLICATION.progressCode));
+					appliedVacancy.setAppliedStatus(statusDao.getByCode(AppliedStatusCode.ACTIVE.statusCode));
 					appliedVacancy.setJobVacancy(job);
 					final AppliedVacancy appliedVacancyDb = appliedVacancyDao.save(appliedVacancy);
-					
+
+					ConnHandler.commit();
 					if(appliedVacancyDb != null) {
 						response.setId(appliedVacancyDb.getId());
 						response.setMessage("You have applied to this job!");
+					} else {
+						throw new CustomException();
 					}
+				} 
+			} else {
+				System.out.println("masukk");
+				final AppliedVacancy appliedVacancy = new AppliedVacancy();
+				appliedVacancy.setCandidate(candidate);
+				appliedVacancy.setAppliedProgress(progressDao.getByCode(AppliedProgressCode.APPLICATION.progressCode));
+				appliedVacancy.setAppliedStatus(statusDao.getByCode(AppliedStatusCode.ACTIVE.statusCode));
+				appliedVacancy.setJobVacancy(job);
+				final AppliedVacancy appliedVacancyDb = appliedVacancyDao.save(appliedVacancy);
+
+				ConnHandler.commit();
+				if(appliedVacancyDb != null) {
+					response.setId(appliedVacancyDb.getId());
+					response.setMessage("You have applied to this job!");
 				} else {
 					throw new CustomException();
 				}
 			}
-			ConnHandler.commit();
+
 			return response;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -107,5 +131,28 @@ public class AppliedVacancyService {
 		}
 		
 		return response;
+	}
+	
+	public List<AppliedVacancyResDto> getByCandidateId(String email){
+		final byte[] decodeEmail = Base64.getDecoder().decode(email);
+		final String candidateEmail = new String(decodeEmail);
+		final Candidate candidate = candidateDao.getByEmail(candidateEmail);
+		
+		final List<AppliedVacancyResDto> responses = new ArrayList<>();
+		
+		appliedVacancyDao.getByCandidateId(candidate.getId()).forEach(av -> {
+			final AppliedVacancyResDto response = new AppliedVacancyResDto();
+			
+			response.setId(av.getId());
+			response.setJobVacancyId(av.getJobVacancy().getId());
+			response.setJobVacancyCode(av.getJobVacancy().getVacancyCode());
+			response.setAppliedProgressName(av.getAppliedProgress().getProgressName());
+			response.setAppliedStatusName(av.getAppliedStatus().getStatusName());
+			
+			responses.add(response);
+			
+		});
+		
+		return responses;
 	}
 }

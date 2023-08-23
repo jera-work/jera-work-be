@@ -41,6 +41,5 @@ public class SecurityConfig {
 			web.ignoring().requestMatchers(r);
 		});
 	}
-
 }
 
