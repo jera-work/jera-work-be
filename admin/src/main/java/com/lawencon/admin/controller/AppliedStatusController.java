@@ -9,25 +9,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lawencon.admin.dto.appliedprogress.AppliedProgressResDto;
-import com.lawencon.admin.service.AppliedProgressService;
+import com.lawencon.admin.dto.appliedstatus.AppliedStatusResDto;
+import com.lawencon.admin.service.AppliedStatusService;
 
 @RestController
-@RequestMapping("/applied-progress")
-public class AppliedProgressController {
+@RequestMapping("/applied-status")
+public class AppliedStatusController {
 	@Autowired
-	private AppliedProgressService appliedProgressService;
+	private AppliedStatusService appliedStatusService;
 	
 	@GetMapping
-	public ResponseEntity<List<AppliedProgressResDto>> getAll(){
-		final List<AppliedProgressResDto> responses = appliedProgressService.getAll();
+	public ResponseEntity<List<AppliedStatusResDto>> getAll(){
+		final List<AppliedStatusResDto> responses = appliedStatusService.getAll();
 		
 		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}
 	
 	@GetMapping("/code")
-	public ResponseEntity<AppliedProgressResDto> getByCode(String code){
-		final AppliedProgressResDto responses = appliedProgressService.getByCode(code);
+	public ResponseEntity<AppliedStatusResDto> getByCode(String code){
+		final AppliedStatusResDto responses = appliedStatusService.getByCode(code);
 		
 		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}

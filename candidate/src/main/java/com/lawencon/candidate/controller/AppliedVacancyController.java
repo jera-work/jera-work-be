@@ -1,8 +1,11 @@
 package com.lawencon.candidate.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.UpdateResDto;
+import com.lawencon.candidate.dto.appliedvacancy.AppliedVacancyResDto;
 import com.lawencon.candidate.dto.appliedvacancy.InsertAppliedVacancyReqDto;
 import com.lawencon.candidate.dto.appliedvacancy.UpdateProgressReqDto;
 import com.lawencon.candidate.service.AppliedVacancyService;
@@ -32,5 +36,11 @@ public class AppliedVacancyController {
 	public ResponseEntity<UpdateResDto> changeStatus(@RequestBody UpdateProgressReqDto data) {
 		final UpdateResDto response = appliedVacancyService.changeAppliedStatusProgress(data);
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("/my-applied")
+	public ResponseEntity<List<AppliedVacancyResDto>> getMyAppliedJob() {
+		final List<AppliedVacancyResDto> responses = appliedVacancyService.getByCandidateId();
+		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}
 }

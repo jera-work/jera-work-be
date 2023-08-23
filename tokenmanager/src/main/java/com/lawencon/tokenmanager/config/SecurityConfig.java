@@ -43,21 +43,5 @@ public class SecurityConfig {
 			web.ignoring().requestMatchers(r);
 		});
 	}
-	
-	@Bean
-	public WebMvcConfigurer mvcConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-				.allowedOrigins("http://localhost:4200")
-				.allowedMethods(HttpMethod.GET.name(),
-						HttpMethod.POST.name(),
-						HttpMethod.PUT.name(),
-						HttpMethod.PATCH.name(),
-						HttpMethod.DELETE.name());
-			}
-		};
-	}
 }
 

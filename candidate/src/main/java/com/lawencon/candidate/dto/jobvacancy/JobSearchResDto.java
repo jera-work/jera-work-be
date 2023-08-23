@@ -1,4 +1,4 @@
-package com.lawencon.admin.dto.jobvacancy;
+package com.lawencon.candidate.dto.jobvacancy;
 
 public class JobSearchResDto {
 	private String id;
@@ -11,6 +11,7 @@ public class JobSearchResDto {
 	private String cityName;
 	private String createdAt;
 	private String companyPhotoId;
+	
 
 	public String getId() {
 		return id;

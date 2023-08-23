@@ -1,4 +1,6 @@
 --DROP TABLE IF EXISTS t_saved_jobs;
+--DROP TABLE IF EXISTS t_question_answer;
+--DROP TABLE IF EXISTS t_applied_vacancy;
 --DROP TABLE IF EXISTS t_custom_candidate_skill;
 --DROP TABLE IF EXISTS t_candidate_skill;
 --DROP TABLE IF EXISTS t_candidate_experience;

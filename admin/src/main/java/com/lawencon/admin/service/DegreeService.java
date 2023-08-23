@@ -20,7 +20,9 @@ public class DegreeService {
 		
 		degreeDao.getAll().forEach(av -> {
 			final DegreeResDto response = new DegreeResDto();
-			//
+			response.setId(av.getId());
+			response.setDegreeCode(av.getDegreeCode());
+			response.setDegreeName(av.getDegreeName());
 			
 			responses.add(response);
 		});

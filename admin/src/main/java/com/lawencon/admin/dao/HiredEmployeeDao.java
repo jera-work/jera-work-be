@@ -98,7 +98,7 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 	
 	public HiredEmployee getByCandidate(String companyId, String candidateId) {
 		final String sql = "SELECT "
-				+ "	the.id, tc.id "
+				+ "	the.id "
 				+ "FROM "
 				+ "	t_hired_employee the "
 				+ "INNER JOIN "
@@ -106,26 +106,28 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 				+ "WHERE "
 				+ "	the.candidate_id = :candidateId AND the.company_id = :companyId";
 		
-		final Object hirObj = ConnHandler.getManager()
-				.createNativeQuery(sql)
-				.setParameter("candidateId", candidateId)
-				.setParameter("companyId", companyId)
-				.getSingleResult();
-		
-		final Object[] hirObjArr = (Object[]) hirObj;
+		try {
+			final Object hirObj = ConnHandler.getManager()
+					.createNativeQuery(sql)
+					.setParameter("candidateId", candidateId)
+					.setParameter("companyId", companyId)
+					.getSingleResult();
 
-		HiredEmployee employee = null;
-		if(hirObjArr.length > 0) {
-			employee = new HiredEmployee();
-			employee.setId(hirObjArr[0].toString());
-			
-			final Candidate candidate = new Candidate();
-			candidate.setId(hirObjArr[1].toString());
-			
-			employee.setCandidate(candidate);
-			
+			HiredEmployee employee = null;
+			if (hirObj != null) {
+				final Object[] hirObjArr = (Object[]) hirObj;
+
+				if(hirObjArr.length > 0) {
+					employee = new HiredEmployee();
+					employee.setId(hirObjArr[0].toString());
+					
+				}
+			}
+			return employee;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 		
-		return employee;
 	}
 }

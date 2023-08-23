@@ -19,7 +19,9 @@ public class CityService {
 		
 		cityDao.getAll().forEach(av -> {
 			final CityResDto response = new CityResDto();
-			//
+			response.setId(av.getId());
+			response.setCityCode(av.getCityCode());
+			response.setCityName(av.getCityName());
 			
 			responses.add(response);
 		});

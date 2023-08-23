@@ -379,7 +379,6 @@ CREATE TABLE t_job_vacancy (
 	end_date TIMESTAMP NOT NULL,
 	exp_level_id VARCHAR NOT NULL,
 	available_status_id VARCHAR NOT NULL,
-	candidate_total INT,
 	company_id VARCHAR NOT NULL,
 	vacancy_description_id VARCHAR NOT NULL,
 	created_by varchar NOT NULL,

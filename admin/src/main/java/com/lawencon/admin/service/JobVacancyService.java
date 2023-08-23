@@ -118,13 +118,15 @@ public class JobVacancyService {
 
 		jobDao.getAllWithLimit(startIndex, endIndex, vacancyTitle, degreeId, cityId, jobTypeId).forEach(jv -> {
 			final JobSearchResDto response = new JobSearchResDto();
+			response.setId(jv.getId());
 			response.setCityName(jv.getVacancyDescription().getCity().getCityName());
 			response.setCompanyName(jv.getCompany().getCompanyName());
 			response.setDegreeName(jv.getVacancyDescription().getDegree().getDegreeName());
 			response.setJobTypeName(jv.getVacancyDescription().getJobType().getTypeName());
 			response.setSalary(jv.getVacancyDescription().getSalary());
 			response.setVacancyTitle(jv.getVacancyTitle());
-			response.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
+			response.setVacancyCode(jv.getVacancyCode());
+			response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
 
 			responses.add(response);
 		});
@@ -132,18 +134,41 @@ public class JobVacancyService {
 		return responses;
 	}
 
-	public List<JobSearchResDto> getAll(int startIndex, int endIndex) {
+	public List<JobSearchResDto> getAllWithPagination(int startIndex, int endIndex) {
 		final List<JobSearchResDto> responses = new ArrayList<>();
 
 		jobDao.getAll(startIndex, endIndex).forEach(jv -> {
 			final JobSearchResDto response = new JobSearchResDto();
+			response.setId(jv.getId());
 			response.setCityName(jv.getVacancyDescription().getCity().getCityName());
 			response.setCompanyName(jv.getCompany().getCompanyName());
 			response.setDegreeName(jv.getVacancyDescription().getDegree().getDegreeName());
 			response.setJobTypeName(jv.getVacancyDescription().getJobType().getTypeName());
 			response.setSalary(jv.getVacancyDescription().getSalary());
 			response.setVacancyTitle(jv.getVacancyTitle());
-			response.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
+			response.setVacancyCode(jv.getVacancyCode());
+			response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
+
+			responses.add(response);
+		});
+
+		return responses;
+	}
+	
+	public List<JobSearchResDto> getAll() {
+		final List<JobSearchResDto> responses = new ArrayList<>();
+
+		jobDao.getAll().forEach(jv -> {
+			final JobSearchResDto response = new JobSearchResDto();
+			response.setId(jv.getId());
+			response.setCityName(jv.getVacancyDescription().getCity().getCityName());
+			response.setCompanyName(jv.getCompany().getCompanyName());
+			response.setDegreeName(jv.getVacancyDescription().getDegree().getDegreeName());
+			response.setJobTypeName(jv.getVacancyDescription().getJobType().getTypeName());
+			response.setSalary(jv.getVacancyDescription().getSalary());
+			response.setVacancyTitle(jv.getVacancyTitle());
+			response.setVacancyCode(jv.getVacancyCode());
+			response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
 
 			responses.add(response);
 		});
@@ -156,13 +181,15 @@ public class JobVacancyService {
 
 		jobDao.getLatestJob(startIndex, endIndex).forEach(jv -> {
 			final JobSearchResDto response = new JobSearchResDto();
+			response.setId(jv.getId());
 			response.setCityName(jv.getVacancyDescription().getCity().getCityName());
 			response.setCompanyName(jv.getCompany().getCompanyName());
 			response.setDegreeName(jv.getVacancyDescription().getDegree().getDegreeName());
 			response.setJobTypeName(jv.getVacancyDescription().getJobType().getTypeName());
 			response.setSalary(jv.getVacancyDescription().getSalary());
 			response.setVacancyTitle(jv.getVacancyTitle());
-			response.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
+			response.setVacancyCode(jv.getVacancyCode());
+			response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
 
 			responses.add(response);
 		});
@@ -179,7 +206,6 @@ public class JobVacancyService {
 		jobDao.getJobByCompany(startIndex, endIndex, company.getId()).forEach(jv -> {
 			final JobVacancyResDto response = new JobVacancyResDto();
 			response.setCompanyName(jv.getCompany().getCompanyName());
-			response.setDescriptionId(jv.getVacancyDescription().getId());
 			response.setEndDate(DateUtil.dateFormat(jv.getEndDate()));
 			response.setStartDate(DateUtil.dateFormat(jv.getStartDate()));
 			response.setHrName(jv.getPicHr().getProfile().getProfileName());
@@ -198,10 +224,20 @@ public class JobVacancyService {
 
 	public JobVacancyResDto getJobDetail(String jobId) {
 		final JobVacancy jv = jobDao.getById(jobId);
+		final VacancyDescription vd = descDao.getById(jv.getVacancyDescription().getId());
 
 		final JobVacancyResDto response = new JobVacancyResDto();
 		response.setCompanyName(jv.getCompany().getCompanyName());
-		response.setDescriptionId(jv.getVacancyDescription().getId());
+		response.setCompanyDesc(jv.getCompany().getDescription());
+		response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
+		response.setDegreeName(vd.getDegree().getDegreeName());
+		response.setGenderName(vd.getGender().getGenderName());
+		response.setAgeVacancyName(vd.getAgeVacancy().getAgeName());
+		response.setJobTypeName(vd.getJobType().getTypeName());
+		response.setSalary(vd.getSalary());
+		response.setCityName(vd.getCity().getCityName());
+		response.setAddress(vd.getAddress());
+		response.setDescription(vd.getDescription());
 		response.setEndDate(DateUtil.dateFormat(jv.getEndDate()));
 		response.setStartDate(DateUtil.dateFormat(jv.getStartDate()));
 		response.setHrName(jv.getPicHr().getProfile().getProfileName());
@@ -211,6 +247,36 @@ public class JobVacancyService {
 		response.setVacancyTitle(jv.getVacancyTitle());
 		response.setVacancyCode(jv.getVacancyCode());
 		response.setVacancyId(jv.getId());
+
+		return response;
+	}
+	
+	public JobVacancyResDto getByCode(String code) {
+		final JobVacancy job = jobDao.getByCode(code);
+		final JobVacancy jv = jobDao.getById(job.getId());
+		final VacancyDescription vd = descDao.getById(jv.getVacancyDescription().getId());
+
+		final JobVacancyResDto response = new JobVacancyResDto();
+		response.setCompanyName(jv.getCompany().getCompanyName());
+		response.setCompanyDesc(jv.getCompany().getDescription());
+		response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
+		response.setEndDate(DateUtil.dateFormat(jv.getEndDate()));
+		response.setStartDate(DateUtil.dateFormat(jv.getStartDate()));
+		response.setHrName(jv.getPicHr().getProfile().getProfileName());
+		response.setUserName(jv.getPicUser().getProfile().getProfileName());
+		response.setLevelName(jv.getExpLevel().getLevelName());
+		response.setStatusName(jv.getAvailableStatus().getStatusname());
+		response.setVacancyTitle(jv.getVacancyTitle());
+		response.setVacancyCode(jv.getVacancyCode());
+		response.setVacancyId(jv.getId());
+		response.setDegreeName(vd.getDegree().getDegreeName());
+		response.setGenderName(vd.getGender().getGenderName());
+		response.setAgeVacancyName(vd.getAgeVacancy().getAgeName());
+		response.setJobTypeName(vd.getJobType().getTypeName());
+		response.setSalary(vd.getSalary());
+		response.setCityName(vd.getCity().getCityName());
+		response.setAddress(vd.getAddress());
+		response.setDescription(vd.getDescription());
 
 		return response;
 	}

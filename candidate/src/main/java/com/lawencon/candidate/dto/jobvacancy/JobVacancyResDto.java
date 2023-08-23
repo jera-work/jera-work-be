@@ -1,4 +1,4 @@
-package com.lawencon.admin.dto.jobvacancy;
+package com.lawencon.candidate.dto.jobvacancy;
 
 public class JobVacancyResDto {
 	private String vacancyId;

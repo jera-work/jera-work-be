@@ -49,6 +49,7 @@ public class SecurityConfig {
 		final List<RequestMatcher> matchers = new ArrayList<>();
 		matchers.add(new AntPathRequestMatcher("/login", HttpMethod.POST.toString()));
 		matchers.add(new AntPathRequestMatcher("/candidates/register", HttpMethod.POST.toString()));
+		matchers.add(new AntPathRequestMatcher("/files/**", HttpMethod.GET.toString()));
 		return matchers;
 	}
 
@@ -58,21 +59,15 @@ public class SecurityConfig {
 			web.ignoring().requestMatchers(r);
 		});
 	}
-	
+
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-						.allowedOrigins("http://localhost:4200")
-						.allowedMethods(
-								HttpMethod.GET.name(), 
-								HttpMethod.POST.name(), 
-								HttpMethod.PUT.name(), 
-								HttpMethod.DELETE.name(),
-								HttpMethod.PATCH.name()
-								);
+				registry.addMapping("/**").allowedOrigins("http://localhost:4201", "http://localhost:4200").allowedMethods(HttpMethod.GET.name(),
+						HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.DELETE.name(),
+						HttpMethod.PATCH.name());
 			}
 		};
 	}

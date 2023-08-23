@@ -63,20 +63,28 @@ INSERT INTO t_skill(id, skill_code, skill_name, created_by, created_at, is_activ
 	((SELECT uuid_generate_v4()), 'PHP', 'PHP', '', now(), true, 0);
 
 INSERT INTO t_experience_level(id, level_code, level_name, created_by, created_at, is_active, ver) VALUES 
-	((SELECT uuid_generate_v4()), 'JNR', 'Junior', '', now(), true, 0);
+	((SELECT uuid_generate_v4()), 'JNR', 'Junior / Entry Level', '', now(), true, 0),
+	((SELECT uuid_generate_v4()), 'MID', 'Mid - Senior Level', '', now(), true, 0),
+	((SELECT uuid_generate_v4()), 'DIR', 'Director', '', now(), true, 0),
+	((SELECT uuid_generate_v4()), 'EXE', 'Executive', '', now(), true, 0);
 
 INSERT INTO t_available_status(id, status_code, status_name, created_by, created_at, is_active, ver) VALUES
-	((SELECT uuid_generate_v4()), 'OPN', 'Open', '', now(), true, 0);
+	((SELECT uuid_generate_v4()), 'OPN', 'Open', '', now(), true, 0),
+	((SELECT uuid_generate_v4()), 'CLS', 'Closed', '', now(), true, 0);
 
 INSERT INTO t_age_vacancy(id, age_code, age_name, created_by, created_at, is_active, ver) VALUES
 	((SELECT uuid_generate_v4()), 'AG1', 'Below 20', '', now(), true, 0);
 
 INSERT INTO t_job_type(id, type_code, type_name, created_by, created_at, is_active, ver) VALUES
-	((SELECT uuid_generate_v4()), 'FT', 'Fulltime', '', now(), true, 0);
+	((SELECT uuid_generate_v4()), 'FT', 'Fulltime', '', now(), true, 0),
+	((SELECT uuid_generate_v4()), 'PT', 'Part Time', '', now(), true, 0),
+	((SELECT uuid_generate_v4()), 'IT', 'Intern', '', now(), true, 0),
+	((SELECT uuid_generate_v4()), 'FL', 'Freelance', '', now(), true, 0);
 
 INSERT INTO t_applied_status(id, status_code, status_name, created_by, created_at, is_active, ver) VALUES
 	((SELECT uuid_generate_v4()), 'ACT', 'Active', '', now(), true, 0),
-	((SELECT uuid_generate_v4()), 'CLS', 'Closed', '', now(), true, 0);
+	((SELECT uuid_generate_v4()), 'CLS', 'Closed', '', now(), true, 0),
+	((SELECT uuid_generate_v4()), 'RJC', 'Rejected', '', now(), true, 0);
 
 INSERT INTO t_applied_progress(id, progress_code, progress_name, created_by, created_at, is_active, ver) VALUES
 	((SELECT uuid_generate_v4()), 'APP', 'Application', '', now(), true, 0),

@@ -21,7 +21,7 @@ public class FileService {
 	}
 
 
-	public File getById(Long id) {
+	public File getById(String id) {
 		final File file = fileDao.getById(id);
 		return file;
 	}

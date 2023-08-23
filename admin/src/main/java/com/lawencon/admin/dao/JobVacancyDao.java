@@ -1,7 +1,6 @@
 package com.lawencon.admin.dao;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -13,6 +12,7 @@ import com.lawencon.admin.model.City;
 import com.lawencon.admin.model.Company;
 import com.lawencon.admin.model.Degree;
 import com.lawencon.admin.model.ExperienceLevel;
+import com.lawencon.admin.model.File;
 import com.lawencon.admin.model.JobType;
 import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.admin.model.Profile;
@@ -58,7 +58,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 	
 	public JobVacancy getByCode(final String code) {
 		final String sql = "SELECT "
-				+ "tja.id, tc.id as companyId"
+				+ "tja.id, tja.company_id "
 				+ "FROM "
 				+ "t_job_vacancy tja "
 				+ "INNER JOIN "
@@ -92,12 +92,14 @@ public class JobVacancyDao extends AbstractJpaDao {
 
 	public List<JobVacancy> getAllWithLimit(int startIndex, int endIndex, String vacancyTitle, String degreeId, String cityId, String jobTypeId){
 		final String sql = "SELECT "
-				+ "	tjv.id, tjv.vacancy_code, tjv.vacancy_title, tc.company_name, "
-				+ " tvd.salary, td.degree_name, tjt.type_name, tc2.city_name, tjv.created_at "
+				+ "	tjv.id, tjv.vacancy_code, tjv.vacancy_title, tc.company_name, tc.photo_id, "
+				+ " tvd.salary, td.degree_name, tjt.type_name, tc2.city_name "
 				+ "FROM "
 				+ "	t_job_vacancy tjv "
 				+ "INNER JOIN "
 				+ "	t_company tc ON tjv.company_id = tc.id "
+				+ "INNER JOIN "
+				+ "	t_file tf ON tc.photo_id = tf.id "
 				+ "INNER JOIN "
 				+ "	t_vacancy_description tvd ON tjv.vacancy_description_id = tvd.id "
 				+ "INNER JOIN "
@@ -154,25 +156,29 @@ public class JobVacancyDao extends AbstractJpaDao {
 				
 				final Company company = new Company();
 				company.setCompanyName(objArr[3].toString());
+				
+				final File photo = new File();
+				photo.setId(objArr[4].toString());
+				company.setPhoto(photo);
+				
 				jobVacancy.setCompany(company);
 				
 				final VacancyDescription vacancyDescription = new VacancyDescription();
-				vacancyDescription.setSalary(objArr[4].toString());
+				vacancyDescription.setSalary(objArr[5].toString());
 				
 				final Degree degree = new Degree();
-				degree.setDegreeName(objArr[5].toString());
+				degree.setDegreeName(objArr[6].toString());
 				vacancyDescription.setDegree(degree);
 				
 				final JobType jobType = new JobType();
-				jobType.setTypeName(objArr[6].toString());
+				jobType.setTypeName(objArr[7].toString());
 				vacancyDescription.setJobType(jobType);
 				
 				final City city = new City();
-				city.setCityName(objArr[7].toString());
+				city.setCityName(objArr[8].toString());
 				vacancyDescription.setCity(city);
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
-				jobVacancy.setCreatedAt(LocalDateTime.parse(objArr[8].toString()));
 				
 				jobVacancies.add(jobVacancy);
 			}
@@ -184,11 +190,14 @@ public class JobVacancyDao extends AbstractJpaDao {
 	public List<JobVacancy> getLatestJob(int startIndex, int endIndex){
 		final String sql = "SELECT "
 				+ "	tjv.id, tjv.vacancy_code, tjv.vacancy_title, "
-				+ "tc.company_name, tvd.salary, td.degree_name , tjt.type_name , tc2.city_name, tjv.created_at "
+				+ "tc.company_name, tc.photo_id, tvd.salary, "
+				+ "td.degree_name, tjt.type_name , tc2.city_name "
 				+ "FROM "
 				+ "	t_job_vacancy tjv "
 				+ "INNER JOIN "
 				+ "	t_company tc ON tjv.company_id = tc.id "
+				+ "INNER JOIN "
+				+ "	t_file tf ON tc.photo_id = tf.id "
 				+ "INNER JOIN "
 				+ "	t_vacancy_description tvd ON tjv.vacancy_description_id = tvd.id "
 				+ "INNER JOIN "
@@ -219,25 +228,29 @@ public class JobVacancyDao extends AbstractJpaDao {
 				
 				final Company company = new Company();
 				company.setCompanyName(objArr[3].toString());
+				
+				final File photo = new File();
+				photo.setId(objArr[4].toString());
+				company.setPhoto(photo);
+				
 				jobVacancy.setCompany(company);
 				
 				final VacancyDescription vacancyDescription = new VacancyDescription();
-				vacancyDescription.setSalary(objArr[4].toString());
+				vacancyDescription.setSalary(objArr[5].toString());
 				
 				final Degree degree = new Degree();
-				degree.setDegreeName(objArr[5].toString());
+				degree.setDegreeName(objArr[6].toString());
 				vacancyDescription.setDegree(degree);
 				
 				final JobType jobType = new JobType();
-				jobType.setTypeName(objArr[6].toString());
+				jobType.setTypeName(objArr[7].toString());
 				vacancyDescription.setJobType(jobType);
 				
 				final City city = new City();
-				city.setCityName(objArr[7].toString());
+				city.setCityName(objArr[8].toString());
 				vacancyDescription.setCity(city);
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
-				jobVacancy.setCreatedAt(LocalDateTime.parse(objArr[8].toString()));
 				
 				jobVacancies.add(jobVacancy);
 			}
@@ -249,11 +262,14 @@ public class JobVacancyDao extends AbstractJpaDao {
 	public List<JobVacancy> getAll(int startIndex, int endIndex){
 		final String sql = "SELECT "
 				+ "	tjv.id, tjv.vacancy_code, tjv.vacancy_title, "
-				+ "tc.company_name, tvd.salary, td.degree_name , tjt.type_name , tc2.city_name, tjv.created_at "
+				+ "tc.company_name, tc.photo_id, tvd.salary, "
+				+ "td.degree_name , tjt.type_name , tc2.city_name "
 				+ "FROM "
 				+ "	t_job_vacancy tjv "
 				+ "INNER JOIN "
 				+ "	t_company tc ON tjv.company_id = tc.id "
+				+ "INNER JOIN "
+				+ "	t_file tf ON tc.photo_id = tf.id "
 				+ "INNER JOIN "
 				+ "	t_vacancy_description tvd ON tjv.vacancy_description_id = tvd.id "
 				+ "INNER JOIN "
@@ -282,25 +298,29 @@ public class JobVacancyDao extends AbstractJpaDao {
 				
 				final Company company = new Company();
 				company.setCompanyName(objArr[3].toString());
+				
+				final File photo = new File();
+				photo.setId(objArr[4].toString());
+				company.setPhoto(photo);
+				
 				jobVacancy.setCompany(company);
 				
 				final VacancyDescription vacancyDescription = new VacancyDescription();
-				vacancyDescription.setSalary(objArr[4].toString());
+				vacancyDescription.setSalary(objArr[5].toString());
 				
 				final Degree degree = new Degree();
-				degree.setDegreeName(objArr[5].toString());
+				degree.setDegreeName(objArr[6].toString());
 				vacancyDescription.setDegree(degree);
 				
 				final JobType jobType = new JobType();
-				jobType.setTypeName(objArr[6].toString());
+				jobType.setTypeName(objArr[7].toString());
 				vacancyDescription.setJobType(jobType);
 				
 				final City city = new City();
-				city.setCityName(objArr[7].toString());
+				city.setCityName(objArr[8].toString());
 				vacancyDescription.setCity(city);
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
-				jobVacancy.setCreatedAt(LocalDateTime.parse(objArr[8].toString()));
 				
 				jobVacancies.add(jobVacancy);
 			}
