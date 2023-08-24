@@ -97,12 +97,18 @@ public class CandidateService implements UserDetailsService {
 			profile.setProfileAddress(data.getProfileAddress());
 			profile.setProfileName(data.getProfileName());
 
-			if (data.getPhotoContent() != null && data.getPhotoContent() != "") {
-				final File photo = new File();
-				photo.setFileContent(data.getPhotoContent());
-				photo.setFileExt(data.getPhotoExt());
-				final File photoDb = fileDao.saveAndFlush(photo);
-				profile.setPhoto(photoDb);
+			if(profile.getPhoto() != null) {
+				if(fileDao.deleteById(profile.getPhoto().getId())) {
+					final File newPhoto = new File();
+					newPhoto.setFileContent(data.getPhotoContent());
+					newPhoto.setFileExt(data.getPhotoExt());
+					profile.setPhoto(newPhoto);
+				};
+			} else {
+				final File newPhoto = new File();
+				newPhoto.setFileContent(data.getPhotoContent());
+				newPhoto.setFileExt(data.getPhotoExt());
+				profile.setPhoto(newPhoto);
 			}
 
 			final CandidateProfile profileDb = candidateProfileDao.saveAndFlush(profile);
