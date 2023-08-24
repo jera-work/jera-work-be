@@ -252,6 +252,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
 				jobVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(objArr[9].toString()));
+
 				
 				jobVacancies.add(jobVacancy);
 			}
@@ -289,7 +290,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 		final List<JobVacancy> jobVacancies = new ArrayList<>();
 		
 		if(jobObjs.size() > 0) {
-			for(Object jobObj:jobObjs) {
+			for(Object jobObj : jobObjs) {
 				final Object[] objArr = (Object[]) jobObj;
 				final JobVacancy jobVacancy = new JobVacancy();
 				
