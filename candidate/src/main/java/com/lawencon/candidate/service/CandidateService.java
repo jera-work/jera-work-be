@@ -131,15 +131,18 @@ public class CandidateService implements UserDetailsService {
 	
 	/* change password for candidate */
 	public UpdateResDto changePassword(CandidatePasswordUpdateReqDto data) {
+		ConnHandler.commit();
 		final String id = principalService.getAuthPrincipal();
 		final Candidate cdt = candidateDao.getById(id);
 		if (cdt != null) {
 
 			if (passwordEncoder.matches(data.getOldPassword(), cdt.getCandidatePassword())) {
 				cdt.setCandidatePassword(passwordEncoder.encode(data.getNewPassword()));
+				final Candidate cdtDb = candidateDao.saveAndFlush(cdt);
 				final UpdateResDto response = new UpdateResDto();
 				response.setMessage("Update Password Berhasil");
-				response.setVer(cdt.getVersion());
+				response.setVer(cdtDb.getVersion());
+				ConnHandler.commit();
 				return response;
 			}
 		}

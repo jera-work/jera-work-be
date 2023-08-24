@@ -18,6 +18,7 @@ import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.admin.model.Profile;
 import com.lawencon.admin.model.User;
 import com.lawencon.admin.model.VacancyDescription;
+import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
@@ -331,7 +332,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 	
 	public List<JobVacancy> getJobByCompany(int startIndex, int endIndex, String companyId){
 		final String sql = "SELECT "
-				+ "tjv.id, tjv.vancacy_code, tjv.vacancy_title, tp.profile_name as hrName, tp2.profile_name as userName, "
+				+ "tjv.id, tjv.vacancy_code, tjv.vacancy_title, tp.profile_name as hrName, tp2.profile_name as userName, "
 				+ "tjv.start_date, tjv.end_date, tel.level_name, tas.status_name, "
 				+ "tc.company_name, tjv.vacancy_description_id "
 				+ "FROM "
@@ -385,8 +386,8 @@ public class JobVacancyDao extends AbstractJpaDao {
 				picUser.setProfile(hrProfile);
 				jobVacancy.setPicUser(picUser);
 				
-				jobVacancy.setStartDate(LocalDate.parse(objArr[5].toString()));
-				jobVacancy.setEndDate(LocalDate.parse(objArr[6].toString()));
+				jobVacancy.setStartDate(DateUtil.dateParseTest((objArr[5].toString())));
+				jobVacancy.setEndDate(DateUtil.dateParseTest(objArr[6].toString()));
 				
 				final ExperienceLevel experienceLevel = new ExperienceLevel();
 				experienceLevel.setLevelName(objArr[7].toString());
