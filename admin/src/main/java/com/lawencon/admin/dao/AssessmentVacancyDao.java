@@ -52,7 +52,9 @@ public class AssessmentVacancyDao extends AbstractJpaDao {
 				+ "	t_assessment_vacancy tav "
 				+ "WHERE "
 				+ "	tav.applied_vacancy_id = :appliedVacancyId";
-		
+
+		try {
+			
 		final Object assObj = ConnHandler.getManager()
 				.createNativeQuery(sql)
 				.setParameter("appliedVacancyId", appliedVacancyId)
@@ -60,7 +62,6 @@ public class AssessmentVacancyDao extends AbstractJpaDao {
 		
 		final Object[] assObjArr = (Object[]) assObj;
 		
-		try {
 			final AssessmentVacancy assessmentVacancy = new AssessmentVacancy();
 			assessmentVacancy.setId(assObjArr[0].toString());
 			assessmentVacancy.setIsQuestion(Boolean.valueOf(assObjArr[1].toString()));

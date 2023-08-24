@@ -1,5 +1,7 @@
 package com.lawencon.candidate.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +38,15 @@ public class SavedJobController {
 	}
 	
 	@DeleteMapping
-	public ResponseEntity<DeleteResDto> unsaveJobs(String saveId){
-		final DeleteResDto response = savedJobService.deleteSavedJobs(saveId);
+	public ResponseEntity<DeleteResDto> unsaveJobs(String savedId){
+		final DeleteResDto response = savedJobService.deleteSavedJobs(savedId);
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("/my-saved")
+	public ResponseEntity<List<SavedJobResDto>> getMySavedJob(int startIndex, int endIndex) {
+		final List<SavedJobResDto> responses = savedJobService.getMySavedJob(startIndex, endIndex);
+		
+		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}
 }

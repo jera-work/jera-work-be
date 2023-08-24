@@ -37,7 +37,7 @@ public class BlacklistService {
 		ConnHandler.begin();
 		final BlacklistEmployee blacklisted = new BlacklistEmployee();
 		blacklisted.setEmployee(hiredDao.getByIdRef(data.getEmployeeId()));
-		blacklisted.setCompany(companyDao.getByIdRef(data.getCompanyId()));
+		blacklisted.setCompany(companyDao.getByIdRef(userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId()));
 		final BlacklistEmployee blacklistedDb = blacklistDao.saveAndFlush(blacklisted);
 		ConnHandler.commit();
 
