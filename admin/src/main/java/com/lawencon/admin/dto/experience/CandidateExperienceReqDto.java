@@ -1,16 +1,14 @@
 package com.lawencon.admin.dto.experience;
 
-import java.time.LocalDate;
-
 public class CandidateExperienceReqDto {
 
 	private String candidateEmail;
 	private String formerPosition;
 	private String formerInstitution;
 	private String formerLocation;
-	private String formerJobdesk;
-	private LocalDate startDate;
-	private LocalDate endDate;
+	private String formerJobdesc;
+	private String startDate;
+	private String endDate;
 
 	public String getCandidateEmail() {
 		return candidateEmail;
@@ -44,27 +42,27 @@ public class CandidateExperienceReqDto {
 		this.formerLocation = formerLocation;
 	}
 
-	public String getFormerJobdesk() {
-		return formerJobdesk;
+	public String getFormerJobdesc() {
+		return formerJobdesc;
 	}
 
-	public void setFormerJobdesk(String formerJobdesk) {
-		this.formerJobdesk = formerJobdesk;
+	public void setFormerJobdesc(String formerJobdesc) {
+		this.formerJobdesc = formerJobdesc;
 	}
 
-	public LocalDate getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDate getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDate endDate) {
+	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
 

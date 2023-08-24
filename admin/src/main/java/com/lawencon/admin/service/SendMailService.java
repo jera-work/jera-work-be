@@ -22,6 +22,7 @@ import org.thymeleaf.context.Context;
 import com.lawencon.admin.dto.email.EmailReqDto;
 import com.lawencon.admin.dto.email.OfferingReqDto;
 
+
 @Service
 public class SendMailService {
 
@@ -71,5 +72,5 @@ public class SendMailService {
         }
         this.javaMailSender.send(msg);
 	}
-
+	
 }

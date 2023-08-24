@@ -1,13 +1,11 @@
 package com.lawencon.admin.dto.offering;
 
-import java.time.LocalDate;
-
 public class InsertOfferingReqDto {
 
 	private String appliedVacancyId;
 	private Boolean isApprove;
-	private LocalDate startDate;
-	private LocalDate endDate;
+	private String startDate;
+	private String endDate;
 	private String description;
 	private String offeringLocation;
 
@@ -27,19 +25,19 @@ public class InsertOfferingReqDto {
 		this.isApprove = isApprove;
 	}
 
-	public LocalDate getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDate getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDate endDate) {
+	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
 

@@ -1,30 +1,28 @@
 package com.lawencon.admin.dto.assessmentvacancy;
 
-import java.time.LocalDate;
-
 public class InsertAssessmentVacancyReqDto {
 
 	private String appliedVacancyId;
 	private Boolean isQuestion;
 	private Float score;
 	private String notes;
-	private LocalDate startDate;
-	private LocalDate endDate;
+	private String startDate;
+	private String endDate;
 	private String assessmentLocation;
 
-	public LocalDate getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDate getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDate endDate) {
+	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
 

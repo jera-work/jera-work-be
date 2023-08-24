@@ -6,6 +6,15 @@ public class UserResDto {
 	private String profileName;
 	private String companyId;
 	private String roleName;
+	private String companyName;
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
 
 	public String getId() {
 		return id;

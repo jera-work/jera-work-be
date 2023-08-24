@@ -12,8 +12,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.lawencon.tokenmanager.filter.AuthorizationFilter;
 
@@ -42,22 +40,6 @@ public class SecurityConfig {
 		return (web) -> matchers().forEach(r -> {
 			web.ignoring().requestMatchers(r);
 		});
-	}
-	
-	@Bean
-	public WebMvcConfigurer mvcConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-				.allowedOrigins("http://localhost:4200")
-				.allowedMethods(HttpMethod.GET.name(),
-						HttpMethod.POST.name(),
-						HttpMethod.PUT.name(),
-						HttpMethod.PATCH.name(),
-						HttpMethod.DELETE.name());
-			}
-		};
 	}
 }
 

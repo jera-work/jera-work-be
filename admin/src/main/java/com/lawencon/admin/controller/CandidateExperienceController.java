@@ -1,4 +1,4 @@
-package com.lawencon.candidate.controller;
+package com.lawencon.admin.controller;
 
 import java.util.List;
 
@@ -10,20 +10,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lawencon.candidate.dto.InsertResDto;
-import com.lawencon.candidate.dto.questionanswer.InsertQuestionAnswerReqDto;
-import com.lawencon.candidate.service.QuestionAnswerService;
+import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.experience.CandidateExperienceReqDto;
+import com.lawencon.admin.service.CandidateExperienceService;
 
 @RestController
-@RequestMapping("answers")
-public class QuestionAnswerController {
+@RequestMapping("/experiences")
+public class CandidateExperienceController {
 
 	@Autowired
-	private QuestionAnswerService questionAnswerService;
+	private CandidateExperienceService expService;
 	
 	@PostMapping
-	public ResponseEntity<InsertResDto> register(@RequestBody List<InsertQuestionAnswerReqDto> data) {
-		final InsertResDto response = questionAnswerService.submitAnswer(data);
+	public ResponseEntity<InsertResDto> insertCandidateExperiences(@RequestBody List<CandidateExperienceReqDto> data) {
+		final InsertResDto response = expService.createExperience(data);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 }

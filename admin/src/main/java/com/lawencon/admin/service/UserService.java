@@ -11,18 +11,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.admin.dao.CompanyDao;
+import com.lawencon.admin.dao.FileDao;
 import com.lawencon.admin.dao.ProfileDao;
 import com.lawencon.admin.dao.RoleDao;
 import com.lawencon.admin.dao.UserDao;
 import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.login.LoginReqDto;
+import com.lawencon.admin.dto.profile.ProfileUpdateReqDto;
+import com.lawencon.admin.dto.user.UserChangePasswordReqDto;
 import com.lawencon.admin.dto.user.UserCreateReqDto;
+import com.lawencon.admin.dto.user.UserProfileResDto;
 import com.lawencon.admin.dto.user.UserResDto;
 import com.lawencon.admin.model.Company;
+import com.lawencon.admin.model.File;
 import com.lawencon.admin.model.Profile;
 import com.lawencon.admin.model.Role;
 import com.lawencon.admin.model.User;
 import com.lawencon.base.ConnHandler;
+import com.lawencon.security.principal.PrincipalServiceImpl;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -39,6 +46,10 @@ public class UserService implements UserDetailsService {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private SendMailService sendMailService;
+	@Autowired
+	private PrincipalServiceImpl principalService;
+	@Autowired
+	private FileDao fileDao;
 
 	public InsertResDto createUser(UserCreateReqDto data) {
 		ConnHandler.begin();
@@ -83,9 +94,27 @@ public class UserService implements UserDetailsService {
 
 		return response;
 	}
+	
+	public List<UserResDto> getAllUsers() {
+		final List<User> users = userDao.getAll();
+		final List<UserResDto> responses = new ArrayList<>();
 
-	public List<UserResDto> getUsers(String roleCode, String companyCode) {
-		final List<User> users = userDao.getByRoleCode(roleCode, companyCode);
+		users.forEach(user -> {
+			final UserResDto response = new UserResDto();
+			response.setId(user.getId());
+			response.setProfileName(user.getProfile().getProfileName());
+			response.setCompanyId(user.getProfile().getCompany().getId());
+			response.setCompanyName(user.getProfile().getCompany().getCompanyName());
+			response.setRoleName(user.getRole().getRoleName());
+			responses.add(response);
+		});
+
+		return responses;
+	}
+
+	public List<UserResDto> getUsers(String roleCode) {
+		final User userPrincipal = userDao.getById(principalService.getAuthPrincipal());
+		final List<User> users = userDao.getByRoleCode(roleCode, userPrincipal.getProfile().getCompany().getId());
 		final List<UserResDto> responses = new ArrayList<>();
 
 		users.forEach(user -> {
@@ -96,6 +125,82 @@ public class UserService implements UserDetailsService {
 		});
 
 		return responses;
+	}
+	
+	public UpdateResDto changePassword(UserChangePasswordReqDto data) {
+		ConnHandler.begin();
+		final String id = principalService.getAuthPrincipal();
+		final User user = userDao.getById(id);
+		if (user != null) {
+			if (passwordEncoder.matches(data.getOldPassword(), user.getUserPassword())) {
+				user.setUserPassword(passwordEncoder.encode(data.getNewPassword()));
+				final User userDb = userDao.saveAndFlush(user); 
+				final UpdateResDto response = new UpdateResDto();
+//				ConnHandler.getManager().flush();
+				response.setMessage("Update Password Berhasil");
+				response.setVer(userDb.getVersion());
+				ConnHandler.commit();
+				return response;
+			}
+		}
+		throw new UsernameNotFoundException("Email / password salah");
+
+	}
+	
+	public UserProfileResDto getProfile() {
+		
+		final User user = userDao.getById(principalService.getAuthPrincipal());
+		
+		final UserProfileResDto response = new UserProfileResDto();
+		response.setUserId(user.getId());
+		response.setUserEmail(user.getUserEmail());
+		response.setProfileName(user.getProfile().getProfileName());
+		response.setRoleName(user.getRole().getRoleName());
+		response.setProfileAddress(user.getProfile().getProfileAddress());
+		response.setPhoneNumber(user.getProfile().getProfilePhone());
+		response.setCompanyName(user.getProfile().getCompany().getCompanyName());
+		
+		return response;
+	}
+	
+	public UpdateResDto updateProfile(ProfileUpdateReqDto data) {
+		UpdateResDto response = new UpdateResDto();
+		
+		try {
+			ConnHandler.begin();
+			final User user = userDao.getById(principalService.getAuthPrincipal());
+			user.setUserEmail(data.getUserEmail());
+			
+			final Profile profile = profileDao.getById(user.getProfile().getId());
+			profile.setProfileName(data.getProfileName());
+			profile.setProfileAddress(data.getProfileAddress());
+			profile.setProfilePhone(data.getPhoneNumber());
+			
+			if(profile.getPhoto() != null) {
+				if(fileDao.deleteById(profile.getPhoto().getId())) {
+					final File newPhoto = new File();
+					newPhoto.setFileContent(data.getFileContent());
+					newPhoto.setFileExt(data.getFileExt());
+					profile.setPhoto(newPhoto);
+				};
+			} else {
+				final File newPhoto = new File();
+				newPhoto.setFileContent(data.getFileContent());
+				newPhoto.setFileExt(data.getFileExt());
+				profile.setPhoto(newPhoto);
+			}
+			
+			final Profile profileDb = profileDao.saveAndFlush(profile);
+			ConnHandler.commit();
+			
+			response.setMessage("Profile has been updated!");
+			response.setVer(profileDb.getVersion());
+		} catch (Exception e) {
+			e.printStackTrace();
+			ConnHandler.rollback();
+		}
+		
+		return response;
 	}
 
 	public User login(LoginReqDto data) {

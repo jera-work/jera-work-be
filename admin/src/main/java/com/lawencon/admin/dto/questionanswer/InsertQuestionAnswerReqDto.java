@@ -5,8 +5,8 @@ public class InsertQuestionAnswerReqDto {
 	private String jobVacancyCode;
 	private String candidateEmail;
 	private String questionId;
-	private String questionCode;
 	private String questionOptionId;
+	private String assesmentVacancyId;
 	
 	public String getJobVacancyCode() {
 		return jobVacancyCode;
@@ -38,10 +38,10 @@ public class InsertQuestionAnswerReqDto {
 	public void setQuestionOptionId(String questionOptionId) {
 		this.questionOptionId = questionOptionId;
 	}
-	public String getQuestionCode() {
-		return questionCode;
+	public String getAssesmentVacancyId() {
+		return assesmentVacancyId;
 	}
-	public void setQuestionCode(String questionCode) {
-		this.questionCode = questionCode;
+	public void setAssesmentVacancyId(String assesmentVacancyId) {
+		this.assesmentVacancyId = assesmentVacancyId;
 	}
 }

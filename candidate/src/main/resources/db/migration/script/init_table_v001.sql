@@ -1,4 +1,6 @@
 --DROP TABLE IF EXISTS t_saved_jobs;
+--DROP TABLE IF EXISTS t_question_answer;
+--DROP TABLE IF EXISTS t_applied_vacancy;
 --DROP TABLE IF EXISTS t_custom_candidate_skill;
 --DROP TABLE IF EXISTS t_candidate_skill;
 --DROP TABLE IF EXISTS t_candidate_experience;
@@ -52,7 +54,6 @@ CREATE TABLE t_job_vacancy (
 	end_date TIMESTAMP NOT NULL,
 	exp_level_id VARCHAR NOT NULL,
 	available_status_id VARCHAR NOT NULL,
-	candidate_total INT,
 	company_id VARCHAR NOT NULL,
 	vacancy_description_id VARCHAR NOT NULL,
 	created_by varchar NOT NULL,
@@ -171,7 +172,8 @@ CREATE TABLE t_candidate_experience (
 CREATE TABLE t_candidate_skill (
 	id varchar(36) NOT NULL,
 	candidate_id varchar NOT NULL,
-	skill_id varchar NOT NULL,
+	skill_id varchar,
+	skill_name varchar(255),
 	created_by varchar NOT NULL,
 	created_at timestamp NOT NULL,
 	updated_by varchar,
@@ -179,21 +181,6 @@ CREATE TABLE t_candidate_skill (
 	is_active boolean NOT NULL,
 	ver int NOT NULL,
 	
-	PRIMARY KEY (id),
-	FOREIGN KEY (candidate_id)
-		REFERENCES t_candidate(id)
-);
-
-CREATE TABLE t_custom_candidate_skill (
-	id varchar(36) NOT NULL,
-	candidate_id varchar NOT NULL,
-	skill_name varchar(50) NOT NULL,
-	created_by varchar NOT NULL,
-	created_at timestamp NOT NULL,
-	updated_by varchar,
-	updated_at timestamp,
-	is_active boolean NOT NULL,
-	ver int NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (candidate_id)
 		REFERENCES t_candidate(id)

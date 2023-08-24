@@ -3,7 +3,6 @@ package com.lawencon.admin.dao;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.admin.model.Candidate;
@@ -12,7 +11,6 @@ import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
 @Repository
-@Profile(value = { "native-query" })
 public class CandidateDao extends AbstractJpaDao {
 
 	public Candidate getById(final Object id) {
@@ -57,7 +55,7 @@ public class CandidateDao extends AbstractJpaDao {
 	public Candidate getByEmail(String candidateEmail) {
 		final String sql = 
 				"SELECT " 
-					+ "tc.id, tc.candidate_profile_id " 
+					+ "tc.id, tc.candidate_profile_id, tc.candidate_email " 
 				+ "FROM " 
 					+ "t_candidate tc "
 //				+ "INNER JOIN "
@@ -80,6 +78,7 @@ public class CandidateDao extends AbstractJpaDao {
 				
 				cdt = new Candidate();
 				cdt.setId(cdtArr[0].toString());
+				cdt.setCandidateEmail(cdtArr[2].toString());
 				cdt.setCandidateProfile(profile);
 			}
 			

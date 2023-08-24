@@ -3,14 +3,13 @@ package com.lawencon.admin.dao;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
-import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.admin.model.CandidateSkill;
+import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.base.ConnHandler;
 
 @Repository
-@Profile(value = { "native-query" })
 public class CandidateSkillDao extends AbstractJpaDao {
 
 	public CandidateSkill getById(final Object id) {
@@ -43,6 +42,16 @@ public class CandidateSkillDao extends AbstractJpaDao {
 
 	public boolean deleteById(final Object entityId) {
 		return super.deleteById(CandidateSkill.class, entityId);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CandidateSkill> getByCandidateId(String candidateId){
+		final String sql = "SELECT * FROM t_candidate_skill WHERE candidate_id LIKE :candidateId ; ";
+		
+		final List<CandidateSkill> results = ConnHandler.getManager().createNativeQuery(sql, CandidateSkill.class)
+				.setParameter("candidateId", candidateId)
+				.getResultList();
+		return results;
 	}
 
 }

@@ -3,16 +3,15 @@ package com.lawencon.admin.dao;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
-import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.admin.model.CandidateDocument;
+import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.base.ConnHandler;
 
 @Repository
-@Profile(value = { "native-query" })
 public class CandidateDocumentDao extends AbstractJpaDao {
-	
+
 	public CandidateDocument getById(final Object id) {
 		return super.getById(CandidateDocument.class, id);
 	}
@@ -24,7 +23,7 @@ public class CandidateDocumentDao extends AbstractJpaDao {
 	public CandidateDocument getByIdAndDetach(final Object id) {
 		return super.getByIdAndDetach(CandidateDocument.class, id);
 	}
-	
+
 	public List<CandidateDocument> getAll() {
 		return super.getAll(CandidateDocument.class);
 	}
@@ -43,6 +42,16 @@ public class CandidateDocumentDao extends AbstractJpaDao {
 
 	public boolean deleteById(final Object entityId) {
 		return super.deleteById(CandidateDocument.class, entityId);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CandidateDocument> getDocuments(String candidateId) {
+		final String sql = "SELECT * FROM t_candidate_document WHERE candidate_id LIKE :candidateId ; ";
+
+		final List<CandidateDocument> results = ConnHandler.getManager()
+				.createNativeQuery(sql, CandidateDocument.class).setParameter("candidateId", candidateId)
+				.getResultList();
+		return results;
 	}
 
 }

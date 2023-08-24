@@ -3,14 +3,13 @@ package com.lawencon.admin.dao;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
-import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.admin.model.AvailableStatus;
+import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.base.ConnHandler;
 
 @Repository
-@Profile(value = { "native-query" })
 public class AvailableStatusDao extends AbstractJpaDao {
 	
 	public AvailableStatus getById(final Object id) {
@@ -45,4 +44,22 @@ public class AvailableStatusDao extends AbstractJpaDao {
 		return super.deleteById(AvailableStatus.class, entityId);
 	}
 
+	public AvailableStatus getByCode(final String code) {
+		final String sql = "SELECT "
+				+ "tas.id "
+				+ "FROM "
+				+ "t_available_status tas "
+				+ "WHERE "
+				+ "tas.status_code LIKE :code";
+		
+		final Object appObj = ConnHandler.getManager()
+				.createNativeQuery(sql)
+				.setParameter("code", code)
+				.getSingleResult();
+		
+		final AvailableStatus availableStatus = new AvailableStatus();
+		availableStatus.setId(appObj.toString());
+		
+		return availableStatus;
+	}
 }

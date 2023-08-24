@@ -26,7 +26,7 @@ public class CandidateEducation extends BaseEntity{
 	private Degree degree;
 	
 	@OneToOne
-	@JoinColumn(name = "major_id", nullable = false)
+	@JoinColumn(name = "majors_id", nullable = false)
 	private Major major;
 	
 	@Column(name = "gpa", nullable = false)

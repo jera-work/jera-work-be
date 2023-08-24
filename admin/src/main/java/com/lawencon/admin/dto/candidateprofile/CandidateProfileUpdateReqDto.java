@@ -12,6 +12,15 @@ public class CandidateProfileUpdateReqDto {
 	private String maritalId;
 	private String nationalityId;
 	private String religionId;
+	private String profileName;
+
+	public String getProfileName() {
+		return profileName;
+	}
+
+	public void setProfileName(String profileName) {
+		this.profileName = profileName;
+	}
 
 	public String getCandidateEmail() {
 		return candidateEmail;

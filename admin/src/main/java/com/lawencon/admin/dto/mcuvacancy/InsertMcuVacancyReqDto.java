@@ -1,12 +1,10 @@
 package com.lawencon.admin.dto.mcuvacancy;
 
-import java.time.LocalDate;
-
 public class InsertMcuVacancyReqDto {
 
 	private String appliedVacancy;
-	private LocalDate startDate;
-	private LocalDate endDate;
+	private String startDate;
+	private String endDate;
 
 	public String getAppliedVacancy() {
 		return appliedVacancy;
@@ -16,20 +14,22 @@ public class InsertMcuVacancyReqDto {
 		this.appliedVacancy = appliedVacancy;
 	}
 
-	public LocalDate getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDate getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDate endDate) {
+	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
+
+
 
 }
