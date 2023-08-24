@@ -61,7 +61,7 @@ public class UserController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@PatchMapping
+	@PatchMapping("/profile")
 	public ResponseEntity<UpdateResDto> updateProfile(@RequestBody ProfileUpdateReqDto data){
 		final UpdateResDto response = userService.updateProfile(data);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);

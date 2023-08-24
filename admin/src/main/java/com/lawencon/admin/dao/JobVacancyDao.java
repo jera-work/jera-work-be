@@ -1,6 +1,5 @@
 package com.lawencon.admin.dao;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -192,7 +191,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 		final String sql = "SELECT "
 				+ "	tjv.id, tjv.vacancy_code, tjv.vacancy_title, "
 				+ "tc.company_name, tc.photo_id, tvd.salary, "
-				+ "td.degree_name, tjt.type_name , tc2.city_name "
+				+ "td.degree_name, tjt.type_name , tc2.city_name, tjv.created_at "
 				+ "FROM "
 				+ "	t_job_vacancy tjv "
 				+ "INNER JOIN "
@@ -252,6 +251,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 				vacancyDescription.setCity(city);
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
+				jobVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(objArr[9].toString()));
 				
 				jobVacancies.add(jobVacancy);
 			}
@@ -264,7 +264,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 		final String sql = "SELECT "
 				+ "	tjv.id, tjv.vacancy_code, tjv.vacancy_title, "
 				+ "tc.company_name, tc.photo_id, tvd.salary, "
-				+ "td.degree_name , tjt.type_name , tc2.city_name "
+				+ "td.degree_name , tjt.type_name , tc2.city_name, tjv.created_at "
 				+ "FROM "
 				+ "	t_job_vacancy tjv "
 				+ "INNER JOIN "
@@ -322,6 +322,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 				vacancyDescription.setCity(city);
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
+				jobVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(objArr[9].toString()));
 				
 				jobVacancies.add(jobVacancy);
 			}
@@ -386,8 +387,8 @@ public class JobVacancyDao extends AbstractJpaDao {
 				picUser.setProfile(hrProfile);
 				jobVacancy.setPicUser(picUser);
 				
-				jobVacancy.setStartDate(DateUtil.dateParseTest((objArr[5].toString())));
-				jobVacancy.setEndDate(DateUtil.dateParseTest(objArr[6].toString()));
+				jobVacancy.setStartDate(DateUtil.dateParseCustom((objArr[5].toString())));
+				jobVacancy.setEndDate(DateUtil.dateParseCustom(objArr[6].toString()));
 				
 				final ExperienceLevel experienceLevel = new ExperienceLevel();
 				experienceLevel.setLevelName(objArr[7].toString());

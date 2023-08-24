@@ -83,15 +83,27 @@ public class CandidateService {
 			profile.setReligion(religionDao.getByIdRef(data.getReligionId()));
 			profile.setProfileName(data.getProfileName());
 			
-			if(data.getPhotoContent() != null && data.getPhotoContent() != "") {
-				final File photo = new File();
-				photo.setFileContent(data.getPhotoContent());
-				photo.setFileExt(data.getPhotoExt());
-				final File photoDb = fileDao.saveAndFlush(photo);				
-				profile.setPhoto(photoDb);
+			File fileDb = new File();
+			if (profile.getPhoto() != null) {
+				final String oldPhotoId = profile.getPhoto().getId();
+				if (data.getPhotoContent() != null && data.getPhotoContent() != "") {
+					final File newPhoto = new File();
+					newPhoto.setFileContent(data.getPhotoContent());
+					newPhoto.setFileExt(data.getPhotoExt());
+					fileDb = fileDao.saveAndFlush(newPhoto);
+					profile.setPhoto(fileDb);
+					fileDao.deleteById(oldPhotoId);
+				}
+			} else {
+				if (data.getPhotoContent() != null && data.getPhotoContent() != "") {
+					final File newPhoto = new File();
+					newPhoto.setFileContent(data.getPhotoContent());
+					newPhoto.setFileExt(data.getPhotoExt());
+					fileDb = fileDao.saveAndFlush(newPhoto);
+					profile.setPhoto(fileDb);
+				}
 			}
 			
-
 			final CandidateProfile profileDb = candidateProfileDao.saveAndFlush(profile);
 
 			final UpdateResDto response = new UpdateResDto();

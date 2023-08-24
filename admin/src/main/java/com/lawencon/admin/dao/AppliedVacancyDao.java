@@ -122,7 +122,7 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 				appliedProgress.setProgressName(appObjArr[3].toString());
 				appliedVacancy.setAppliedProgress(appliedProgress);
 				
-				appliedVacancy.setCreatedAt(DateUtil.dateTimeParse(appObjArr[4].toString()));
+				appliedVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(appObjArr[4].toString()));
 				
 				appliedVacancies.add(appliedVacancy);
 			}
@@ -133,7 +133,7 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 	
 	public List<AppliedVacancy> getByCandidateId(String candidateId){
 		final String sql = "SELECT "
-				+ "	tav.id, tav.job_vacancy_id, tjv.vacancy_code, tap.progress_name , tas.status_name "
+				+ "	tav.id, tav.job_vacancy_id, tjv.vacancy_code, tap.progress_name , tas.status_name, tav.created_at "
 				+ "FROM "
 				+ "	t_applied_vacancy tav "
 				+ "INNER JOIN "
@@ -171,6 +171,7 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 				final AppliedStatus appliedStatus = new AppliedStatus();
 				appliedStatus.setStatusName(appObjArr[4].toString());
 				appliedVacancy.setAppliedStatus(appliedStatus);
+				appliedVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(appObjArr[5].toString()));
 				
 				appliedVacancies.add(appliedVacancy);
 			}
