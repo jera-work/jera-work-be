@@ -18,6 +18,7 @@ import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.admin.model.Profile;
 import com.lawencon.admin.model.User;
 import com.lawencon.admin.model.VacancyDescription;
+import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
@@ -191,7 +192,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 		final String sql = "SELECT "
 				+ "	tjv.id, tjv.vacancy_code, tjv.vacancy_title, "
 				+ "tc.company_name, tc.photo_id, tvd.salary, "
-				+ "td.degree_name, tjt.type_name , tc2.city_name "
+				+ "td.degree_name, tjt.type_name , tc2.city_name, tjv.created_at "
 				+ "FROM "
 				+ "	t_job_vacancy tjv "
 				+ "INNER JOIN "
@@ -251,6 +252,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 				vacancyDescription.setCity(city);
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
+				jobVacancy.setCreatedAt(DateUtil.dateTimeParse(objArr[9].toString()));
 				
 				jobVacancies.add(jobVacancy);
 			}
@@ -263,7 +265,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 		final String sql = "SELECT "
 				+ "	tjv.id, tjv.vacancy_code, tjv.vacancy_title, "
 				+ "tc.company_name, tc.photo_id, tvd.salary, "
-				+ "td.degree_name , tjt.type_name , tc2.city_name "
+				+ "td.degree_name , tjt.type_name , tc2.city_name, tjv.created_at "
 				+ "FROM "
 				+ "	t_job_vacancy tjv "
 				+ "INNER JOIN "
@@ -321,6 +323,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 				vacancyDescription.setCity(city);
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
+				jobVacancy.setCreatedAt(DateUtil.dateTimeParse(objArr[9].toString()));
 				
 				jobVacancies.add(jobVacancy);
 			}

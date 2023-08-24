@@ -130,6 +130,7 @@ public class JobVacancyService {
 			response.setVacancyTitle(jv.getVacancyTitle());
 			response.setVacancyCode(jv.getVacancyCode());
 			response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
+			response.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
 
 			responses.add(response);
 		});
@@ -151,6 +152,8 @@ public class JobVacancyService {
 			response.setVacancyTitle(jv.getVacancyTitle());
 			response.setVacancyCode(jv.getVacancyCode());
 			response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
+			response.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
+//			response.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));)
 
 			responses.add(response);
 		});
@@ -172,6 +175,7 @@ public class JobVacancyService {
 			response.setVacancyTitle(jv.getVacancyTitle());
 			response.setVacancyCode(jv.getVacancyCode());
 			response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
+			response.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
 
 			responses.add(response);
 		});
@@ -193,6 +197,7 @@ public class JobVacancyService {
 			response.setVacancyTitle(jv.getVacancyTitle());
 			response.setVacancyCode(jv.getVacancyCode());
 			response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
+			response.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
 
 			responses.add(response);
 		});
