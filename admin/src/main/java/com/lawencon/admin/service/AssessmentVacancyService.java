@@ -63,4 +63,6 @@ public class AssessmentVacancyService {
 		
 		return response;
 	}
+	
+	
 }

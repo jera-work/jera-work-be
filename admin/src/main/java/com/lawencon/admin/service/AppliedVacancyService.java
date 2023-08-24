@@ -19,6 +19,7 @@ import com.lawencon.admin.dao.HiredEmployeeDao;
 import com.lawencon.admin.dao.JobVacancyDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.UpdateResDto;
+import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyAdminResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyResDto;
 import com.lawencon.admin.dto.appliedvacancy.InsertAppliedVacancyReqDto;
 import com.lawencon.admin.dto.appliedvacancy.UpdateProgressReqDto;
@@ -28,6 +29,7 @@ import com.lawencon.admin.model.AppliedVacancy;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.HiredEmployee;
 import com.lawencon.admin.model.JobVacancy;
+import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.ConnHandler;
 
 @Service
@@ -153,6 +155,40 @@ public class AppliedVacancyService {
 			
 			responses.add(response);
 			
+		});
+		
+		return responses;
+	}
+	
+	public List<AppliedVacancyAdminResDto> getByProgress(String progressId){
+		final List<AppliedVacancyAdminResDto> responses = new ArrayList<>();
+		
+		appliedVacancyDao.getByProgressId(progressId).forEach(av -> {
+			final AppliedVacancyAdminResDto response = new AppliedVacancyAdminResDto();
+			response.setId(av.getId());
+			response.setProfileName(av.getCandidate().getCandidateProfile().getProfileName());
+			response.setStatusName(av.getAppliedStatus().getStatusName());
+			response.setProgressName(av.getAppliedProgress().getProgressName());
+			response.setCreatedAt(DateUtil.dateTimeFormat(av.getCreatedAt()));
+			
+			responses.add(response);
+		});
+		
+		return responses;
+	}
+	
+	public List<AppliedVacancyAdminResDto> getByJobVacancyId(String jobId){
+		final List<AppliedVacancyAdminResDto> responses = new ArrayList<>();
+		
+		appliedVacancyDao.getByJobVacancyId(jobId).forEach(av -> {
+			final AppliedVacancyAdminResDto response = new AppliedVacancyAdminResDto();
+			response.setId(av.getId());
+			response.setProfileName(av.getCandidate().getCandidateProfile().getProfileName());
+			response.setStatusName(av.getAppliedStatus().getStatusName());
+			response.setProgressName(av.getAppliedProgress().getProgressName());
+			response.setCreatedAt(DateUtil.dateTimeFormat(av.getCreatedAt()));
+			
+			responses.add(response);
 		});
 		
 		return responses;

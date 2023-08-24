@@ -1,7 +1,7 @@
 package com.lawencon.admin.constant;
 
 public enum AvailableStatusCode {
-	ACTIVE("ACT", "Active"), CLOSED("CLS", "Closed");
+	OPEN("OPN", "Open"), CLOSED("CLS", "Closed");
 
 	public final String statusCode;
 	public final String statusName;

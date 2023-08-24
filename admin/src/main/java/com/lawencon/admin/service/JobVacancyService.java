@@ -77,11 +77,12 @@ public class JobVacancyService {
 			final VacancyDescription descDb = descDao.saveAndFlush(desc);
 
 			final JobVacancy job = new JobVacancy();
-			data.setAvailableStatusId(statusDao.getByCode(AvailableStatusCode.ACTIVE.statusCode).getId());
+			data.setAvailableStatusId(statusDao.getByCode(AvailableStatusCode.OPEN.statusCode).getId());
 			job.setAvailableStatus(statusDao.getByIdRef(data.getAvailableStatusId()));
 
 			final User user = userDao.getById(principalService.getAuthPrincipal());
-			job.setCompany(companyDao.getByIdRef(user.getProfile().getCompany().getId()));
+			data.setCompanyId(user.getProfile().getCompany().getId());
+			job.setCompany(companyDao.getByIdRef(data.getCompanyId()));
 			job.setEndDate(DateUtil.dateParse(data.getEndDate()));
 			job.setExpLevel(levelDao.getByIdRef(data.getExpLevelId()));
 			job.setStartDate(DateUtil.dateParse(data.getStartDate()));
