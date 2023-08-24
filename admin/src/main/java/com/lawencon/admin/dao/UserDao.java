@@ -104,7 +104,7 @@ public class UserDao extends AbstractJpaDao {
 			return user;
 	}
 	
-	public List<User> getByRoleCode(String roleCode, String companyCode) {
+	public List<User> getByRoleCode(String roleCode, String companyId) {
 		final List<User> users = new ArrayList<>();
 		final String sql =
 				"SELECT "
@@ -118,11 +118,11 @@ public class UserDao extends AbstractJpaDao {
 				+ "INNER JOIN "
 				+ "	t_company tc ON tp.company_id = tc.id "
 				+ "WHERE "
-				+ "	tr.role_code = :roleCode AND tc.company_code = :companyCode ";
+				+ "	tr.role_code = :roleCode AND tp.company_id = :companyId ";
 		
 		final List<?> userObj = em().createNativeQuery(sql)
 				.setParameter("roleCode", roleCode)
-				.setParameter("companyCode", companyCode)
+				.setParameter("companyId", companyId)
 				.getResultList();
 		
 		if(userObj.size() > 0) {
@@ -141,4 +141,5 @@ public class UserDao extends AbstractJpaDao {
 		return users;
 	}
 
+	
 }

@@ -23,6 +23,7 @@ import com.lawencon.admin.model.Profile;
 import com.lawencon.admin.model.Role;
 import com.lawencon.admin.model.User;
 import com.lawencon.base.ConnHandler;
+import com.lawencon.security.principal.PrincipalServiceImpl;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -39,6 +40,8 @@ public class UserService implements UserDetailsService {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private SendMailService sendMailService;
+	@Autowired
+	private PrincipalServiceImpl principalService;
 
 	public InsertResDto createUser(UserCreateReqDto data) {
 		ConnHandler.begin();
@@ -83,9 +86,27 @@ public class UserService implements UserDetailsService {
 
 		return response;
 	}
+	
+	public List<UserResDto> getAllUsers() {
+		final List<User> users = userDao.getAll();
+		final List<UserResDto> responses = new ArrayList<>();
 
-	public List<UserResDto> getUsers(String roleCode, String companyCode) {
-		final List<User> users = userDao.getByRoleCode(roleCode, companyCode);
+		users.forEach(user -> {
+			final UserResDto response = new UserResDto();
+			response.setId(user.getId());
+			response.setProfileName(user.getProfile().getProfileName());
+			response.setCompanyId(user.getProfile().getCompany().getId());
+			response.setCompanyName(user.getProfile().getCompany().getCompanyName());
+			response.setRoleName(user.getRole().getRoleName());
+			responses.add(response);
+		});
+
+		return responses;
+	}
+
+	public List<UserResDto> getUsers(String roleCode) {
+		final User userPrincipal = userDao.getById(principalService.getAuthPrincipal());
+		final List<User> users = userDao.getByRoleCode(roleCode, userPrincipal.getProfile().getCompany().getId());
 		final List<UserResDto> responses = new ArrayList<>();
 
 		users.forEach(user -> {

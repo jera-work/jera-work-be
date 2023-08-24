@@ -31,8 +31,14 @@ public class UserController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<UserResDto>> getUsers(@RequestParam String roleCode, @RequestParam String companyCode) {
-		final List<UserResDto> response = userService.getUsers(roleCode, companyCode);
+	public ResponseEntity<List<UserResDto>> getUsers(@RequestParam String roleCode) {
+		final List<UserResDto> response = userService.getUsers(roleCode);
+		return new ResponseEntity<List<UserResDto>>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("/all")
+	public ResponseEntity<List<UserResDto>> getAllUsers() {
+		final List<UserResDto> response = userService.getAllUsers();
 		return new ResponseEntity<List<UserResDto>>(response, HttpStatus.OK);
 	}
 

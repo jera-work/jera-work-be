@@ -19,8 +19,9 @@ public class RoleService {
 		
 		roleDao.getAll().forEach(av -> {
 			final RoleResDto response = new RoleResDto();
-			//
-			
+			response.setId(av.getId());
+			response.setRoleCode(av.getRoleCode());
+			response.setRoleName(av.getRoleName());
 			responses.add(response);
 		});
 		
