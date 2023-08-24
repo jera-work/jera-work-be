@@ -30,6 +30,13 @@ public class DateUtil {
 		return date;
 	}
 	
+	public static LocalDate dateParseTest(String dateStr) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss.S");
+		final LocalDate date = LocalDate.parse(dateStr, formatter);
+
+		return date;
+	}
+	
 	public static String yearFormat(LocalDate date) {
 		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
 

@@ -20,8 +20,9 @@ public class AgeVacancyService {
 		
 		ageVacancyDao.getAll().forEach(av -> {
 			final AgeVacancyResDto response = new AgeVacancyResDto();
-			//
-			
+			response.setAgeCode(av.getAgeCode());
+			response.setAgeName(av.getAgeName());
+			response.setId(av.getId());
 			responses.add(response);
 		});
 		

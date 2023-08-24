@@ -24,7 +24,6 @@ public class CandidateProfileService {
 	@Autowired
 	private ApiService apiService;
 
-	@SuppressWarnings("null")
 	public CandidateProfileResDto getProfile() {
 		
 		final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());

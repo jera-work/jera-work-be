@@ -19,8 +19,9 @@ public class ExperienceLevelService {
 		
 		experienceLevelDao.getAll().forEach(av -> {
 			final ExperienceLevelResDto response = new ExperienceLevelResDto();
-			//
-			
+			response.setId(av.getId());
+			response.setLevelCode(av.getLevelCode());
+			response.setLevelName(av.getLevelName());
 			responses.add(response);
 		});
 		
