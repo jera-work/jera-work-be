@@ -19,7 +19,7 @@ public class DateUtil {
 	}
 
 	public static LocalDateTime dateTimeParse(String dateStr) {
-		final LocalDateTime date = LocalDateTime.parse(dateStr, DateTimeFormatter.ISO_DATE_TIME);
+		final LocalDateTime date = LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
 
 		return date;
 	}
