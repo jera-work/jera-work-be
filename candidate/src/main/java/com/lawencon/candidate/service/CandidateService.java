@@ -97,18 +97,25 @@ public class CandidateService implements UserDetailsService {
 			profile.setProfileAddress(data.getProfileAddress());
 			profile.setProfileName(data.getProfileName());
 
-			if(profile.getPhoto() != null) {
-				if(fileDao.deleteById(profile.getPhoto().getId())) {
+			File fileDb = new File();
+			if (profile.getPhoto() != null) {
+				final String oldPhotoId = profile.getPhoto().getId();
+				if (data.getPhotoContent() != null && data.getPhotoContent() != "") {
 					final File newPhoto = new File();
 					newPhoto.setFileContent(data.getPhotoContent());
 					newPhoto.setFileExt(data.getPhotoExt());
-					profile.setPhoto(newPhoto);
-				};
+					fileDb = fileDao.saveAndFlush(newPhoto);
+					profile.setPhoto(fileDb);
+					fileDao.deleteById(oldPhotoId);
+				}
 			} else {
-				final File newPhoto = new File();
-				newPhoto.setFileContent(data.getPhotoContent());
-				newPhoto.setFileExt(data.getPhotoExt());
-				profile.setPhoto(newPhoto);
+				if (data.getPhotoContent() != null && data.getPhotoContent() != "") {
+					final File newPhoto = new File();
+					newPhoto.setFileContent(data.getPhotoContent());
+					newPhoto.setFileExt(data.getPhotoExt());
+					fileDb = fileDao.saveAndFlush(newPhoto);
+					profile.setPhoto(fileDb);
+				}
 			}
 
 			final CandidateProfile profileDb = candidateProfileDao.saveAndFlush(profile);
@@ -134,7 +141,7 @@ public class CandidateService implements UserDetailsService {
 			return null;
 		}
 	}
-	
+
 	/* change password for candidate */
 	public UpdateResDto changePassword(CandidatePasswordUpdateReqDto data) {
 		ConnHandler.commit();

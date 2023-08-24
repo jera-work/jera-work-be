@@ -130,7 +130,7 @@ public class JobVacancyService {
 			response.setVacancyTitle(jv.getVacancyTitle());
 			response.setVacancyCode(jv.getVacancyCode());
 			response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
-			response.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
+			response.setCreatedAt(DateUtil.dateTimeFormatIso(jv.getCreatedAt()));
 
 			responses.add(response);
 		});
@@ -152,15 +152,15 @@ public class JobVacancyService {
 			response.setVacancyTitle(jv.getVacancyTitle());
 			response.setVacancyCode(jv.getVacancyCode());
 			response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
-			response.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
-//			response.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));)
+			response.setCreatedAt(DateUtil.dateTimeFormatIso(jv.getCreatedAt()));
+//			response.setCreatedAt(DateUtil.dateTimeFormatIso(jv.getCreatedAt()));)
 
 			responses.add(response);
 		});
 
 		return responses;
 	}
-	
+
 	public List<JobSearchResDto> getAll() {
 		final List<JobSearchResDto> responses = new ArrayList<>();
 
@@ -175,7 +175,7 @@ public class JobVacancyService {
 			response.setVacancyTitle(jv.getVacancyTitle());
 			response.setVacancyCode(jv.getVacancyCode());
 			response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
-			response.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
+			response.setCreatedAt(DateUtil.dateTimeFormatIso(jv.getCreatedAt()));
 
 			responses.add(response);
 		});
@@ -197,7 +197,7 @@ public class JobVacancyService {
 			response.setVacancyTitle(jv.getVacancyTitle());
 			response.setVacancyCode(jv.getVacancyCode());
 			response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
-			response.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
+			response.setCreatedAt(DateUtil.dateTimeFormatIso(jv.getCreatedAt()));
 
 			responses.add(response);
 		});
@@ -258,7 +258,7 @@ public class JobVacancyService {
 
 		return response;
 	}
-	
+
 	public JobVacancyResDto getByCode(String code) {
 		final JobVacancy job = jobDao.getByCode(code);
 		final JobVacancy jv = jobDao.getById(job.getId());

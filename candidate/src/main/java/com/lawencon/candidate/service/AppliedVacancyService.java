@@ -135,7 +135,6 @@ public class AppliedVacancyService {
 			myAppliedFromCdt.setJobTypeName(jobResponse.getJobTypeName());
 			myAppliedFromCdt.setVacancyTitle(jobResponse.getVacancyTitle());
 			myAppliedFromCdt.setSalary(jobResponse.getSalary());
-			
 			myAppliedFromCdts.add(myAppliedFromCdt);
 		});
 		
@@ -146,6 +145,7 @@ public class AppliedVacancyService {
 				if(resCon.getJobVacancyCode().equals(appCdt.getJobVacancyCode())) {
 					appCdt.setAppliedProgressName(resCon.getAppliedProgressName());
 					appCdt.setAppliedStatusName(resCon.getAppliedStatusName());
+					appCdt.setCreatedAt(resCon.getCreatedAt());
 					final AppliedVacancyResDto response = appCdt;
 					
 					responses.add(response);

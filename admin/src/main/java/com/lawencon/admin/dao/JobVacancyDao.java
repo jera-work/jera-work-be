@@ -1,6 +1,5 @@
 package com.lawencon.admin.dao;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -252,7 +251,8 @@ public class JobVacancyDao extends AbstractJpaDao {
 				vacancyDescription.setCity(city);
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
-				jobVacancy.setCreatedAt(DateUtil.dateTimeParse(objArr[9].toString()));
+				jobVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(objArr[9].toString()));
+
 				
 				jobVacancies.add(jobVacancy);
 			}
@@ -290,7 +290,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 		final List<JobVacancy> jobVacancies = new ArrayList<>();
 		
 		if(jobObjs.size() > 0) {
-			for(Object jobObj:jobObjs) {
+			for(Object jobObj : jobObjs) {
 				final Object[] objArr = (Object[]) jobObj;
 				final JobVacancy jobVacancy = new JobVacancy();
 				
@@ -323,7 +323,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 				vacancyDescription.setCity(city);
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
-				jobVacancy.setCreatedAt(DateUtil.dateTimeParse(objArr[9].toString()));
+				jobVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(objArr[9].toString()));
 				
 				jobVacancies.add(jobVacancy);
 			}
@@ -388,8 +388,8 @@ public class JobVacancyDao extends AbstractJpaDao {
 				picUser.setProfile(hrProfile);
 				jobVacancy.setPicUser(picUser);
 				
-				jobVacancy.setStartDate(DateUtil.dateParseTest((objArr[5].toString())));
-				jobVacancy.setEndDate(DateUtil.dateParseTest(objArr[6].toString()));
+				jobVacancy.setStartDate(DateUtil.dateParseCustom((objArr[5].toString())));
+				jobVacancy.setEndDate(DateUtil.dateParseCustom(objArr[6].toString()));
 				
 				final ExperienceLevel experienceLevel = new ExperienceLevel();
 				experienceLevel.setLevelName(objArr[7].toString());

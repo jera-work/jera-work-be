@@ -31,6 +31,20 @@ public class DateUtil {
 		return date;
 	}
 	
+	public static LocalDate dateParseCustom(String dateStr) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss.S");
+		final LocalDate date = LocalDate.parse(dateStr, formatter);
+
+		return date;
+	}
+	
+	public static LocalDateTime dateTimeParseCustom(String dateStr) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss.S");
+		final LocalDateTime date = LocalDateTime.parse(dateStr, formatter);
+
+		return date;
+	}
+	
 	public static LocalDate educationDateParse(String dateStr) {
 		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
 		final LocalDate date = LocalDate.parse(dateStr, formatter);

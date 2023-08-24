@@ -7,6 +7,24 @@ public class UserResDto {
 	private String companyId;
 	private String roleName;
 	private String companyName;
+	private String phoneNumber;
+	private String profileAddress;
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getProfileAddress() {
+		return profileAddress;
+	}
+
+	public void setProfileAddress(String profileAddress) {
+		this.profileAddress = profileAddress;
+	}
 
 	public String getCompanyName() {
 		return companyName;

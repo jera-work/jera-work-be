@@ -152,7 +152,7 @@ public class AppliedVacancyService {
 			response.setJobVacancyCode(av.getJobVacancy().getVacancyCode());
 			response.setAppliedProgressName(av.getAppliedProgress().getProgressName());
 			response.setAppliedStatusName(av.getAppliedStatus().getStatusName());
-			
+			response.setCreatedAt(DateUtil.dateTimeFormatIso(av.getCreatedAt()));
 			responses.add(response);
 			
 		});
