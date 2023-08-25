@@ -111,11 +111,11 @@ public class AppliedVacancyService {
 		return response;
 	}
 	
-	public List<AppliedVacancyResDto> getByCandidateId(){
+	public List<AppliedVacancyResDto> getByCandidateIdWithLimit(int startIndex, int endIndex){
 		final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
 		
 		final String encodedEmail = emailEncoderService.encodeEmail(candidate.getCandidateEmail());
-		final String url = "http://localhost:8081/applied/my-applied/?email=" + encodedEmail;
+		final String url = "http://localhost:8081/applied/my-applied/?email=" + encodedEmail + "&startIndex=" + startIndex + "&endIndex=" + endIndex;
 		final List<AppliedVacancyResDto> responseFromAdmins = apiService.getListFrom(url, AppliedVacancyResDto.class);
 		
 		final List<AppliedVacancyResDto> responseFromAdminConverteds = new ObjectMapper().convertValue(responseFromAdmins,
@@ -151,6 +151,19 @@ public class AppliedVacancyService {
 					responses.add(response);
 				}
 			});
+		});
+		
+		return responses;
+	}
+	
+	public List<AppliedVacancyResDto> getByCandidateId(){
+		final List<AppliedVacancyResDto> responses = new ArrayList<>();
+		
+		appliedVacancyDao.getByCandidateId(principalService.getAuthPrincipal()).forEach(av -> {
+			final AppliedVacancyResDto response = new AppliedVacancyResDto();
+			response.setId(av.getId());
+			
+			responses.add(response);
 		});
 		
 		return responses;

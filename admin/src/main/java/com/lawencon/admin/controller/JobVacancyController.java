@@ -69,8 +69,8 @@ public class JobVacancyController {
 	}
 	
 	@GetMapping("/code")
-	public ResponseEntity<JobVacancyResDto> getByCode(String code){
-		final JobVacancyResDto response = jobService.getByCode(code);
+	public ResponseEntity<JobSearchResDto> getByCode(String code){
+		final JobSearchResDto response = jobService.getByCode(code);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

@@ -12,6 +12,7 @@ import com.lawencon.candidate.dao.JobVacancyDao;
 import com.lawencon.candidate.dao.SavedJobsDao;
 import com.lawencon.candidate.dto.DeleteResDto;
 import com.lawencon.candidate.dto.InsertResDto;
+import com.lawencon.candidate.dto.jobvacancy.JobSearchResDto;
 import com.lawencon.candidate.dto.jobvacancy.JobVacancyResDto;
 import com.lawencon.candidate.dto.savedjob.InsertSavedJobReqDto;
 import com.lawencon.candidate.dto.savedjob.SavedJobResDto;
@@ -72,13 +73,13 @@ public class SavedJobService {
 		return response;
 	}
 
-	public List<SavedJobResDto> getMySavedJob(int startIndex, int endIndex) {
+	public List<SavedJobResDto> getMySavedJobWithLimit(int startIndex, int endIndex) {
 		final List<SavedJobResDto> responses = new ArrayList<>();
 		final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
 
-		savedJobsDao.getByCandidateId(startIndex, endIndex, candidate.getId()).forEach(sj -> {
+		savedJobsDao.getByCandidateIdWithLimit(startIndex, endIndex, candidate.getId()).forEach(sj -> {
 			final String url = "http://localhost:8081/jobs/code/?code=" + sj.getJobVacancy().getVacancyCode();
-			final JobVacancyResDto responseFromAdmin = apiService.getFrom(url, JobVacancyResDto.class);
+			final JobSearchResDto responseFromAdmin = apiService.getFrom(url, JobSearchResDto.class);
 
 			final SavedJobResDto response = new SavedJobResDto();
 			response.setCityName(responseFromAdmin.getCityName());
@@ -91,7 +92,34 @@ public class SavedJobService {
 			response.setVacancyCode(sj.getJobVacancy().getVacancyCode());
 			response.setVacancyId(sj.getJobVacancy().getId());
 			response.setVacancyTitle(sj.getJobVacancy().getVacancyTitle());
-//			response.setCreatedAt(url);
+			response.setCreatedAt(responseFromAdmin.getCreatedAt());
+
+			responses.add(response);
+		});
+
+		return responses;
+	}
+	
+	public List<SavedJobResDto> getMySavedJob() {
+		final List<SavedJobResDto> responses = new ArrayList<>();
+		final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
+
+		savedJobsDao.getByCandidateId(candidate.getId()).forEach(sj -> {
+			final String url = "http://localhost:8081/jobs/code/?code=" + sj.getJobVacancy().getVacancyCode();
+			final JobSearchResDto responseFromAdmin = apiService.getFrom(url, JobSearchResDto.class);
+
+			final SavedJobResDto response = new SavedJobResDto();
+			response.setCityName(responseFromAdmin.getCityName());
+			response.setCompanyName(responseFromAdmin.getCompanyName());
+			response.setCompanyPhotoId(responseFromAdmin.getCompanyPhotoId());
+			response.setDegreeName(responseFromAdmin.getDegreeName());
+			response.setJobTypeName(responseFromAdmin.getJobTypeName());
+			response.setId(sj.getId());
+			response.setSalary(responseFromAdmin.getSalary());
+			response.setVacancyCode(sj.getJobVacancy().getVacancyCode());
+			response.setVacancyId(sj.getJobVacancy().getId());
+			response.setVacancyTitle(sj.getJobVacancy().getVacancyTitle());
+			response.setCreatedAt(responseFromAdmin.getCreatedAt());
 
 			responses.add(response);
 		});

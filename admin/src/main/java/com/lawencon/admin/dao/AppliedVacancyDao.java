@@ -131,7 +131,7 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 		return appliedVacancies;
 	}
 	
-	public List<AppliedVacancy> getByCandidateId(String candidateId){
+	public List<AppliedVacancy> getByCandidateId(String candidateId, int startIndex, int endIndex){
 		final String sql = "SELECT "
 				+ "	tav.id, tav.job_vacancy_id, tjv.vacancy_code, tap.progress_name , tas.status_name, tav.created_at "
 				+ "FROM "
@@ -148,6 +148,8 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 		final List<?> appObjs = ConnHandler.getManager()
 				.createNativeQuery(sql)
 				.setParameter("candidateId", candidateId)
+				.setFirstResult(startIndex)
+				.setMaxResults(endIndex)
 				.getResultList();
 		
 		final List<AppliedVacancy> appliedVacancies = new ArrayList<>();

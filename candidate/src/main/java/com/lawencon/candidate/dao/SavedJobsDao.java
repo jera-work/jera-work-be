@@ -75,7 +75,7 @@ public class SavedJobsDao extends AbstractJpaDao {
 		}
 	}
 
-	public List<SavedJobs> getByCandidateId(int startIndex, int endIndex, String candidateId) {
+	public List<SavedJobs> getByCandidateIdWithLimit(int startIndex, int endIndex, String candidateId) {
 		final String sql = "SELECT "
 				+ "	tsj.id, tjv.id as jobId, tjv.vacancy_title, tjv.vacancy_code "
 				+ "FROM "
@@ -92,6 +92,49 @@ public class SavedJobsDao extends AbstractJpaDao {
 				.setParameter("candidateId", candidateId)
 				.setFirstResult(startIndex)
 				.setMaxResults(endIndex)
+				.getResultList();
+		
+		final List<SavedJobs> savedJobs = new ArrayList<>();
+		try {
+			if(sjObjs.size() > 0) {
+				for(Object sjObj: sjObjs) {
+					final Object[] sjObjArr = (Object[]) sjObj;
+					
+					final SavedJobs savedJob = new SavedJobs();
+					savedJob.setId(sjObjArr[0].toString());
+					
+					final JobVacancy jobVacancy = new JobVacancy();
+					jobVacancy.setId(sjObjArr[1].toString());
+					jobVacancy.setVacancyTitle(sjObjArr[2].toString());
+					jobVacancy.setVacancyCode(sjObjArr[3].toString());
+					savedJob.setJobVacancy(jobVacancy);
+					
+					savedJobs.add(savedJob);
+				}
+			}
+			
+			return savedJobs;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public List<SavedJobs> getByCandidateId(String candidateId) {
+		final String sql = "SELECT "
+				+ "	tsj.id, tjv.id as jobId, tjv.vacancy_title, tjv.vacancy_code "
+				+ "FROM "
+				+ "	t_saved_jobs tsj "
+				+ "INNER JOIN "
+				+ "	t_candidate tc ON tsj.candidate_id = tc.id "
+				+ "INNER JOIN "
+				+ "	t_job_vacancy tjv ON tsj.job_vacancy_id = tjv.id "
+				+ "WHERE "
+				+ "	tsj.candidate_id = :candidateId";
+		
+		final List<?> sjObjs = ConnHandler.getManager()
+				.createNativeQuery(sql)
+				.setParameter("candidateId", candidateId)
 				.getResultList();
 		
 		final List<SavedJobs> savedJobs = new ArrayList<>();

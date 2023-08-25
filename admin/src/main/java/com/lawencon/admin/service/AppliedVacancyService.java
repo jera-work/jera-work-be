@@ -138,13 +138,13 @@ public class AppliedVacancyService {
 		return response;
 	}
 	
-	public List<AppliedVacancyResDto> getByCandidateId(String email){
+	public List<AppliedVacancyResDto> getByCandidateId(String email, int startIndex, int endIndex){
 		final String candidateEmail = emailEncoderService.decodeEmail(email);
 		final Candidate candidate = candidateDao.getByEmail(candidateEmail);
 		
 		final List<AppliedVacancyResDto> responses = new ArrayList<>();
 		
-		appliedVacancyDao.getByCandidateId(candidate.getId()).forEach(av -> {
+		appliedVacancyDao.getByCandidateId(candidate.getId(), startIndex, endIndex).forEach(av -> {
 			final AppliedVacancyResDto response = new AppliedVacancyResDto();
 			
 			response.setId(av.getId());

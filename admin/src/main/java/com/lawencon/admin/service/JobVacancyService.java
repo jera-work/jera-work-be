@@ -259,32 +259,21 @@ public class JobVacancyService {
 		return response;
 	}
 
-	public JobVacancyResDto getByCode(String code) {
+	public JobSearchResDto getByCode(String code) {
 		final JobVacancy job = jobDao.getByCode(code);
 		final JobVacancy jv = jobDao.getById(job.getId());
-		final VacancyDescription vd = descDao.getById(jv.getVacancyDescription().getId());
 
-		final JobVacancyResDto response = new JobVacancyResDto();
+		final JobSearchResDto response = new JobSearchResDto();
+		response.setId(jv.getId());
+		response.setCityName(jv.getVacancyDescription().getCity().getCityName());
 		response.setCompanyName(jv.getCompany().getCompanyName());
-		response.setCompanyDesc(jv.getCompany().getDescription());
-		response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
-		response.setEndDate(DateUtil.dateFormat(jv.getEndDate()));
-		response.setStartDate(DateUtil.dateFormat(jv.getStartDate()));
-		response.setHrName(jv.getPicHr().getProfile().getProfileName());
-		response.setUserName(jv.getPicUser().getProfile().getProfileName());
-		response.setLevelName(jv.getExpLevel().getLevelName());
-		response.setStatusName(jv.getAvailableStatus().getStatusname());
+		response.setDegreeName(jv.getVacancyDescription().getDegree().getDegreeName());
+		response.setJobTypeName(jv.getVacancyDescription().getJobType().getTypeName());
+		response.setSalary(jv.getVacancyDescription().getSalary());
 		response.setVacancyTitle(jv.getVacancyTitle());
 		response.setVacancyCode(jv.getVacancyCode());
-		response.setVacancyId(jv.getId());
-		response.setDegreeName(vd.getDegree().getDegreeName());
-		response.setGenderName(vd.getGender().getGenderName());
-		response.setAgeVacancyName(vd.getAgeVacancy().getAgeName());
-		response.setJobTypeName(vd.getJobType().getTypeName());
-		response.setSalary(vd.getSalary());
-		response.setCityName(vd.getCity().getCityName());
-		response.setAddress(vd.getAddress());
-		response.setDescription(vd.getDescription());
+		response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
+		response.setCreatedAt(DateUtil.dateTimeFormatIso(jv.getCreatedAt()));
 
 		return response;
 	}
