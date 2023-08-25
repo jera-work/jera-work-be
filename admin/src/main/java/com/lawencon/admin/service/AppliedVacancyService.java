@@ -1,7 +1,6 @@
 package com.lawencon.admin.service;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,7 @@ import com.lawencon.admin.dao.JobVacancyDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyAdminResDto;
+import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCandidateDetailResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyResDto;
 import com.lawencon.admin.dto.appliedvacancy.InsertAppliedVacancyReqDto;
 import com.lawencon.admin.dto.appliedvacancy.UpdateProgressReqDto;
@@ -192,5 +192,30 @@ public class AppliedVacancyService {
 		});
 		
 		return responses;
+	}
+	
+	public AppliedVacancyCandidateDetailResDto getAppliedCandidateDetail(String appliedId) {
+		final AppliedVacancyCandidateDetailResDto response = new AppliedVacancyCandidateDetailResDto();
+		final AppliedVacancy applied = appliedVacancyDao.getById(appliedId);
+		final Candidate candidate = candidateDao.getById(applied.getCandidate().getId());
+		
+		response.setAppliedProgress(applied.getAppliedProgress().getProgressName());
+		response.setAppliedStatus(applied.getAppliedStatus().getStatusName());
+		response.setCandidateName(candidate.getCandidateProfile().getProfileName());
+		response.setExpectedSalary(candidate.getCandidateProfile().getExpectedSalary());
+		response.setGenderName(candidate.getCandidateProfile().getGender().getGenderName());
+		response.setId(appliedId);
+		response.setMaritalName(candidate.getCandidateProfile().getMarital().getMaritalName());
+		response.setNationalityName(candidate.getCandidateProfile().getNationality().getNationalityName());
+		response.setPhoneNumber(candidate.getCandidateProfile().getPhoneNumber());
+		response.setPhotoId(candidate.getCandidateProfile().getPhoto().getId());
+		response.setPicHrId(applied.getJobVacancy().getPicHr().getId());
+		response.setPicHrName(applied.getJobVacancy().getPicHr().getProfile().getProfileName());
+		response.setPicUserId(applied.getJobVacancy().getPicUser().getId());
+		response.setPicUserName(applied.getJobVacancy().getPicUser().getProfile().getProfileName());
+		response.setProfileAddress(candidate.getCandidateProfile().getProfileAddress());
+		response.setReligionName(candidate.getCandidateProfile().getReligion().getReligionName());
+		
+		return response;
 	}
 }
