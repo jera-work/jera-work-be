@@ -99,7 +99,7 @@ public class CandidateService {
 					final File newPhoto = new File();
 					newPhoto.setFileContent(data.getPhotoContent());
 					newPhoto.setFileExt(data.getPhotoExt());
-					fileDb = fileDao.saveAndFlush(newPhoto);
+					fileDb = fileDao.save(newPhoto);
 					profile.setPhoto(fileDb);
 				}
 			}

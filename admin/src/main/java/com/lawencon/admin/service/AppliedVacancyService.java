@@ -23,6 +23,10 @@ import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCandidateDetailResDto
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyResDto;
 import com.lawencon.admin.dto.appliedvacancy.InsertAppliedVacancyReqDto;
 import com.lawencon.admin.dto.appliedvacancy.UpdateProgressReqDto;
+import com.lawencon.admin.dto.candidatedocument.CandidateDocumentResDto;
+import com.lawencon.admin.dto.candidateexperience.CandidateExperienceResDto;
+import com.lawencon.admin.dto.candidateskill.CandidateSkillResDto;
+import com.lawencon.admin.dto.education.CandidateEducationResDto;
 import com.lawencon.admin.exception.CustomException;
 import com.lawencon.admin.model.AppliedProgress;
 import com.lawencon.admin.model.AppliedVacancy;
@@ -54,6 +58,14 @@ public class AppliedVacancyService {
 	private BlacklistEmployeeDao blacklistEmployeeDao;
 	@Autowired
 	private HiredEmployeeDao hiredEmployeeDao;
+	@Autowired
+	private CandidateDocumentService docsService;
+	@Autowired
+	private CandidateExperienceService expService;
+	@Autowired
+	private CandidateEducationService eduService;
+	@Autowired
+	private CandidateSkillService skillService;
 
 	public InsertResDto insertAppliedVacancy(InsertAppliedVacancyReqDto data) {
 
@@ -198,9 +210,15 @@ public class AppliedVacancyService {
 		final AppliedVacancyCandidateDetailResDto response = new AppliedVacancyCandidateDetailResDto();
 		final AppliedVacancy applied = appliedVacancyDao.getById(appliedId);
 		final Candidate candidate = candidateDao.getById(applied.getCandidate().getId());
+		final List<CandidateDocumentResDto> docsDto = docsService.getDocumentsByCandidateId(candidate.getId());
+		final List<CandidateExperienceResDto> expsDto = expService.getExperiencesByCandidateId(candidate.getId());
+		final List<CandidateEducationResDto> edusDto = eduService.getEducationsByCandidateId(candidate.getId());
+		final List<CandidateSkillResDto> skillsDto = skillService.getSkillsByCandidateId(candidate.getId());
 		
 		response.setAppliedProgress(applied.getAppliedProgress().getProgressName());
+		response.setAppliedProgressId(applied.getAppliedProgress().getId());
 		response.setAppliedStatus(applied.getAppliedStatus().getStatusName());
+		response.setAppliedStatusId(applied.getAppliedStatus().getId());
 		response.setCandidateName(candidate.getCandidateProfile().getProfileName());
 		response.setExpectedSalary(candidate.getCandidateProfile().getExpectedSalary());
 		response.setGenderName(candidate.getCandidateProfile().getGender().getGenderName());
@@ -215,6 +233,10 @@ public class AppliedVacancyService {
 		response.setPicUserName(applied.getJobVacancy().getPicUser().getProfile().getProfileName());
 		response.setProfileAddress(candidate.getCandidateProfile().getProfileAddress());
 		response.setReligionName(candidate.getCandidateProfile().getReligion().getReligionName());
+		response.setDocuments(docsDto);
+		response.setExperiences(expsDto);
+		response.setEducations(edusDto);
+		response.setSkills(skillsDto);
 		
 		return response;
 	}

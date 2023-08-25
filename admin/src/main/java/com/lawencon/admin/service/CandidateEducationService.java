@@ -82,5 +82,27 @@ public class CandidateEducationService {
 
 		return responses;
 	}
+	
+	/* get educations for admin */ 
+	public List<CandidateEducationResDto> getEducationsByCandidateId(String candidateId) {
+		final List<CandidateEducationResDto> responses = new ArrayList<>();
+		final Candidate candidate = candidateDao.getById(candidateId);
+		final List<CandidateEducation> educations = educationDao.getByCandidateId(candidate.getId());
+
+		for (CandidateEducation education : educations) {
+			final CandidateEducationResDto response = new CandidateEducationResDto();
+			response.setDegreeId(education.getDegree().getDegreeName());
+			response.setMajorId(education.getMajor().getMajorName());
+			response.setId(education.getId());
+			response.setEndYear(DateUtil.yearFormat(education.getEndYear()));
+			response.setGpa(education.getGpa());
+			response.setInstitutionAddress(education.getInstitutionAddress());
+			response.setInstitutionName(education.getInstitutionName());
+			response.setStartYear(DateUtil.yearFormat(education.getStartYear()));
+			responses.add(response);
+		}
+
+		return responses;
+	}
 
 }

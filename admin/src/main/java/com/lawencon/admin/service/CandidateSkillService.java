@@ -75,4 +75,23 @@ public class CandidateSkillService {
 		}
 		return responses;
 	}
+	
+	/* get skills for admin */
+	public List<CandidateSkillResDto> getSkillsByCandidateId(String candidateId) {
+		final List<CandidateSkillResDto> responses = new ArrayList<>();
+		final Candidate candidate = candidateDao.getById(candidateId);
+		final List<CandidateSkill> skills = candidateSkillDao.getByCandidateId(candidate.getId());
+		
+		for (CandidateSkill skill : skills) {
+			final CandidateSkillResDto response = new CandidateSkillResDto();
+			response.setSkillId(skill.getId());
+			if(skill.getSkill() != null) {
+				response.setSkillName(skill.getSkill().getSkillName());
+			} else {
+				response.setSkillName(skill.getSkillName());
+			}
+			responses.add(response);
+		}
+		return responses;
+	}
 }
