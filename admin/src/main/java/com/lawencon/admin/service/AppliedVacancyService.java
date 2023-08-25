@@ -233,6 +233,7 @@ public class AppliedVacancyService {
 		response.setPicUserName(applied.getJobVacancy().getPicUser().getProfile().getProfileName());
 		response.setProfileAddress(candidate.getCandidateProfile().getProfileAddress());
 		response.setReligionName(candidate.getCandidateProfile().getReligion().getReligionName());
+		response.setJobTitle(applied.getJobVacancy().getVacancyTitle());
 		response.setDocuments(docsDto);
 		response.setExperiences(expsDto);
 		response.setEducations(edusDto);
