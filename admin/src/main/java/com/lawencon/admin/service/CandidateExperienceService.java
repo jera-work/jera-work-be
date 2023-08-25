@@ -1,5 +1,6 @@
 package com.lawencon.admin.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,8 @@ import org.springframework.stereotype.Service;
 import com.lawencon.admin.dao.CandidateDao;
 import com.lawencon.admin.dao.CandidateExperienceDao;
 import com.lawencon.admin.dto.InsertResDto;
-import com.lawencon.admin.dto.experience.CandidateExperienceReqDto;
+import com.lawencon.admin.dto.candidateexperience.CandidateExperienceReqDto;
+import com.lawencon.admin.dto.candidateexperience.CandidateExperienceResDto;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.CandidateExperience;
 import com.lawencon.admin.util.DateUtil;
@@ -52,6 +54,27 @@ public class CandidateExperienceService {
 		}
 
 		return response;
+	}
+	
+	/* get experiences for admin */
+	public List<CandidateExperienceResDto> getExperiencesByCandidateId(String candidateId) {
+		final List<CandidateExperienceResDto> responses = new ArrayList<>();
+		final Candidate candidate = candidateDao.getById(candidateId);
+		final List<CandidateExperience> experiences = candidateExperienceDao.getByCandidateId(candidate.getId());
+		
+		for (CandidateExperience experience : experiences) {
+			final CandidateExperienceResDto response = new CandidateExperienceResDto();
+			response.setEndDate(experience.getEndDate().toString());
+			response.setFormerInstitution(experience.getFormerInstitution());
+			response.setFormerJobdesc(experience.getFormerJobdesk());
+			response.setFormerLocation(experience.getFormerLocation());
+			response.setFormerPosition(experience.getFormerPosition());
+			response.setId(experience.getId());
+			response.setStartDate(experience.getStartDate().toString());
+			responses.add(response);
+		}
+		
+		return responses;
 	}
 
 }

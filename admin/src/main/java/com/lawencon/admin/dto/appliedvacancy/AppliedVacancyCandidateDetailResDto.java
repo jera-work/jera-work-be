@@ -1,5 +1,12 @@
 package com.lawencon.admin.dto.appliedvacancy;
 
+import java.util.List;
+
+import com.lawencon.admin.dto.candidatedocument.CandidateDocumentResDto;
+import com.lawencon.admin.dto.candidateexperience.CandidateExperienceResDto;
+import com.lawencon.admin.dto.candidateskill.CandidateSkillResDto;
+import com.lawencon.admin.dto.education.CandidateEducationResDto;
+
 public class AppliedVacancyCandidateDetailResDto {
 
 	private String id;
@@ -13,11 +20,65 @@ public class AppliedVacancyCandidateDetailResDto {
 	private String religionName;
 	private String photoId;
 	private String appliedStatus;
+	private String appliedStatusId;
 	private String appliedProgress;
+	private String appliedProgressId;
 	private String picHrId;
 	private String picHrName;
 	private String picUserId;
 	private String picUserName;
+	private List<CandidateDocumentResDto> documents;
+	private List<CandidateExperienceResDto> experiences;
+	private List<CandidateEducationResDto> educations;
+	private List<CandidateSkillResDto> skills;
+
+	public String getAppliedStatusId() {
+		return appliedStatusId;
+	}
+
+	public void setAppliedStatusId(String appliedStatusId) {
+		this.appliedStatusId = appliedStatusId;
+	}
+
+	public String getAppliedProgressId() {
+		return appliedProgressId;
+	}
+
+	public void setAppliedProgressId(String appliedProgressId) {
+		this.appliedProgressId = appliedProgressId;
+	}
+
+	public List<CandidateDocumentResDto> getDocuments() {
+		return documents;
+	}
+
+	public void setDocuments(List<CandidateDocumentResDto> documents) {
+		this.documents = documents;
+	}
+
+	public List<CandidateExperienceResDto> getExperiences() {
+		return experiences;
+	}
+
+	public void setExperiences(List<CandidateExperienceResDto> experiences) {
+		this.experiences = experiences;
+	}
+
+	public List<CandidateEducationResDto> getEducations() {
+		return educations;
+	}
+
+	public void setEducations(List<CandidateEducationResDto> educations) {
+		this.educations = educations;
+	}
+
+	public List<CandidateSkillResDto> getSkills() {
+		return skills;
+	}
+
+	public void setSkills(List<CandidateSkillResDto> skills) {
+		this.skills = skills;
+	}
 
 	public String getId() {
 		return id;

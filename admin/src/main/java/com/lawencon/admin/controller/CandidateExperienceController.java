@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.admin.dto.InsertResDto;
-import com.lawencon.admin.dto.experience.CandidateExperienceReqDto;
+import com.lawencon.admin.dto.candidateexperience.CandidateExperienceReqDto;
 import com.lawencon.admin.service.CandidateExperienceService;
 
 @RestController

@@ -1,4 +1,4 @@
-package com.lawencon.admin.dto.experience;
+package com.lawencon.admin.dto.candidateexperience;
 
 public class CandidateExperienceReqDto {
 
