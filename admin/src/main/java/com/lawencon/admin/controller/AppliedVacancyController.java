@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyAdminResDto;
+import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCandidateDetailResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyResDto;
 import com.lawencon.admin.dto.appliedvacancy.InsertAppliedVacancyReqDto;
 import com.lawencon.admin.dto.appliedvacancy.UpdateProgressReqDto;
@@ -57,5 +58,11 @@ public class AppliedVacancyController {
 		final List<AppliedVacancyAdminResDto> responses = appliedVacancyService.getByJobVacancyId(jobId);
 		
 		return new ResponseEntity<>(responses, HttpStatus.OK);
+	}
+	
+	@GetMapping
+	public ResponseEntity<AppliedVacancyCandidateDetailResDto> getAppliedCandidateDetail(String appliedId){
+		final AppliedVacancyCandidateDetailResDto response = appliedVacancyService.getAppliedCandidateDetail(appliedId);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }
