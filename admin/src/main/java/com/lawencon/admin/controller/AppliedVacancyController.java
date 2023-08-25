@@ -16,6 +16,7 @@ import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyAdminResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCandidateDetailResDto;
+import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyProgressResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyResDto;
 import com.lawencon.admin.dto.appliedvacancy.InsertAppliedVacancyReqDto;
 import com.lawencon.admin.dto.appliedvacancy.UpdateProgressReqDto;
@@ -43,6 +44,12 @@ public class AppliedVacancyController {
 	@GetMapping("/my-applied")
 	public ResponseEntity<List<AppliedVacancyResDto>> getMyAppliedJob(String email, int startIndex, int endIndex) {
 		final List<AppliedVacancyResDto> responses = appliedVacancyService.getByCandidateId(email, startIndex, endIndex);
+		return new ResponseEntity<>(responses, HttpStatus.OK);
+	}
+	
+	@GetMapping("/my-applied/detail")
+	public ResponseEntity<AppliedVacancyProgressResDto> getAppliedByJobAndCandidate(String jobCode, String email) {
+		final AppliedVacancyProgressResDto responses = appliedVacancyService.getAppliedByJobAndCandidate(jobCode, email);
 		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}
 	
