@@ -93,7 +93,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 	public List<JobVacancy> getAllWithLimit(int startIndex, int endIndex, String vacancyTitle, String degreeId, String cityId, String jobTypeId){
 		final String sql = "SELECT "
 				+ "	tjv.id, tjv.vacancy_code, tjv.vacancy_title, tc.company_name, tc.photo_id, "
-				+ " tvd.salary, td.degree_name, tjt.type_name, tc2.city_name "
+				+ " tvd.salary, td.degree_name, tjt.type_name, tc2.city_name, tjv.created_at "
 				+ "FROM "
 				+ "	t_job_vacancy tjv "
 				+ "INNER JOIN "
@@ -179,6 +179,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 				vacancyDescription.setCity(city);
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
+				jobVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(objArr[9].toString()));
 				
 				jobVacancies.add(jobVacancy);
 			}

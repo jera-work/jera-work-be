@@ -85,7 +85,6 @@ public class JobVacancyService {
 			final JobSearchResDto jobFromCandidateRes = new JobSearchResDto();
 			jobFromCandidateRes.setId(jv.getId());
 			jobFromCandidateRes.setVacancyCode(jv.getVacancyCode());
-			jobFromCandidateRes.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
 
 			jobFromCandidates.add(jobFromCandidateRes);
 		});
@@ -102,6 +101,7 @@ public class JobVacancyService {
 					jobCdt.setJobTypeName(resCon.getJobTypeName());
 					jobCdt.setSalary(resCon.getSalary());
 					jobCdt.setVacancyTitle(resCon.getVacancyTitle());
+					jobCdt.setCreatedAt(resCon.getCreatedAt());
 					final JobSearchResDto response = jobCdt;
 
 					responses.add(response);
