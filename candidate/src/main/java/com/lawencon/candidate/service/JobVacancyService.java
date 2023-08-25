@@ -85,7 +85,6 @@ public class JobVacancyService {
 			final JobSearchResDto jobFromCandidateRes = new JobSearchResDto();
 			jobFromCandidateRes.setId(jv.getId());
 			jobFromCandidateRes.setVacancyCode(jv.getVacancyCode());
-			jobFromCandidateRes.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
 
 			jobFromCandidates.add(jobFromCandidateRes);
 		});
@@ -102,6 +101,7 @@ public class JobVacancyService {
 					jobCdt.setJobTypeName(resCon.getJobTypeName());
 					jobCdt.setSalary(resCon.getSalary());
 					jobCdt.setVacancyTitle(resCon.getVacancyTitle());
+					jobCdt.setCreatedAt(resCon.getCreatedAt());
 					final JobSearchResDto response = jobCdt;
 
 					responses.add(response);
@@ -233,7 +233,9 @@ public class JobVacancyService {
 	public JobVacancyResDto getJobDetail(String jobId) {
 		final JobVacancy job = jobDao.getById(jobId);
 
-		final String url = "http://localhost:8081/jobs/code/?code=" + job.getVacancyCode();
+		final String urlToGetId = "http://localhost:8081/jobs/code/?code=" + job.getVacancyCode();
+		final JobSearchResDto jobIdFromAdmin = apiService.getFrom(urlToGetId, JobSearchResDto.class);
+		final String url = "http://localhost:8081/jobs/detail/?jobId=" + jobIdFromAdmin.getId();
 		final JobVacancyResDto responseFromAdmin = apiService.getFrom(url, JobVacancyResDto.class);
 
 		final JobVacancyResDto response = new JobVacancyResDto();

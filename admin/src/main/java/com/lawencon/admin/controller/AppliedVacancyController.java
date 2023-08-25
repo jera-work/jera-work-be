@@ -41,8 +41,8 @@ public class AppliedVacancyController {
 	}
 
 	@GetMapping("/my-applied")
-	public ResponseEntity<List<AppliedVacancyResDto>> getMyAppliedJob(String email) {
-		final List<AppliedVacancyResDto> responses = appliedVacancyService.getByCandidateId(email);
+	public ResponseEntity<List<AppliedVacancyResDto>> getMyAppliedJob(String email, int startIndex, int endIndex) {
+		final List<AppliedVacancyResDto> responses = appliedVacancyService.getByCandidateId(email, startIndex, endIndex);
 		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}
 	

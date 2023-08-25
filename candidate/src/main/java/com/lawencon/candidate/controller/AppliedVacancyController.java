@@ -38,6 +38,12 @@ public class AppliedVacancyController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	@GetMapping("/my-applied/page")
+	public ResponseEntity<List<AppliedVacancyResDto>> getMyAppliedJobWithLimit(int startIndex, int endIndex) {
+		final List<AppliedVacancyResDto> responses = appliedVacancyService.getByCandidateIdWithLimit(startIndex, endIndex);
+		return new ResponseEntity<>(responses, HttpStatus.OK);
+	}
+	
 	@GetMapping("/my-applied")
 	public ResponseEntity<List<AppliedVacancyResDto>> getMyAppliedJob() {
 		final List<AppliedVacancyResDto> responses = appliedVacancyService.getByCandidateId();
