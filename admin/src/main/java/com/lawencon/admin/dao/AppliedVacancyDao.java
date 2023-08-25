@@ -54,13 +54,15 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 	
 	public AppliedVacancy getByJobVacancyAndCandidate(String jobId, String candidateId){
 		final String sql = "SELECT "
-				+ "	tav.id "
+				+ "	tav.id, tap.progress_code "
 				+ "FROM "
 				+ "	t_applied_vacancy tav "
 				+ "INNER JOIN "
 				+ "	t_candidate tc ON tav.candidate_id = tc.id "
 				+ "INNER JOIN "
 				+ "	t_job_vacancy tjv ON tav.job_vacancy_id = tjv.id "
+				+ "INNER JOIN "
+				+ "t_applied_progress tap ON tav.applied_progress_id = tap.id "
 				+ "WHERE "
 				+ "	tc.id LIKE :candidate_id AND tjv.id LIKE :job_id ";
 		
@@ -70,8 +72,14 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 					.setParameter("candidate_id", candidateId)
 					.getSingleResult();
 
-				AppliedVacancy appliedVacancy = new AppliedVacancy();
-				appliedVacancy.setId(appJobObj.toString());
+			final Object[] appJobObjArr = (Object[]) appJobObj;
+			final AppliedVacancy appliedVacancy = new AppliedVacancy();
+			appliedVacancy.setId(appJobObjArr[0].toString());
+				
+			final AppliedProgress appliedProgress = new AppliedProgress();
+			appliedProgress.setProgressCode(appJobObjArr[1].toString());
+			appliedVacancy.setAppliedProgress(appliedProgress);
+				
 			return appliedVacancy;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -20,6 +20,7 @@ import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.UpdateResDto;
 import com.lawencon.candidate.dto.appliedprogress.AppliedProgressResDto;
 import com.lawencon.candidate.dto.appliedstatus.AppliedStatusResDto;
+import com.lawencon.candidate.dto.appliedvacancy.AppliedVacancyProgressResDto;
 import com.lawencon.candidate.dto.appliedvacancy.AppliedVacancyResDto;
 import com.lawencon.candidate.dto.appliedvacancy.InsertAppliedVacancyReqDto;
 import com.lawencon.candidate.dto.appliedvacancy.UpdateProgressReqDto;
@@ -169,4 +170,17 @@ public class AppliedVacancyService {
 		return responses;
 	}
 	
+	public AppliedVacancyProgressResDto getProgressCode(String appliedId) {
+		final AppliedVacancyProgressResDto response = new AppliedVacancyProgressResDto();
+
+		final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
+		final String encodedEmail = emailEncoderService.encodeEmail(candidate.getCandidateEmail());
+		
+		final AppliedVacancy appliedVacancy = appliedVacancyDao.getById(appliedId);
+		final String url = "http://localhost:8081/applied/my-applied/detail/?jobCode=" + appliedVacancy.getJobVacancy().getVacancyCode()  + "&email=" + encodedEmail;
+		final AppliedVacancyProgressResDto responseFromAdmins = apiService.getFrom(url, AppliedVacancyProgressResDto.class);
+		
+		response.setProgressCode(responseFromAdmins.getProgressCode());
+		return response;
+	}
 }
