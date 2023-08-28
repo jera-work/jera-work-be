@@ -73,20 +73,28 @@ public class QuestionService {
 
 	public List<QuestionResDto> getQuestions(String jobId) {
 		final List<QuestionResDto> responses = new ArrayList<>();
-		final List<QuestionOptionResDto> optionResponses = new ArrayList<>();
 		final List<Question> questions = questionDao.getByJobId(jobId);
 		
 		for (Question question : questions) {
 			final QuestionResDto response = new QuestionResDto();
-						
+			final List<QuestionOptionResDto> optionResponses = new ArrayList<>();
+			
 			final List<QuestionOption> options = questionOptionDao.getByQuestionId(question.getId());
-			for (QuestionOption option : options) {
+			options.forEach(o -> {
 				final QuestionOptionResDto optionResponse = new QuestionOptionResDto();
-				optionResponse.setOptionId(option.getId());
-				optionResponse.setIsCorrect(option.getIsCorrect());
-				optionResponse.setOptionLabel(option.getOptionLabel());
+				optionResponse.setOptionId(o.getId());
+				optionResponse.setIsCorrect(o.getIsCorrect());
+				optionResponse.setOptionLabel(o.getOptionLabel());
 				optionResponses.add(optionResponse);
-			}
+			});
+			
+//			for (QuestionOption option : options) {
+//				final QuestionOptionResDto optionResponse = new QuestionOptionResDto();
+//				optionResponse.setOptionId(option.getId());
+//				optionResponse.setIsCorrect(option.getIsCorrect());
+//				optionResponse.setOptionLabel(option.getOptionLabel());
+//				optionResponses.add(optionResponse);
+//			}
 			
 			response.setId(question.getId());
 			response.setJobVacancyId(question.getJobVacancy().getId());
