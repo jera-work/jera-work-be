@@ -141,7 +141,7 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 	
 	public List<AppliedVacancy> getByCandidateId(String candidateId, int startIndex, int endIndex){
 		final String sql = "SELECT "
-				+ "	tav.id, tav.job_vacancy_id, tjv.vacancy_code, tap.progress_name , tas.status_name, tav.created_at "
+				+ "	tav.id, tav.job_vacancy_id, tjv.vacancy_code, tap.progress_code, tap.progress_name, tas.status_code, tas.status_name, tav.created_at "
 				+ "FROM "
 				+ "	t_applied_vacancy tav "
 				+ "INNER JOIN "
@@ -175,13 +175,15 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 				appliedVacancy.setJobVacancy(jobVacancy);
 				
 				final AppliedProgress appliedProgress = new AppliedProgress();
-				appliedProgress.setProgressName(appObjArr[3].toString());
+				appliedProgress.setProgressCode(appObjArr[3].toString());
+				appliedProgress.setProgressName(appObjArr[4].toString());
 				appliedVacancy.setAppliedProgress(appliedProgress);
 				
 				final AppliedStatus appliedStatus = new AppliedStatus();
-				appliedStatus.setStatusName(appObjArr[4].toString());
+				appliedStatus.setStatusCode(appObjArr[5].toString());
+				appliedStatus.setStatusName(appObjArr[6].toString());
 				appliedVacancy.setAppliedStatus(appliedStatus);
-				appliedVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(appObjArr[5].toString()));
+				appliedVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(appObjArr[7].toString()));
 				
 				appliedVacancies.add(appliedVacancy);
 			}

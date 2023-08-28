@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.admin.model.AvailableStatus;
@@ -91,7 +93,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 	}
 
 	public List<JobVacancy> getAllWithLimit(int startIndex, int endIndex, String vacancyTitle, String degreeId, String cityId, String jobTypeId){
-		final String sql = "SELECT "
+		String sql = "SELECT "
 				+ "	tjv.id, tjv.vacancy_code, tjv.vacancy_title, tc.company_name, tc.photo_id, "
 				+ " tvd.salary, td.degree_name, tjt.type_name, tc2.city_name, tjv.created_at "
 				+ "FROM "
@@ -109,39 +111,43 @@ public class JobVacancyDao extends AbstractJpaDao {
 				+ "INNER JOIN "
 				+ "	t_job_type tjt ON tvd.job_type_id = tjt.id "
 				+ "WHERE "
-				+ "	tjv.vacancy_title ILIKE '%' || :vacancyTitle || '%' "
-				+ "AND "
-				+ "	tvd.degree_id ILIKE :degreeId || '%' "
-				+ "AND "
-				+ "	tvd.city_id ILIKE :cityId || '%' "
-				+ "AND "
-				+ "	tvd.job_type_id ILIKE :jobTypeId || '%' ";
+				+ " 1 = 1 ";
 		
-		if(vacancyTitle == null) {
-			vacancyTitle = "";
+		if(vacancyTitle != null && !vacancyTitle.equalsIgnoreCase("")) {
+			sql += "AND tjv.vacancy_title ILIKE '%' || :vacancyTitle || '%' ";
 		}
 		
-		if(degreeId == null) {
-			degreeId = "";
+		if(degreeId != null && !degreeId.equalsIgnoreCase("")) {
+			sql += " AND tvd.degree_id ILIKE :degreeId || '%' ";
 		}
 		
-		if(cityId == null) {
-			cityId = "";
+		if(cityId != null && !cityId.equalsIgnoreCase("")) {
+			sql += " AND tvd.city_id ILIKE :cityId || '%' ";
 		}
 		
-		if(jobTypeId == null) {
-			jobTypeId = "";
+		if(jobTypeId != null && !jobTypeId.equalsIgnoreCase("")) {
+			sql += " AND tvd.job_type_id ILIKE :jobTypeId || '%' ";
 		}
 		
-		final List<?> jobObjs = ConnHandler.getManager()
-				.createNativeQuery(sql)
-				.setParameter("vacancyTitle", vacancyTitle)
-				.setParameter("degreeId", degreeId)
-				.setParameter("cityId", cityId)
-				.setParameter("jobTypeId", jobTypeId)
-				.setFirstResult(startIndex)
-				.setMaxResults(endIndex)
-				.getResultList();
+		final Query query = ConnHandler.getManager().createNativeQuery(sql);
+		
+		if(vacancyTitle != null && !vacancyTitle.equalsIgnoreCase("")) {
+			query.setParameter("vacancyTitle", vacancyTitle);
+		}
+		
+		if(degreeId != null && !degreeId.equalsIgnoreCase("")) {
+			query.setParameter("degreeId", degreeId);
+		}
+		
+		if(cityId != null && !cityId.equalsIgnoreCase("")) {
+			query.setParameter("cityId", cityId);
+		}
+		
+		if(jobTypeId != null && !jobTypeId.equalsIgnoreCase("")) {
+			query.setParameter("jobTypeId", jobTypeId);
+		}
+		
+		final List<?> jobObjs = query.getResultList();
 		
 		final List<JobVacancy> jobVacancies = new ArrayList<>();
 		
@@ -280,7 +286,9 @@ public class JobVacancyDao extends AbstractJpaDao {
 				+ "INNER JOIN "
 				+ "	t_degree td ON tvd.degree_id = td.id "
 				+ "INNER JOIN "
-				+ "	t_job_type tjt ON tvd.job_type_id = tjt.id ";
+				+ "	t_job_type tjt ON tvd.job_type_id = tjt.id "
+				+ "ORDER BY "
+				+ " random()";
 		
 		final List<?> jobObjs = ConnHandler.getManager()
 				.createNativeQuery(sql)

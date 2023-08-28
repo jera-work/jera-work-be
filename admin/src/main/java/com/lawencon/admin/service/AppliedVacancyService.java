@@ -164,7 +164,9 @@ public class AppliedVacancyService {
 			response.setId(av.getId());
 			response.setJobVacancyId(av.getJobVacancy().getId());
 			response.setJobVacancyCode(av.getJobVacancy().getVacancyCode());
+			response.setAppliedProgressCode(av.getAppliedProgress().getProgressCode());
 			response.setAppliedProgressName(av.getAppliedProgress().getProgressName());
+			response.setAppliedStatusCode(av.getAppliedStatus().getStatusCode());
 			response.setAppliedStatusName(av.getAppliedStatus().getStatusName());
 			response.setCreatedAt(DateUtil.dateTimeFormatIso(av.getCreatedAt()));
 			responses.add(response);
