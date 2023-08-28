@@ -396,9 +396,8 @@
                     <tr>
                       <td>
                         <img th:src="|cid:logo|" alt="Logo Jera-Work">
-                        <h2>Offering Letter</h2>
-                        <p>Halo, <span th:text="${data.getCandidateName()}"></span></p>
-                        <p>Congratulation! your application has accepted by company :
+                        <h2>Invitation to send Medical Checkup</h2>
+                        <p>Congratulation! you has invited to send Medical Checkup by company :
 
                         <div class="company-job">
                           <img class="job-company-logo" th:src="|cid:logocompany|" alt="job-company-logo">
@@ -418,7 +417,7 @@
                                     <tr>
                                         <td class="table-header">Location</td>
                                         <td class="table-operator">:</td>
-                                        <td><span th:text="${data.getOfferingLocation()}"></span></td>
+                                        <td><span th:text="${data.getAddress()}"></span></td>
                                     </tr>
                                     <tr>
                                         <td class="table-header">Start Date</td>
@@ -437,7 +436,7 @@
                           </tbody>
                         </table>
                         
-						<p>We are confident that you will find this fit to your company's needs.
+                        <p>We are confident that you will find this fit to your company's needs.
                         <p>Please contact us immediately to confirm acceptance of this offer.
                       </td>
                     </tr>

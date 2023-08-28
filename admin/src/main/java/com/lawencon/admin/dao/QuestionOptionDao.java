@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.lawencon.admin.model.QuestionOption;
 import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.base.ConnHandler;
 
 @Repository
 public class QuestionOptionDao extends AbstractJpaDao {
@@ -41,5 +42,24 @@ public class QuestionOptionDao extends AbstractJpaDao {
 
 	public boolean deleteById(final Object entityId) {
 		return super.deleteById(QuestionOption.class, entityId);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<QuestionOption> getByQuestionId(String questionId){
+		final String sql = 
+				"SELECT "
+					+ "	* "	
+				+ "FROM "
+					+ "	t_question_option tqo "
+				+ "INNER JOIN "
+					+ "	t_question tq ON tq.id = tqo.question_id  "
+				+ "WHERE "
+					+ "	tq.id LIKE :questionId ";
+		
+		final List<QuestionOption> options = ConnHandler.getManager().createNativeQuery(sql, QuestionOption.class)
+				.setParameter("questionId", questionId)
+				.getResultList();
+		
+		return options;
 	}
 }

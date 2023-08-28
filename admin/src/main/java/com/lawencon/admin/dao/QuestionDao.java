@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.lawencon.admin.model.Question;
 import com.lawencon.base.AbstractJpaDao;
+import com.lawencon.base.ConnHandler;
 
 @Repository
 public class QuestionDao extends AbstractJpaDao {
@@ -41,5 +42,24 @@ public class QuestionDao extends AbstractJpaDao {
 
 	public boolean deleteById(final Object entityId) {
 		return super.deleteById(Question.class, entityId);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Question> getByJobId(String jobId){
+		final String sql = 
+				"SELECT "
+					+ "	* "
+				+ "FROM "
+					+ "	t_question tq "
+				+ "INNER JOIN "
+					+ "	t_job_vacancy tjv ON tjv.id = tq.job_vacancy_id "
+				+ "WHERE "
+					+ "	tjv.id LIKE :jobId ";
+		
+		final List<Question> questions = ConnHandler.getManager().createNativeQuery(sql, Question.class)
+				.setParameter("jobId", jobId)
+				.getResultList();
+		
+		return questions;
 	}
 }

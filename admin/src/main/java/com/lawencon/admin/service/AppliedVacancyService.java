@@ -238,10 +238,15 @@ public class AppliedVacancyService {
 		response.setPicUserName(applied.getJobVacancy().getPicUser().getProfile().getProfileName());
 		response.setProfileAddress(candidate.getCandidateProfile().getProfileAddress());
 		response.setReligionName(candidate.getCandidateProfile().getReligion().getReligionName());
+		response.setJobTitle(applied.getJobVacancy().getVacancyTitle());
+		response.setDocuments(docsDto);
+		response.setExperiences(expsDto);
+		response.setEducations(edusDto);
+		response.setSkills(skillsDto);
 
 		return response;
 	}
-
+	
 	public AppliedVacancyProgressResDto getAppliedByJobAndCandidate(String jobCode, String email) {
 		final AppliedVacancyProgressResDto response = new AppliedVacancyProgressResDto();
 		final String candidateEmail = emailEncoderService.decodeEmail(email);

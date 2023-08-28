@@ -27,10 +27,19 @@ public class AppliedVacancyCandidateDetailResDto {
 	private String picHrName;
 	private String picUserId;
 	private String picUserName;
+	private String jobTitle;
 	private List<CandidateDocumentResDto> documents;
 	private List<CandidateExperienceResDto> experiences;
 	private List<CandidateEducationResDto> educations;
 	private List<CandidateSkillResDto> skills;
+
+	public String getJobTitle() {
+		return jobTitle;
+	}
+
+	public void setJobTitle(String jobTitle) {
+		this.jobTitle = jobTitle;
+	}
 
 	public String getAppliedStatusId() {
 		return appliedStatusId;

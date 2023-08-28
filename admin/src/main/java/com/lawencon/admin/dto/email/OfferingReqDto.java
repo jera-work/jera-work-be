@@ -5,6 +5,9 @@ import java.time.LocalDate;
 public class OfferingReqDto {
 	private String companyName;
 	private String companyPhoto;
+	private String address;
+	private String description;
+	private String phoneNumber;
 	private String picHrName;
 	private String candidateName;
 	private String vacancyTitle;
@@ -14,6 +17,9 @@ public class OfferingReqDto {
 	private LocalDate startDate;
 	private LocalDate endDate;
 	private String offeringLocation;
+	
+	private String benefit;
+	private String startWork;
 	
 	public String getCompanyName() {
 		return companyName;
@@ -26,6 +32,24 @@ public class OfferingReqDto {
 	}
 	public void setCompanyPhoto(String companyPhoto) {
 		this.companyPhoto = companyPhoto;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 	public String getPicHrName() {
 		return picHrName;
@@ -80,5 +104,17 @@ public class OfferingReqDto {
 	}
 	public void setOfferingLocation(String offeringLocation) {
 		this.offeringLocation = offeringLocation;
+	}
+	public String getBenefit() {
+		return benefit;
+	}
+	public void setBenefit(String benefit) {
+		this.benefit = benefit;
+	}
+	public String getStartWork() {
+		return startWork;
+	}
+	public void setStartWork(String startWork) {
+		this.startWork = startWork;
 	}
 }

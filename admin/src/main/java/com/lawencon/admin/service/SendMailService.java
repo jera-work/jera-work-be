@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -19,9 +21,12 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import com.lawencon.admin.dto.email.AssessmentVacancyReqDto;
 import com.lawencon.admin.dto.email.EmailReqDto;
+import com.lawencon.admin.dto.email.HiredEmployeeReqDto;
+import com.lawencon.admin.dto.email.InterviewVacancyReqDto;
+import com.lawencon.admin.dto.email.McuVacancyReqDto;
 import com.lawencon.admin.dto.email.OfferingReqDto;
-
 
 @Service
 public class SendMailService {
@@ -30,6 +35,8 @@ public class SendMailService {
 	private JavaMailSender javaMailSender;
 	@Autowired
 	private TemplateEngine templateEngine;
+	
+	private ExecutorService executorService;
 
 	public void sendEmail(String emailTo, String subject, String body) {
 		SimpleMailMessage msg = new SimpleMailMessage();
@@ -39,38 +46,154 @@ public class SendMailService {
 
 		javaMailSender.send(msg);
 	}
-	
-	public void sendOffering(EmailReqDto email, OfferingReqDto data, byte[] file)  throws MessagingException, IOException {
-		MimeMessage msg = javaMailSender.createMimeMessage();
-		
-		MimeMessageHelper helper = new MimeMessageHelper(msg, true);
-		helper.setTo(email.getEmail());
-		helper.setSubject(email.getSubject());
-		
-		final Context context = new Context();
-        context.setVariable("data", data);
-        final String htmlContent = templateEngine.process("offering-letter", context);
-        helper.setText(htmlContent, true);
-        
-        byte[] decodedBytes = Base64.getDecoder().decode(data.getCompanyPhoto());
-        final String pdfPath = "offering-letter.pdf";
-        try {
-        	File outputPdf = new File(pdfPath);
-            FileOutputStream fos = new FileOutputStream(outputPdf);
-            fos.write(file);
-            fos.close();
-            
-            final Resource imageJeraWork = new ClassPathResource("/html-template/image/JERA-WORK.jpg");
 
-            helper.addInline("logo", imageJeraWork, "image/jpeg");
-            helper.addInline("logocompany", new ByteArrayDataSource(decodedBytes, "image/png"));
-            
-            helper.addAttachment(pdfPath, outputPdf);
-            System.out.println("Byte array has been written to file successfully.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        this.javaMailSender.send(msg);
+	public void sendOffering(EmailReqDto email, OfferingReqDto data, byte[] file) throws MessagingException, IOException {
+		executorService = Executors.newFixedThreadPool(8);
+		executorService.execute(() -> {			
+			MimeMessage msg = javaMailSender.createMimeMessage();
+			
+			try {
+				MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+				helper.setTo(email.getEmail());
+				helper.setSubject(email.getSubject());
+				
+				final Context context = new Context();
+				context.setVariable("data", data);
+				final String htmlContent = templateEngine.process("offering-letter", context);
+				helper.setText(htmlContent, true);
+				
+				byte[] decodedBytes = Base64.getDecoder().decode(data.getCompanyPhoto());
+				final String pdfPath = "offering-letter.pdf";
+				File outputPdf = new File(pdfPath);
+				FileOutputStream fos = new FileOutputStream(outputPdf);
+				fos.write(file);
+				fos.close();
+				
+				final Resource imageJeraWork = new ClassPathResource("/html-template/image/JERA-WORK.jpg");
+				
+				helper.addInline("logo", imageJeraWork, "image/jpeg");
+				helper.addInline("logocompany", new ByteArrayDataSource(decodedBytes, "image/png"));
+				
+				helper.addAttachment(pdfPath, outputPdf);
+
+				javaMailSender.send(msg);
+			} catch (IOException | MessagingException e) {
+				e.printStackTrace();
+			}
+		});
+
 	}
-	
+
+	public void sendAssessment(EmailReqDto email, AssessmentVacancyReqDto data) throws MessagingException {
+		executorService = Executors.newFixedThreadPool(8);
+		executorService.execute(() -> {			
+			MimeMessage msg = javaMailSender.createMimeMessage();
+			
+			try {
+				MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+				helper.setTo(email.getEmail());
+				helper.setSubject(email.getSubject());
+				
+				final Context context = new Context();
+				context.setVariable("data", data);
+				final String htmlContent = templateEngine.process("assessment", context);
+				helper.setText(htmlContent, true);
+				
+				byte[] decodedBytes = Base64.getDecoder().decode(data.getCompanyPhoto());
+				final Resource imageJeraWork = new ClassPathResource("/html-template/image/JERA-WORK.jpg");
+				
+				helper.addInline("logo", imageJeraWork, "image/jpeg");
+				helper.addInline("logocompany", new ByteArrayDataSource(decodedBytes, "image/png"));
+				
+				javaMailSender.send(msg);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
+	public void sendInterview(EmailReqDto email, InterviewVacancyReqDto data) throws MessagingException, IOException {
+		executorService = Executors.newFixedThreadPool(8);
+		executorService.execute(() -> {
+			MimeMessage msg = javaMailSender.createMimeMessage();
+
+			try {
+				MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+				helper.setTo(email.getEmail());
+				helper.setSubject(email.getSubject());
+
+				final Context context = new Context();
+				context.setVariable("data", data);
+				final String htmlContent = templateEngine.process("interview", context);
+				helper.setText(htmlContent, true);
+
+				byte[] decodedBytes = Base64.getDecoder().decode(data.getCompanyPhoto());
+				final Resource imageJeraWork = new ClassPathResource("/html-template/image/JERA-WORK.jpg");
+
+				helper.addInline("logo", imageJeraWork, "image/jpeg");
+				helper.addInline("logocompany", new ByteArrayDataSource(decodedBytes, "image/png"));
+
+				javaMailSender.send(msg);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
+	public void sendMcu(EmailReqDto email, McuVacancyReqDto data) throws MessagingException, IOException {
+		executorService = Executors.newFixedThreadPool(8);
+		executorService.execute(() -> {
+			MimeMessage msg = javaMailSender.createMimeMessage();
+
+			try {
+				MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+				helper.setTo(email.getEmail());
+				helper.setSubject(email.getSubject());
+
+				final Context context = new Context();
+				context.setVariable("data", data);
+				final String htmlContent = templateEngine.process("mcu", context);
+				helper.setText(htmlContent, true);
+
+				byte[] decodedBytes = Base64.getDecoder().decode(data.getCompanyPhoto());
+				final Resource imageJeraWork = new ClassPathResource("/html-template/image/JERA-WORK.jpg");
+
+				helper.addInline("logo", imageJeraWork, "image/jpeg");
+				helper.addInline("logocompany", new ByteArrayDataSource(decodedBytes, "image/png"));
+
+				javaMailSender.send(msg);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+		});
+
+	}
+
+	public void sendHired(EmailReqDto email, HiredEmployeeReqDto data) throws MessagingException, IOException {
+		executorService = Executors.newFixedThreadPool(8);
+		executorService.execute(() -> {
+			MimeMessage msg = javaMailSender.createMimeMessage();
+
+			try {
+				MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+				helper.setTo(email.getEmail());
+				helper.setSubject(email.getSubject());
+
+				final Context context = new Context();
+				context.setVariable("data", data);
+				final String htmlContent = templateEngine.process("hired", context);
+				helper.setText(htmlContent, true);
+
+				byte[] decodedBytes = Base64.getDecoder().decode(data.getCompanyPhoto());
+				final Resource imageJeraWork = new ClassPathResource("/html-template/image/JERA-WORK.jpg");
+
+				helper.addInline("logo", imageJeraWork, "image/jpeg");
+				helper.addInline("logocompany", new ByteArrayDataSource(decodedBytes, "image/png"));
+
+				javaMailSender.send(msg);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+		});
+	}
 }
