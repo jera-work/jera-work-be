@@ -33,7 +33,7 @@ public class McuVacancyService {
 
 		try {
 			ConnHandler.begin();
-			final AppliedVacancy appliedVacancy = appliedVacancyDao.getById(data.getAppliedVacancy()); 
+			final AppliedVacancy appliedVacancy = appliedVacancyDao.getById(data.getAppliedVacancyId()); 
 			final McuVacancy mcu = new McuVacancy();
 			mcu.setAppliedVacancy(appliedVacancy);
 			mcu.setEndDate(DateUtil.dateParse(data.getEndDate()));

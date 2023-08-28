@@ -7,6 +7,15 @@ public class InsertQuestionAnswerReqDto {
 	private String questionId;
 	private String questionOptionId;
 	private String assesmentVacancyId;
+	private String candidateId;
+
+	public String getCandidateId() {
+		return candidateId;
+	}
+
+	public void setCandidateId(String candidateId) {
+		this.candidateId = candidateId;
+	}
 
 	public String getJobVacancyId() {
 		return jobVacancyId;

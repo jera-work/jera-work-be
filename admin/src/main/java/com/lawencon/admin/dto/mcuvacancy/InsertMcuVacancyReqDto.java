@@ -2,16 +2,16 @@ package com.lawencon.admin.dto.mcuvacancy;
 
 public class InsertMcuVacancyReqDto {
 
-	private String appliedVacancy;
+	private String appliedVacancyId;
 	private String startDate;
 	private String endDate;
 
-	public String getAppliedVacancy() {
-		return appliedVacancy;
+	public String getAppliedVacancyId() {
+		return appliedVacancyId;
 	}
 
-	public void setAppliedVacancy(String appliedVacancy) {
-		this.appliedVacancy = appliedVacancy;
+	public void setAppliedVacancyId(String appliedVacancyId) {
+		this.appliedVacancyId = appliedVacancyId;
 	}
 
 	public String getStartDate() {
@@ -29,7 +29,5 @@ public class InsertMcuVacancyReqDto {
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
-
-
 
 }
