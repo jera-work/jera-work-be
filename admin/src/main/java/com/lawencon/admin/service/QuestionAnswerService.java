@@ -47,9 +47,6 @@ public class QuestionAnswerService {
 	@Autowired
 	private AssessmentVacancyDao assessmentVacancyDao;
 	
-	@Autowired
-	private EmailEncoderService emailEncoderService;
-	
 	public InsertResDto submitAnswer(List<InsertQuestionAnswerReqDto> data) {
 		final InsertResDto response = new InsertResDto();
 		
@@ -59,9 +56,7 @@ public class QuestionAnswerService {
 			for(int i = 0; i < data.size(); i++) {
 				final QuestionAnswer questionAnswer = new QuestionAnswer();
 				
-				final String email = emailEncoderService.decodeEmail(data.get(i).getCandidateEmail());
-				
-				final Candidate candidate = candidateDao.getByEmail(email);
+				final Candidate candidate = candidateDao.getByEmail(data.get(i).getCandidateEmail());
 				
 				final JobVacancy jobVacancy = jobVacancyDao.getById(data.get(i).getJobVacancyId());
 				

@@ -22,9 +22,6 @@ public class QuestionAnswerService {
 	private PrincipalServiceImpl principalService;
 	
 	@Autowired
-	private EmailEncoderService emailEncoderService;
-	
-	@Autowired
 	private ApiService apiService;
 	
 	public InsertResDto submitAnswer(List<InsertQuestionAnswerReqDto> data) {
@@ -35,8 +32,7 @@ public class QuestionAnswerService {
 			
 			for(int i = 0; i < data.size(); i++) {
 				final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
-				final String email = emailEncoderService.encodeEmail(candidate.getCandidateEmail());
-				data.get(i).setCandidateEmail(email);
+				data.get(i).setCandidateEmail(candidate.getCandidateEmail());
 			}
 			
 			apiService.writeTo("http://localhost:8081/answers", data);

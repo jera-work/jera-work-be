@@ -1,6 +1,6 @@
 package com.lawencon.admin.dao;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -13,7 +13,6 @@ import com.lawencon.admin.model.AppliedVacancy;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.CandidateProfile;
 import com.lawencon.admin.model.JobVacancy;
-import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
@@ -130,7 +129,7 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 				appliedProgress.setProgressName(appObjArr[3].toString());
 				appliedVacancy.setAppliedProgress(appliedProgress);
 				
-				appliedVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(appObjArr[4].toString()));
+				appliedVacancy.setCreatedAt(Timestamp.valueOf(appObjArr[4].toString()).toLocalDateTime());
 				
 				appliedVacancies.add(appliedVacancy);
 			}
@@ -183,7 +182,7 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 				appliedStatus.setStatusCode(appObjArr[5].toString());
 				appliedStatus.setStatusName(appObjArr[6].toString());
 				appliedVacancy.setAppliedStatus(appliedStatus);
-				appliedVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(appObjArr[7].toString()));
+				appliedVacancy.setCreatedAt(Timestamp.valueOf(appObjArr[7].toString()).toLocalDateTime());
 				
 				appliedVacancies.add(appliedVacancy);
 			}
@@ -233,7 +232,7 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 				appliedProgress.setProgressName(appObjArr[3].toString());
 				appliedVacancy.setAppliedProgress(appliedProgress);
 				
-				appliedVacancy.setCreatedAt(DateUtil.dateTimeParse(appObjArr[4].toString()));
+				appliedVacancy.setCreatedAt(Timestamp.valueOf(appObjArr[4].toString()).toLocalDateTime());
 				
 				appliedVacancies.add(appliedVacancy);
 			}

@@ -258,6 +258,7 @@ public class AppliedVacancyService {
 		response.setAppliedStatusId(applied.getAppliedStatus().getId());
 		response.setAppliedStatusCode(applied.getAppliedStatus().getStatusCode());
 		response.setCandidateName(candidate.getCandidateProfile().getProfileName());
+		response.setCandidateId(applied.getCandidate().getId());
 		response.setExpectedSalary(candidate.getCandidateProfile().getExpectedSalary());
 		response.setGenderName(candidate.getCandidateProfile().getGender().getGenderName());
 		response.setId(appliedId);
