@@ -13,14 +13,11 @@ import com.lawencon.admin.dao.UserDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.email.EmailReqDto;
 import com.lawencon.admin.dto.email.HiredEmployeeReqDto;
-import com.lawencon.admin.dto.email.McuVacancyReqDto;
 import com.lawencon.admin.dto.hiredemployee.HiredEmployeeResDto;
 import com.lawencon.admin.dto.hiredemployee.InsertHiredEmployeeReqDto;
-import com.lawencon.admin.model.AppliedVacancy;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.Company;
 import com.lawencon.admin.model.HiredEmployee;
-import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.base.ConnHandler;
 import com.lawencon.security.principal.PrincipalService;
 

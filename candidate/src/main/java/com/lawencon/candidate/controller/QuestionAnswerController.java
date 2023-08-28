@@ -1,4 +1,4 @@
-package com.lawencon.admin.controller;
+package com.lawencon.candidate.controller;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lawencon.admin.dto.InsertResDto;
-import com.lawencon.admin.dto.questionanswer.InsertQuestionAnswerReqDto;
-import com.lawencon.admin.service.QuestionAnswerService;
+import com.lawencon.candidate.dto.InsertResDto;
+import com.lawencon.candidate.dto.questionanswer.InsertQuestionAnswerReqDto;
+import com.lawencon.candidate.service.QuestionAnswerService;
 
 @RestController
 @RequestMapping("/answers")

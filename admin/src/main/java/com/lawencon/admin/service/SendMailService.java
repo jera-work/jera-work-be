@@ -39,12 +39,15 @@ public class SendMailService {
 	private ExecutorService executorService;
 
 	public void sendEmail(String emailTo, String subject, String body) {
-		SimpleMailMessage msg = new SimpleMailMessage();
-		msg.setTo(emailTo);
-		msg.setSubject(subject);
-		msg.setText(body);
-
-		javaMailSender.send(msg);
+		executorService = Executors.newFixedThreadPool(8);
+		executorService.execute(() -> {
+			SimpleMailMessage msg = new SimpleMailMessage();
+			msg.setTo(emailTo);
+			msg.setSubject(subject);
+			msg.setText(body);
+			
+			javaMailSender.send(msg);			
+		});
 	}
 
 	public void sendOffering(EmailReqDto email, OfferingReqDto data, byte[] file) throws MessagingException, IOException {

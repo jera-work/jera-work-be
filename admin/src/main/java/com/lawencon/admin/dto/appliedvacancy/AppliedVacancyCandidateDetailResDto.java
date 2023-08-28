@@ -11,6 +11,7 @@ public class AppliedVacancyCandidateDetailResDto {
 
 	private String id;
 	private String candidateName;
+	private String candidateId;
 	private String profileAddress;
 	private String phoneNumber;
 	private String expectedSalary;
@@ -21,8 +22,10 @@ public class AppliedVacancyCandidateDetailResDto {
 	private String photoId;
 	private String appliedStatus;
 	private String appliedStatusId;
+	private String appliedStatusCode;
 	private String appliedProgress;
 	private String appliedProgressId;
+	private String appliedProgressCode;
 	private String picHrId;
 	private String picHrName;
 	private String picUserId;
@@ -32,6 +35,30 @@ public class AppliedVacancyCandidateDetailResDto {
 	private List<CandidateExperienceResDto> experiences;
 	private List<CandidateEducationResDto> educations;
 	private List<CandidateSkillResDto> skills;
+
+	public String getCandidateId() {
+		return candidateId;
+	}
+
+	public void setCandidateId(String candidateId) {
+		this.candidateId = candidateId;
+	}
+
+	public String getAppliedStatusCode() {
+		return appliedStatusCode;
+	}
+
+	public void setAppliedStatusCode(String appliedStatusCode) {
+		this.appliedStatusCode = appliedStatusCode;
+	}
+
+	public String getAppliedProgressCode() {
+		return appliedProgressCode;
+	}
+
+	public void setAppliedProgressCode(String appliedProgressCode) {
+		this.appliedProgressCode = appliedProgressCode;
+	}
 
 	public String getJobTitle() {
 		return jobTitle;

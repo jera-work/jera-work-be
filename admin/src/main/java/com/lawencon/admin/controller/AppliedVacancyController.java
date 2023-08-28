@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.UpdateResDto;
+import com.lawencon.admin.dto.appliedstatus.UpdateStatusReqDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyAdminResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCandidateDetailResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyProgressResDto;
@@ -30,8 +31,14 @@ public class AppliedVacancyController {
 	private AppliedVacancyService appliedVacancyService;
 	
 	@PutMapping
-	public ResponseEntity<UpdateResDto> changeStatus(@RequestBody UpdateProgressReqDto data) {
+	public ResponseEntity<UpdateResDto> changeProgress(@RequestBody UpdateProgressReqDto data) {
 		final UpdateResDto response = appliedVacancyService.changeAppliedStatusProgress(data);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@PutMapping("/change-status")
+	public ResponseEntity<UpdateResDto> changeStatus(@RequestBody UpdateStatusReqDto data) {
+		final UpdateResDto response = appliedVacancyService.changeAppliedStatus(data);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 

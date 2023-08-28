@@ -8,12 +8,20 @@ public class InsertOfferingReqDto {
 	private String endDate;
 	private String description;
 	private String offeringLocation;
-	
+	private String benefit;
+
 	private String companyDescription;
 	private String companyDescriptionFontColor;
 	private String companyNameFontColor;
-	private String benefit;
 	private String startWork;
+
+	public String getBenefit() {
+		return benefit;
+	}
+
+	public void setBenefit(String benefit) {
+		this.benefit = benefit;
+	}
 
 	public String getAppliedVacancyId() {
 		return appliedVacancyId;
@@ -85,14 +93,6 @@ public class InsertOfferingReqDto {
 
 	public void setCompanyNameFontColor(String companyNameFontColor) {
 		this.companyNameFontColor = companyNameFontColor;
-	}
-
-	public String getBenefit() {
-		return benefit;
-	}
-
-	public void setBenefit(String benefit) {
-		this.benefit = benefit;
 	}
 
 	public String getStartWork() {

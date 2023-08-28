@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +52,11 @@ public class OfferingService {
 	public InsertResDto insertOffering(InsertOfferingReqDto data) {
 		
 		ConnHandler.begin();
-		final AppliedVacancy appliedVacancy = appliedVacancyDao.getById(data.getAppliedVacancyId()); 
+		final AppliedVacancy appliedVacancy = appliedVacancyDao.getById(data.getAppliedVacancyId());
+		final JobVacancy job = jobVacancyDao.getById(appliedVacancy.getJobVacancy().getId());
+		final VacancyDescription jobDesc = vacancyDescriptionDao.getById(job.getVacancyDescription().getId());
+		data.setBenefit(jobDesc.getDescription());
+		
 		final Offering offering = new Offering();
 		offering.setAppliedVacancy(appliedVacancy);
 		offering.setDescription(data.getDescription());
@@ -99,8 +101,8 @@ public class OfferingService {
 
 		offering.setDescription(data.getCompanyDescription());
 		offering.setStartWork(data.getStartWork());
-		offering.setBenefit(data.getBenefit());		
-		offering.setBenefit(offering.getBenefit().replace("<p>", "<br><br>").replace("</p>", ""));
+		offering.setBenefit(data.getBenefit());	
+//		offering.setBenefit(offering.getBenefit().replace("<p>", "<br><br>").replace("</p>", ""));
 		
 		final Map<String, Object> parameters = new HashMap<>();
 		parameters.put("img", offering.getCompanyPhoto());
