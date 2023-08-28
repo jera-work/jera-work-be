@@ -4,7 +4,9 @@ public class AppliedVacancyResDto {
 	private String id;
 	private String jobVacancyId;
 	private String jobVacancyCode;
+	private String appliedStatusCode;
 	private String appliedStatusName;
+	private String appliedProgressCode;
 	private String appliedProgressName;
 	private String createdAt;
 
@@ -56,4 +58,21 @@ public class AppliedVacancyResDto {
 		this.appliedProgressName = appliedProgressName;
 	}
 
+	public String getAppliedStatusCode() {
+		return appliedStatusCode;
+	}
+
+	public void setAppliedStatusCode(String appliedStatusCode) {
+		this.appliedStatusCode = appliedStatusCode;
+	}
+
+	public String getAppliedProgressCode() {
+		return appliedProgressCode;
+	}
+
+	public void setAppliedProgressCode(String appliedProgressCode) {
+		this.appliedProgressCode = appliedProgressCode;
+	}
+
+	
 }

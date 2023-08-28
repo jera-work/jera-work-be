@@ -84,7 +84,7 @@ public class AppliedVacancyService {
 				throw new RuntimeException("Insert Failed");
 			}
 		} else {
-			throw new CustomException("Error! You already applied for this job!");
+			throw new CustomException("You already applied for this job!");
 		}
 
 		return response;
@@ -167,6 +167,8 @@ ConnHandler.begin();
 				if(resCon.getJobVacancyCode().equals(appCdt.getJobVacancyCode())) {
 					appCdt.setAppliedProgressName(resCon.getAppliedProgressName());
 					appCdt.setAppliedStatusName(resCon.getAppliedStatusName());
+					appCdt.setAppliedProgressCode(resCon.getAppliedProgressCode());
+					appCdt.setAppliedStatusCode(resCon.getAppliedStatusCode());
 					appCdt.setCreatedAt(resCon.getCreatedAt());
 					final AppliedVacancyResDto response = appCdt;
 					
@@ -202,6 +204,7 @@ ConnHandler.begin();
 		final AppliedVacancyProgressResDto responseFromAdmins = apiService.getFrom(url, AppliedVacancyProgressResDto.class);
 		
 		response.setProgressCode(responseFromAdmins.getProgressCode());
+		response.setJobVacancyId(appliedVacancy.getJobVacancy().getId());
 		return response;
 	}
 }
