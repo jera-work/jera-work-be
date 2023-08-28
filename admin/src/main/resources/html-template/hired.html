@@ -396,48 +396,19 @@
                     <tr>
                       <td>
                         <img th:src="|cid:logo|" alt="Logo Jera-Work">
-                        <h2>Offering Letter</h2>
-                        <p>Halo, <span th:text="${data.getCandidateName()}"></span></p>
-                        <p>Congratulation! your application has accepted by company :
+                        <h2>Hired Employee</h2>
+                        <p>Congratulation! you has hired by company :
 
                         <div class="company-job">
                           <img class="job-company-logo" th:src="|cid:logocompany|" alt="job-company-logo">
                           <!-- <img class="job-company-logo" src="https://image-service-cdn.seek.com.au/fc5977e7c0996914ce4d5c1eb0670d580787e75c/ee4dce1061f3f616224767ad58cb2fc751b8d2dc" alt="job-company-logo"> -->
                           <div class="company-job-detail">
-                              <p><b th:text="${data.getCompanyName()}"></b></p>
-                              <p><span th:text="${data.getLevelName()}"></span> <span th:text="${data.getVacancyTitle()}"></span></p>
+                              <h3><b th:text="${data.getCompanyName()}"></b></h3>
                           </div>
                         </div>
                         
-                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="information">
-                          <tbody>
-                            <tr>
-                              <td align="left">
-                                <table border="0" cellpadding="0" cellspacing="0">
-                                  <tbody>
-                                    <tr>
-                                        <td class="table-header">Location</td>
-                                        <td class="table-operator">:</td>
-                                        <td><span th:text="${data.getOfferingLocation()}"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="table-header">Start Date</td>
-                                        <td class="table-operator">:</td>
-                                        <td><span th:text="${data.getStartDate()}"></span></td>
-                                    </tr>
-                                    <tr>
-                                      <td class="table-header">End Date</td>
-                                      <td class="table-operator">:</td>
-                                      <td><span th:text="${data.getEndDate()}"></span></td>
-                                  </tr>
-                                  </tbody>
-                                </table>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
                         
-						<p>We are confident that you will find this fit to your company's needs.
+                        <p>We are confident that you will find this fit to your company's needs.
                         <p>Please contact us immediately to confirm acceptance of this offer.
                       </td>
                     </tr>

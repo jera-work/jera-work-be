@@ -11,9 +11,16 @@ import com.lawencon.admin.dao.CompanyDao;
 import com.lawencon.admin.dao.HiredEmployeeDao;
 import com.lawencon.admin.dao.UserDao;
 import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.email.EmailReqDto;
+import com.lawencon.admin.dto.email.HiredEmployeeReqDto;
+import com.lawencon.admin.dto.email.McuVacancyReqDto;
 import com.lawencon.admin.dto.hiredemployee.HiredEmployeeResDto;
 import com.lawencon.admin.dto.hiredemployee.InsertHiredEmployeeReqDto;
+import com.lawencon.admin.model.AppliedVacancy;
+import com.lawencon.admin.model.Candidate;
+import com.lawencon.admin.model.Company;
 import com.lawencon.admin.model.HiredEmployee;
+import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.base.ConnHandler;
 import com.lawencon.security.principal.PrincipalService;
 
@@ -33,6 +40,9 @@ public class HiredEmployeeService {
 	private HiredEmployeeDao hiredDao;
 	
 	@Autowired
+	private SendMailService mailService;
+	
+	@Autowired
 	private UserDao userDao;
 	
 	/* Move candidate to Hired Stage */
@@ -44,12 +54,33 @@ public class HiredEmployeeService {
 		hired.setCompany(companyDao.getByIdRef(userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId()));
 		final HiredEmployee hiredDb = hiredDao.saveAndFlush(hired);
 		ConnHandler.commit();
+		
+		final Candidate candidate = candidateDao.getById(data.getCandidateId());
+		sendHired(hiredDb, candidate.getCandidateEmail());
 
 		final InsertResDto response = new InsertResDto();
 		response.setId(hiredDb.getId());
 		response.setMessage("Candidate has been moved to Hired!");
 		return response;
 
+	}
+	
+	public void sendHired(HiredEmployee hiredDb, String email) {
+		final HiredEmployeeReqDto hiredEmployeeReqDto = new HiredEmployeeReqDto();
+		
+		final Company company = companyDao.getById(hiredDb.getCompany().getId());
+		
+		hiredEmployeeReqDto.setCompanyName(company.getCompanyName());
+		hiredEmployeeReqDto.setCompanyPhoto(company.getPhoto().getFileContent());
+		
+		try {				
+			final EmailReqDto emailReqDto = new EmailReqDto();
+			emailReqDto.setSubject("You has hired by company");
+			emailReqDto.setEmail(email);
+			mailService.sendHired(emailReqDto, hiredEmployeeReqDto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public List<HiredEmployeeResDto> getByCompany(int firstIndex, int lastIndex){
