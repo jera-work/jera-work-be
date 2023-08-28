@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +50,7 @@ public class OfferingService {
 	private SendMailService mailService;
 	@Autowired
 	private JasperUtil jasperUtil;
-
+	
 	public InsertResDto insertOffering(InsertOfferingReqDto data) {
 		
 		ConnHandler.begin();
@@ -62,7 +64,7 @@ public class OfferingService {
 		offering.setStartDate(DateUtil.dateParse(data.getStartDate()));
 		final Offering offeringDb = offeringDao.saveAndFlush(offering);
 		ConnHandler.commit();
-		sendOffering(offeringDb, appliedVacancy.getCandidate().getCandidateEmail());
+		sendOffering(data, appliedVacancy.getCandidate().getCandidateEmail());
 		
 		final InsertResDto response = new InsertResDto();
 		response.setId(offeringDb.getId());
@@ -71,10 +73,10 @@ public class OfferingService {
 		return response;
 	}
 	
-	public void sendOffering(Offering offeringDb, String email) {
+	public void sendOffering(InsertOfferingReqDto data, String email) {
 		final OfferingReqDto offering = new OfferingReqDto();
 		
-		final AppliedVacancy applied = appliedVacancyDao.getById(offeringDb.getAppliedVacancy().getId());
+		final AppliedVacancy applied = appliedVacancyDao.getById(data.getAppliedVacancyId());
 		final JobVacancy job = jobVacancyDao.getById(applied.getJobVacancy().getId());
 		final VacancyDescription jobDesc = vacancyDescriptionDao.getById(job.getVacancyDescription().getId());
 		
@@ -83,29 +85,38 @@ public class OfferingService {
 		
 		offering.setCompanyName(job.getCompany().getCompanyName());
 		offering.setCompanyPhoto(job.getCompany().getPhoto().getFileContent());
+		offering.setAddress(job.getCompany().getAddress());
+		offering.setPhoneNumber(job.getCompany().getPhoneNumber());
 		offering.setVacancyTitle(job.getVacancyTitle());
 		offering.setTypeName(jobDesc.getJobType().getTypeName());
 		offering.setLevelName(job.getExpLevel().getLevelName());
 		offering.setCandidateName(candidate.getCandidateProfile().getProfileName());
 		offering.setPicHrName(picHr.getProfile().getProfileName());
 		offering.setSalary(jobDesc.getSalary());	
-		offering.setStartDate(offeringDb.getStartDate());
-		offering.setEndDate(offeringDb.getEndDate());
-		offering.setOfferingLocation(offeringDb.getOfferingLocation());		
+		offering.setStartDate(DateUtil.dateParse(data.getEndDate()));
+		offering.setEndDate(DateUtil.dateParse(data.getEndDate()));
+		offering.setOfferingLocation(data.getOfferingLocation());
+
+		offering.setDescription(data.getCompanyDescription());
+		offering.setStartWork(data.getStartWork());
+		offering.setBenefit(data.getBenefit());		
+		offering.setBenefit(offering.getBenefit().replace("<p>", "<br><br>").replace("</p>", ""));
 		
 		final Map<String, Object> parameters = new HashMap<>();
 		parameters.put("img", offering.getCompanyPhoto());
+		parameters.put("companyDescriptionFontColor", data.getCompanyDescriptionFontColor());
+		parameters.put("companyNameFontColor", data.getCompanyNameFontColor());
 		
 		final Collection<OfferingReqDto> result = new ArrayList<>();
         result.add(offering);
         
         try {				
         	byte[] dataOut = jasperUtil.responseToByteArray(result, parameters, "jasper-offering");
-
+                	
 	        final EmailReqDto emailReqDto = new EmailReqDto();
 			emailReqDto.setSubject("Surat Penawaran Kerja");
 			emailReqDto.setEmail(email);
-			mailService.sendOffering(emailReqDto, offering, dataOut);
+			mailService.sendOffering(emailReqDto, offering, dataOut);				
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

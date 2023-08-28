@@ -8,6 +8,12 @@ public class InsertOfferingReqDto {
 	private String endDate;
 	private String description;
 	private String offeringLocation;
+	
+	private String companyDescription;
+	private String companyDescriptionFontColor;
+	private String companyNameFontColor;
+	private String benefit;
+	private String startWork;
 
 	public String getAppliedVacancyId() {
 		return appliedVacancyId;
@@ -55,6 +61,46 @@ public class InsertOfferingReqDto {
 
 	public void setOfferingLocation(String offeringLocation) {
 		this.offeringLocation = offeringLocation;
+	}
+
+	public String getCompanyDescription() {
+		return companyDescription;
+	}
+
+	public void setCompanyDescription(String companyDescription) {
+		this.companyDescription = companyDescription;
+	}
+
+	public String getCompanyDescriptionFontColor() {
+		return companyDescriptionFontColor;
+	}
+
+	public void setCompanyDescriptionFontColor(String companyDescriptionFontColor) {
+		this.companyDescriptionFontColor = companyDescriptionFontColor;
+	}
+
+	public String getCompanyNameFontColor() {
+		return companyNameFontColor;
+	}
+
+	public void setCompanyNameFontColor(String companyNameFontColor) {
+		this.companyNameFontColor = companyNameFontColor;
+	}
+
+	public String getBenefit() {
+		return benefit;
+	}
+
+	public void setBenefit(String benefit) {
+		this.benefit = benefit;
+	}
+
+	public String getStartWork() {
+		return startWork;
+	}
+
+	public void setStartWork(String startWork) {
+		this.startWork = startWork;
 	}
 
 }
