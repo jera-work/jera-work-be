@@ -55,7 +55,7 @@ public class BlacklistEmployeeDao extends AbstractJpaDao {
 				+ "FROM "
 				+ "	t_blacklist_employee tbe "
 				+ "INNER JOIN "
-				+ "	t_hired_employee the ON tbe.employee_id "
+				+ "	t_hired_employee the ON tbe.employee_id = the.id "
 				+ "INNER JOIN "
 				+ "	t_candidate tc ON the.candidate_id = tc.id "
 				+ "INNER JOIN "
