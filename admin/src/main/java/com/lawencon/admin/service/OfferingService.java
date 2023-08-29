@@ -3,6 +3,7 @@ package com.lawencon.admin.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import com.lawencon.admin.dao.JobVacancyDao;
 import com.lawencon.admin.dao.OfferingDao;
 import com.lawencon.admin.dao.UserDao;
 import com.lawencon.admin.dao.VacancyDescriptionDao;
+import com.lawencon.admin.dto.DeleteResDto;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.email.EmailReqDto;
 import com.lawencon.admin.dto.email.OfferingReqDto;
@@ -23,6 +25,7 @@ import com.lawencon.admin.model.AppliedVacancy;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.admin.model.Offering;
+import com.lawencon.admin.model.Profile;
 import com.lawencon.admin.model.User;
 import com.lawencon.admin.model.VacancyDescription;
 import com.lawencon.admin.util.DateUtil;
@@ -118,7 +121,8 @@ public class OfferingService {
 	        final EmailReqDto emailReqDto = new EmailReqDto();
 			emailReqDto.setSubject("Surat Penawaran Kerja");
 			emailReqDto.setEmail(email);
-			mailService.sendOffering(emailReqDto, offering, dataOut);				
+			mailService.sendOffering(emailReqDto, offering, dataOut);	
+			            
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -136,5 +140,19 @@ public class OfferingService {
 		response.setLocation(offering.getOfferingLocation());
 		
 		return response;
+	}
+	
+	public DeleteResDto deleteOffering(String offeringId) {
+		try {
+			ConnHandler.begin();
+			offeringDao.deleteById(offeringId);
+			ConnHandler.commit();
+			final DeleteResDto response = new DeleteResDto();
+			response.setMessage("Offering has been deleted!");
+			return response;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

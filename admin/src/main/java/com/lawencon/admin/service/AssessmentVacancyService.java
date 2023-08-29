@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.lawencon.admin.dao.AppliedVacancyDao;
 import com.lawencon.admin.dao.AssessmentVacancyDao;
 import com.lawencon.admin.dao.JobVacancyDao;
+import com.lawencon.admin.dto.DeleteResDto;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.assessmentvacancy.AssessmentVacancyResDto;
 import com.lawencon.admin.dto.assessmentvacancy.InsertAssessmentVacancyReqDto;
@@ -96,6 +97,18 @@ public class AssessmentVacancyService {
 		return response;
 	}
 	
-	
+	public DeleteResDto deleteAssessment(String assessementId) {
+		try {
+			ConnHandler.begin();
+			assessmentVacancyDao.deleteById(assessementId);
+			ConnHandler.commit();
+			final DeleteResDto response = new DeleteResDto();
+			response.setMessage("Assessment has been deleted!");
+			return response;			
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.lawencon.admin.dao.AppliedVacancyDao;
 import com.lawencon.admin.dao.InterviewVacancyDao;
 import com.lawencon.admin.dao.JobVacancyDao;
+import com.lawencon.admin.dto.DeleteResDto;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.email.EmailReqDto;
 import com.lawencon.admin.dto.email.InterviewVacancyReqDto;
@@ -89,4 +90,19 @@ public class InterviewVacancyService {
 		
 		return response;
 	}
+	
+	public DeleteResDto deleteInterview(String interviewId) {
+		try {
+			ConnHandler.begin();
+			interviewDao.deleteById(interviewId);
+			ConnHandler.commit();
+			final DeleteResDto response = new DeleteResDto();
+			response.setMessage("Interview has been deleted!");
+			return response;			
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 }

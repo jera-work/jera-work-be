@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lawencon.admin.dto.DeleteResDto;
 import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.offering.DeleteOfferingReqDto;
 import com.lawencon.admin.dto.offering.InsertOfferingReqDto;
 import com.lawencon.admin.service.OfferingService;
 
@@ -23,6 +25,12 @@ public class OfferingController {
 	public ResponseEntity<InsertResDto> insertOffering(@RequestBody InsertOfferingReqDto data) {
 		final InsertResDto response = offeringService.insertOffering(data);
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/delete")
+	public ResponseEntity<DeleteResDto> deleteOffering(@RequestBody DeleteOfferingReqDto data) {
+		final DeleteResDto response = offeringService.deleteOffering(data.getId());
+		return new ResponseEntity<DeleteResDto>(response, HttpStatus.OK);
 	}
 
 }
