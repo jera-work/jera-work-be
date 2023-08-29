@@ -69,21 +69,16 @@ public class JobVacancyService {
 		}
 	}
 
-
-
 	public List<JobSearchResDto> filter(int startIndex, int endIndex, String vacancyTitle, String degreeId,
 			String cityId, String jobTypeId) {
-		final String url = "http://localhost:8081/jobs/search/"
-				+ "?startIndex=" + startIndex 
-				+ "&endIndex=" + endIndex 
-				+ "&degreeId=" + degreeId
-				+ "&vacancyTitle=" + vacancyTitle
-				+ "&cityId=" + cityId
-				+ "&jobTypeId=" + jobTypeId;
+		final String url = "http://localhost:8081/jobs/search/" + "?startIndex=" + startIndex + "&endIndex=" + endIndex
+				+ "&degreeId=" + degreeId + "&vacancyTitle=" + vacancyTitle + "&cityId=" + cityId + "&jobTypeId="
+				+ jobTypeId;
 
 		final List<JobSearchResDto> responseFromAdmins = apiService.getListFrom(url, JobSearchResDto.class);
 		final List<JobSearchResDto> responseFromAdminConverteds = new ObjectMapper().convertValue(responseFromAdmins,
-				new TypeReference<List<JobSearchResDto>>() {});
+				new TypeReference<List<JobSearchResDto>>() {
+				});
 
 		final List<JobSearchResDto> jobFromCandidates = new ArrayList<>();
 		jobDao.getAll().forEach(jv -> {
@@ -93,12 +88,12 @@ public class JobVacancyService {
 
 			jobFromCandidates.add(jobFromCandidateRes);
 		});
-		
+
 		final List<JobSearchResDto> responses = new ArrayList<>();
-		
+
 		responseFromAdminConverteds.forEach(resCon -> {
 			jobFromCandidates.forEach(jobCdt -> {
-				if(resCon.getVacancyCode().equals(jobCdt.getVacancyCode())) {
+				if (resCon.getVacancyCode().equals(jobCdt.getVacancyCode())) {
 					jobCdt.setCityName(resCon.getCityName());
 					jobCdt.setCompanyName(resCon.getCompanyName());
 					jobCdt.setCompanyPhotoId(resCon.getCompanyPhotoId());
@@ -106,24 +101,24 @@ public class JobVacancyService {
 					jobCdt.setJobTypeName(resCon.getJobTypeName());
 					jobCdt.setSalary(resCon.getSalary());
 					jobCdt.setVacancyTitle(resCon.getVacancyTitle());
+					jobCdt.setCreatedAt(resCon.getCreatedAt());
 					final JobSearchResDto response = jobCdt;
-					
+
 					responses.add(response);
 				}
 			});
 		});
-		
+
 		return responses;
 	}
 
 	public List<JobSearchResDto> getAllWithPagination(int startIndex, int endIndex) {
-		final String url = "http://localhost:8081/jobs/page/"
-				+ "?startIndex=" + startIndex 
-				+ "&endIndex=" + endIndex;
+		final String url = "http://localhost:8081/jobs/page/" + "?startIndex=" + startIndex + "&endIndex=" + endIndex;
 
 		final List<JobSearchResDto> responseFromAdmins = apiService.getListFrom(url, JobSearchResDto.class);
 		final List<JobSearchResDto> responseFromAdminConverteds = new ObjectMapper().convertValue(responseFromAdmins,
-				new TypeReference<List<JobSearchResDto>>() {});
+				new TypeReference<List<JobSearchResDto>>() {
+				});
 
 		final List<JobSearchResDto> jobFromCandidates = new ArrayList<>();
 		jobDao.getAll().forEach(jv -> {
@@ -133,12 +128,12 @@ public class JobVacancyService {
 
 			jobFromCandidates.add(jobFromCandidateRes);
 		});
-		
+
 		final List<JobSearchResDto> responses = new ArrayList<>();
-		
+
 		responseFromAdminConverteds.forEach(resCon -> {
 			jobFromCandidates.forEach(jobCdt -> {
-				if(resCon.getVacancyCode().equals(jobCdt.getVacancyCode())) {
+				if (resCon.getVacancyCode().equals(jobCdt.getVacancyCode())) {
 					jobCdt.setCityName(resCon.getCityName());
 					jobCdt.setCompanyName(resCon.getCompanyName());
 					jobCdt.setCompanyPhotoId(resCon.getCompanyPhotoId());
@@ -146,36 +141,39 @@ public class JobVacancyService {
 					jobCdt.setJobTypeName(resCon.getJobTypeName());
 					jobCdt.setSalary(resCon.getSalary());
 					jobCdt.setVacancyTitle(resCon.getVacancyTitle());
+					jobCdt.setCreatedAt(resCon.getCreatedAt());
 					final JobSearchResDto response = jobCdt;
-					
+
 					responses.add(response);
 				}
 			});
 		});
-		
+
 		return responses;
 	}
-	
+
 	public List<JobSearchResDto> getAll() {
 		final String url = "http://localhost:8081/jobs";
 		final List<JobSearchResDto> responseFromAdmins = apiService.getListFrom(url, JobSearchResDto.class);
 		final List<JobSearchResDto> responseFromAdminConverteds = new ObjectMapper().convertValue(responseFromAdmins,
-				new TypeReference<List<JobSearchResDto>>() {});
+				new TypeReference<List<JobSearchResDto>>() {
+				});
 
 		final List<JobSearchResDto> jobFromCandidates = new ArrayList<>();
 		jobDao.getAll().forEach(jv -> {
 			final JobSearchResDto jobFromCandidateRes = new JobSearchResDto();
 			jobFromCandidateRes.setId(jv.getId());
 			jobFromCandidateRes.setVacancyCode(jv.getVacancyCode());
+			jobFromCandidateRes.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
 
 			jobFromCandidates.add(jobFromCandidateRes);
 		});
-		
+
 		final List<JobSearchResDto> responses = new ArrayList<>();
-		
+
 		responseFromAdminConverteds.forEach(resCon -> {
 			jobFromCandidates.forEach(jobCdt -> {
-				if(resCon.getVacancyCode().equals(jobCdt.getVacancyCode())) {
+				if (resCon.getVacancyCode().equals(jobCdt.getVacancyCode())) {
 					jobCdt.setCityName(resCon.getCityName());
 					jobCdt.setCompanyName(resCon.getCompanyName());
 					jobCdt.setCompanyPhotoId(resCon.getCompanyPhotoId());
@@ -184,37 +182,37 @@ public class JobVacancyService {
 					jobCdt.setSalary(resCon.getSalary());
 					jobCdt.setVacancyTitle(resCon.getVacancyTitle());
 					final JobSearchResDto response = jobCdt;
-					
+
 					responses.add(response);
 				}
 			});
 		});
-		
+
 		return responses;
 	}
 
 	public List<JobSearchResDto> latestJob(int startIndex, int endIndex) {
-		final String url = "http://localhost:8081/jobs/latest/"
-				+ "?startIndex=" + startIndex 
-				+ "&endIndex=" + endIndex;
+		final String url = "http://localhost:8081/jobs/latest/" + "?startIndex=" + startIndex + "&endIndex=" + endIndex;
 		final List<JobSearchResDto> responseFromAdmins = apiService.getListFrom(url, JobSearchResDto.class);
 		final List<JobSearchResDto> responseFromAdminConverteds = new ObjectMapper().convertValue(responseFromAdmins,
-				new TypeReference<List<JobSearchResDto>>() {});
+				new TypeReference<List<JobSearchResDto>>() {
+				});
 
 		final List<JobSearchResDto> jobFromCandidates = new ArrayList<>();
 		jobDao.getAll().forEach(jv -> {
 			final JobSearchResDto jobFromCandidateRes = new JobSearchResDto();
 			jobFromCandidateRes.setId(jv.getId());
 			jobFromCandidateRes.setVacancyCode(jv.getVacancyCode());
+			jobFromCandidateRes.setCreatedAt(DateUtil.dateTimeFormat(jv.getCreatedAt()));
 
 			jobFromCandidates.add(jobFromCandidateRes);
 		});
-		
+
 		final List<JobSearchResDto> responses = new ArrayList<>();
-		
+
 		responseFromAdminConverteds.forEach(resCon -> {
 			jobFromCandidates.forEach(jobCdt -> {
-				if(resCon.getVacancyCode().equals(jobCdt.getVacancyCode())) {
+				if (resCon.getVacancyCode().equals(jobCdt.getVacancyCode())) {
 					jobCdt.setCityName(resCon.getCityName());
 					jobCdt.setCompanyName(resCon.getCompanyName());
 					jobCdt.setCompanyPhotoId(resCon.getCompanyPhotoId());
@@ -223,21 +221,23 @@ public class JobVacancyService {
 					jobCdt.setSalary(resCon.getSalary());
 					jobCdt.setVacancyTitle(resCon.getVacancyTitle());
 					final JobSearchResDto response = jobCdt;
-					
+
 					responses.add(response);
 				}
 			});
 		});
-		
+
 		return responses;
 	}
 
 	public JobVacancyResDto getJobDetail(String jobId) {
 		final JobVacancy job = jobDao.getById(jobId);
-		
-		final String url = "http://localhost:8081/jobs/code/?code=" + job.getVacancyCode();
+
+		final String urlToGetId = "http://localhost:8081/jobs/code/?code=" + job.getVacancyCode();
+		final JobSearchResDto jobIdFromAdmin = apiService.getFrom(urlToGetId, JobSearchResDto.class);
+		final String url = "http://localhost:8081/jobs/detail/?jobId=" + jobIdFromAdmin.getId();
 		final JobVacancyResDto responseFromAdmin = apiService.getFrom(url, JobVacancyResDto.class);
-		
+
 		final JobVacancyResDto response = new JobVacancyResDto();
 		response.setCompanyName(responseFromAdmin.getCompanyName());
 		response.setCompanyDesc(responseFromAdmin.getCompanyDesc());

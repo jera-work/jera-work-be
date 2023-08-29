@@ -57,7 +57,7 @@ public class JobVacancyController {
 	}
 
 	@GetMapping("/company-vacancy")
-	public ResponseEntity<List<JobVacancyResDto>> filter(int startIndex, int endIndex) {
+	public ResponseEntity<List<JobVacancyResDto>> getJobByCompany(int startIndex, int endIndex) {
 		final List<JobVacancyResDto> responses = jobService.jobByCompany(startIndex, endIndex);
 		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}
@@ -69,8 +69,8 @@ public class JobVacancyController {
 	}
 	
 	@GetMapping("/code")
-	public ResponseEntity<JobVacancyResDto> getByCode(String code){
-		final JobVacancyResDto response = jobService.getByCode(code);
+	public ResponseEntity<JobSearchResDto> getByCode(String code){
+		final JobSearchResDto response = jobService.getByCode(code);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

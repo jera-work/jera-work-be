@@ -19,7 +19,8 @@ public class DateUtil {
 	}
 
 	public static LocalDateTime dateTimeParse(String dateStr) {
-		final LocalDateTime date = LocalDateTime.parse(dateStr, DateTimeFormatter.ISO_DATE_TIME);
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+		final LocalDateTime date = LocalDateTime.parse(dateStr, formatter);
 		
 		return date;
 	}
@@ -27,6 +28,20 @@ public class DateUtil {
 	public static LocalDate dateParse(String dateStr) {
 		final LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_DATE_TIME);
 		
+		return date;
+	}
+	
+	public static LocalDate dateParseCustom(String dateStr) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss.S");
+		final LocalDate date = LocalDate.parse(dateStr, formatter);
+
+		return date;
+	}
+	
+	public static LocalDateTime dateTimeParseCustom(String dateStr) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss.S");
+		final LocalDateTime date = LocalDateTime.parse(dateStr, formatter);
+
 		return date;
 	}
 	

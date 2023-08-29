@@ -30,10 +30,32 @@ public class DateUtil {
 		return date;
 	}
 	
+	public static LocalDate dateParseCustom(String dateStr) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss.S");
+		final LocalDate date = LocalDate.parse(dateStr, formatter);
+
+		return date;
+	}
+	
+	public static LocalDateTime dateTimeParseCustom(String dateStr) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+		final LocalDateTime date = LocalDateTime.parse(dateStr, formatter);
+
+		return date;
+	}
+	
 	public static String yearFormat(LocalDate date) {
 		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
 
 		return date.format(formatter);
+	}
+	
+	public static String dateTimeFormatIso(LocalDateTime localDateTime) {
+		return localDateTime.format(DateTimeFormatter.ISO_DATE_TIME);
+	}
+
+	public static String dateFormatIso(LocalDate date) {
+		return date.format(DateTimeFormatter.ISO_DATE_TIME);
 	}
 
 }

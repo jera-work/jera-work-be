@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.UpdateResDto;
+import com.lawencon.candidate.dto.appliedstatus.UpdateStatusReqDto;
+import com.lawencon.candidate.dto.appliedvacancy.AppliedVacancyProgressResDto;
 import com.lawencon.candidate.dto.appliedvacancy.AppliedVacancyResDto;
 import com.lawencon.candidate.dto.appliedvacancy.InsertAppliedVacancyReqDto;
 import com.lawencon.candidate.dto.appliedvacancy.UpdateProgressReqDto;
@@ -35,6 +37,24 @@ public class AppliedVacancyController {
 	@PutMapping
 	public ResponseEntity<UpdateResDto> changeStatus(@RequestBody UpdateProgressReqDto data) {
 		final UpdateResDto response = appliedVacancyService.changeAppliedStatusProgress(data);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@PutMapping("/change-status")
+	public ResponseEntity<UpdateResDto> changeStatus(@RequestBody UpdateStatusReqDto data) {
+		final UpdateResDto response = appliedVacancyService.changeAppliedStatus(data);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("/my-applied/page")
+	public ResponseEntity<List<AppliedVacancyResDto>> getMyAppliedJobWithLimit(int startIndex, int endIndex) {
+		final List<AppliedVacancyResDto> responses = appliedVacancyService.getByCandidateIdWithLimit(startIndex, endIndex);
+		return new ResponseEntity<>(responses, HttpStatus.OK);
+	}
+	
+	@GetMapping("/my-applied/code")
+	public ResponseEntity<AppliedVacancyProgressResDto> getProgress(String appliedId) {
+		final AppliedVacancyProgressResDto response = appliedVacancyService.getProgressCode(appliedId);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	

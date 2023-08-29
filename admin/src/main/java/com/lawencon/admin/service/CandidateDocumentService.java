@@ -11,8 +11,8 @@ import com.lawencon.admin.dao.CandidateDocumentDao;
 import com.lawencon.admin.dao.DocumentTypeDao;
 import com.lawencon.admin.dao.FileDao;
 import com.lawencon.admin.dto.InsertResDto;
-import com.lawencon.admin.dto.document.CandidateDocumentCreateReqDto;
-import com.lawencon.admin.dto.document.CandidateDocumentResDto;
+import com.lawencon.admin.dto.candidatedocument.CandidateDocumentCreateReqDto;
+import com.lawencon.admin.dto.candidatedocument.CandidateDocumentResDto;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.CandidateDocument;
 import com.lawencon.admin.model.DocumentType;
@@ -77,6 +77,23 @@ public class CandidateDocumentService {
 			final CandidateDocumentResDto response = new CandidateDocumentResDto();
 			final DocumentType type = typeDao.getById(document.getDocumentType().getId());
 			response.setTypeName(type.getTypeName());
+			responses.add(response);
+		}
+		return responses;
+	}
+	
+	/* get documents for admin */
+	public List<CandidateDocumentResDto> getDocumentsByCandidateId(String candidateId) {
+		final List<CandidateDocumentResDto> responses = new ArrayList<>();
+		final Candidate candidate = candidateDao.getById(candidateId);
+		final List<CandidateDocument> documents = docsDao.getDocuments(candidate.getId());
+
+		for (CandidateDocument document : documents) {
+			final CandidateDocumentResDto response = new CandidateDocumentResDto();
+			final DocumentType type = typeDao.getById(document.getDocumentType().getId());
+			response.setTypeName(type.getTypeName());
+			response.setFileId(document.getFile().getId());
+			response.setId(document.getId());
 			responses.add(response);
 		}
 		return responses;

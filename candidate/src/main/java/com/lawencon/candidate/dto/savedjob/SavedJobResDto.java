@@ -2,6 +2,7 @@ package com.lawencon.candidate.dto.savedjob;
 
 public class SavedJobResDto {
 	private String id;
+	private String vacancyId;
 	private String vacancyTitle;
 	private String vacancyCode;
 	private String companyName;
@@ -18,6 +19,14 @@ public class SavedJobResDto {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public String getVacancyId() {
+		return vacancyId;
+	}
+
+	public void setVacancyId(String vacancyId) {
+		this.vacancyId = vacancyId;
 	}
 
 	public String getVacancyTitle() {

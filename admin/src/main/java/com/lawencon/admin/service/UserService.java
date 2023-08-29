@@ -11,14 +11,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.admin.dao.CompanyDao;
+import com.lawencon.admin.dao.FileDao;
 import com.lawencon.admin.dao.ProfileDao;
 import com.lawencon.admin.dao.RoleDao;
 import com.lawencon.admin.dao.UserDao;
 import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.login.LoginReqDto;
+import com.lawencon.admin.dto.profile.ProfileUpdateReqDto;
+import com.lawencon.admin.dto.user.UserChangePasswordReqDto;
 import com.lawencon.admin.dto.user.UserCreateReqDto;
+import com.lawencon.admin.dto.user.UserProfileResDto;
 import com.lawencon.admin.dto.user.UserResDto;
 import com.lawencon.admin.model.Company;
+import com.lawencon.admin.model.File;
 import com.lawencon.admin.model.Profile;
 import com.lawencon.admin.model.Role;
 import com.lawencon.admin.model.User;
@@ -42,6 +48,8 @@ public class UserService implements UserDetailsService {
 	private SendMailService sendMailService;
 	@Autowired
 	private PrincipalServiceImpl principalService;
+	@Autowired
+	private FileDao fileDao;
 
 	public InsertResDto createUser(UserCreateReqDto data) {
 		ConnHandler.begin();
@@ -64,7 +72,7 @@ public class UserService implements UserDetailsService {
 
 		final Profile profile = new Profile();
 		profile.setProfileName(data.getProfileName());
-		
+
 		final Company company = companyDao.getByIdRef(data.getCompanyId());
 		profile.setCompany(company);
 		final Profile profileDb = profileDao.save(profile);
@@ -74,19 +82,20 @@ public class UserService implements UserDetailsService {
 		final Role role = roleDao.getByIdRef(data.getRoleId());
 		user.setRole(role);
 		final User userDb = userDao.saveAndFlush(user);
-		
+
 		ConnHandler.commit();
 
 		sendMailService.sendEmail(userDb.getUserEmail(), "Account created successfully", "Hello, "
 				+ data.getProfileName()
-				+ "! Your account has been created successfully for jera-work app, you can login using this password : " + generatedString);
+				+ "! Your account has been created successfully for jera-work app, you can login using this password : "
+				+ generatedString);
 		final InsertResDto response = new InsertResDto();
 		response.setId(userDb.getId());
 		response.setMessage("User created successfully");
 
 		return response;
 	}
-	
+
 	public List<UserResDto> getAllUsers() {
 		final List<User> users = userDao.getAll();
 		final List<UserResDto> responses = new ArrayList<>();
@@ -98,6 +107,8 @@ public class UserService implements UserDetailsService {
 			response.setCompanyId(user.getProfile().getCompany().getId());
 			response.setCompanyName(user.getProfile().getCompany().getCompanyName());
 			response.setRoleName(user.getRole().getRoleName());
+			response.setPhoneNumber(user.getProfile().getProfilePhone());
+			response.setProfileAddress(user.getProfile().getProfileAddress());
 			responses.add(response);
 		});
 
@@ -117,6 +128,91 @@ public class UserService implements UserDetailsService {
 		});
 
 		return responses;
+	}
+
+	public UpdateResDto changePassword(UserChangePasswordReqDto data) {
+		ConnHandler.begin();
+		final String id = principalService.getAuthPrincipal();
+		final User user = userDao.getById(id);
+		if (user != null) {
+			if (passwordEncoder.matches(data.getOldPassword(), user.getUserPassword())) {
+				user.setUserPassword(passwordEncoder.encode(data.getNewPassword()));
+				final User userDb = userDao.saveAndFlush(user);
+				final UpdateResDto response = new UpdateResDto();
+//				ConnHandler.getManager().flush();
+				response.setMessage("Update Password Berhasil");
+				response.setVer(userDb.getVersion());
+				ConnHandler.commit();
+				return response;
+			}
+		}
+		throw new UsernameNotFoundException("Email / password salah");
+
+	}
+
+	public UserProfileResDto getProfile() {
+
+		final User user = userDao.getById(principalService.getAuthPrincipal());
+
+		final UserProfileResDto response = new UserProfileResDto();
+		response.setUserId(user.getId());
+		response.setUserEmail(user.getUserEmail());
+		response.setProfileName(user.getProfile().getProfileName());
+		response.setRoleName(user.getRole().getRoleName());
+		response.setProfileAddress(user.getProfile().getProfileAddress());
+		response.setPhoneNumber(user.getProfile().getProfilePhone());
+		response.setCompanyName(user.getProfile().getCompany().getCompanyName());
+		if(user.getProfile().getPhoto() != null) {
+			response.setPhotoId(user.getProfile().getPhoto().getId());			
+		}
+		return response;
+	}
+
+	public UpdateResDto updateProfile(ProfileUpdateReqDto data) {
+		UpdateResDto response = new UpdateResDto();
+
+		try {
+			ConnHandler.begin();
+			final User user = userDao.getById(principalService.getAuthPrincipal());
+			user.setUserEmail(data.getUserEmail());
+
+			final Profile profile = profileDao.getById(user.getProfile().getId());
+			profile.setProfileName(data.getProfileName());
+			profile.setProfileAddress(data.getProfileAddress());
+			profile.setProfilePhone(data.getPhoneNumber());
+
+			File fileDb = new File();
+			if (profile.getPhoto() != null) {
+				final String oldPhotoId = profile.getPhoto().getId();
+				if (data.getFileContent() != null && data.getFileContent() != "") {
+					final File newPhoto = new File();
+					newPhoto.setFileContent(data.getFileContent());
+					newPhoto.setFileExt(data.getFileExt());
+					fileDb = fileDao.saveAndFlush(newPhoto);
+					profile.setPhoto(fileDb);
+					fileDao.deleteById(oldPhotoId);
+				}
+			} else {
+				if (data.getFileContent() != null && data.getFileContent() != "") {
+					final File newPhoto = new File();
+					newPhoto.setFileContent(data.getFileContent());
+					newPhoto.setFileExt(data.getFileExt());
+					fileDb = fileDao.saveAndFlush(newPhoto);
+					profile.setPhoto(fileDb);
+				}
+			}
+
+			final Profile profileDb = profileDao.saveAndFlush(profile);
+			ConnHandler.commit();
+
+			response.setMessage("Profile has been updated!");
+			response.setVer(profileDb.getVersion());
+		} catch (Exception e) {
+			e.printStackTrace();
+			ConnHandler.rollback();
+		}
+
+		return response;
 	}
 
 	public User login(LoginReqDto data) {

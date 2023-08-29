@@ -1,6 +1,6 @@
 package com.lawencon.admin.dao;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -13,7 +13,6 @@ import com.lawencon.admin.model.AppliedVacancy;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.CandidateProfile;
 import com.lawencon.admin.model.JobVacancy;
-import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
@@ -54,13 +53,15 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 	
 	public AppliedVacancy getByJobVacancyAndCandidate(String jobId, String candidateId){
 		final String sql = "SELECT "
-				+ "	tav.id "
+				+ "	tav.id, tap.progress_code "
 				+ "FROM "
 				+ "	t_applied_vacancy tav "
 				+ "INNER JOIN "
 				+ "	t_candidate tc ON tav.candidate_id = tc.id "
 				+ "INNER JOIN "
 				+ "	t_job_vacancy tjv ON tav.job_vacancy_id = tjv.id "
+				+ "INNER JOIN "
+				+ "t_applied_progress tap ON tav.applied_progress_id = tap.id "
 				+ "WHERE "
 				+ "	tc.id LIKE :candidate_id AND tjv.id LIKE :job_id ";
 		
@@ -70,8 +71,14 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 					.setParameter("candidate_id", candidateId)
 					.getSingleResult();
 
-				AppliedVacancy appliedVacancy = new AppliedVacancy();
-				appliedVacancy.setId(appJobObj.toString());
+			final Object[] appJobObjArr = (Object[]) appJobObj;
+			final AppliedVacancy appliedVacancy = new AppliedVacancy();
+			appliedVacancy.setId(appJobObjArr[0].toString());
+				
+			final AppliedProgress appliedProgress = new AppliedProgress();
+			appliedProgress.setProgressCode(appJobObjArr[1].toString());
+			appliedVacancy.setAppliedProgress(appliedProgress);
+				
 			return appliedVacancy;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -81,7 +88,7 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 
 	public List<AppliedVacancy> getByJobVacancyId(String jobVacancyId) {
 		final String sql = "SELECT "
-				+ "	tav.id, tcp.profile_name, tap.progress_name, tas.status_name, tav.created_at  "
+				+ "	tav.id, tcp.profile_name, tap.progress_name, tas.status_name, tav.created_at, tap.progress_code, tas.status_code  "
 				+ "FROM "
 				+ "	t_applied_vacancy tav "
 				+ "INNER JOIN "
@@ -115,14 +122,16 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 				appliedVacancy.setCandidate(candidate);
 				
 				final AppliedStatus appliedStatus = new AppliedStatus();
-				appliedStatus.setStatusName(appObjArr[2].toString());
+				appliedStatus.setStatusName(appObjArr[3].toString());
+				appliedStatus.setStatusCode(appObjArr[6].toString());
 				appliedVacancy.setAppliedStatus(appliedStatus);
 				
 				final AppliedProgress appliedProgress = new AppliedProgress();
-				appliedProgress.setProgressName(appObjArr[3].toString());
+				appliedProgress.setProgressName(appObjArr[2].toString());
+				appliedProgress.setProgressCode(appObjArr[5].toString());
 				appliedVacancy.setAppliedProgress(appliedProgress);
 				
-				appliedVacancy.setCreatedAt(DateUtil.dateTimeParse(appObjArr[4].toString()));
+				appliedVacancy.setCreatedAt(Timestamp.valueOf(appObjArr[4].toString()).toLocalDateTime());
 				
 				appliedVacancies.add(appliedVacancy);
 			}
@@ -131,9 +140,9 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 		return appliedVacancies;
 	}
 	
-	public List<AppliedVacancy> getByCandidateId(String candidateId){
+	public List<AppliedVacancy> getByCandidateId(String candidateId, int startIndex, int endIndex){
 		final String sql = "SELECT "
-				+ "	tav.id, tav.job_vacancy_id, tjv.vacancy_code, tap.progress_name , tas.status_name "
+				+ "	tav.id, tav.job_vacancy_id, tjv.vacancy_code, tap.progress_code, tap.progress_name, tas.status_code, tas.status_name, tav.created_at "
 				+ "FROM "
 				+ "	t_applied_vacancy tav "
 				+ "INNER JOIN "
@@ -148,6 +157,8 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 		final List<?> appObjs = ConnHandler.getManager()
 				.createNativeQuery(sql)
 				.setParameter("candidateId", candidateId)
+				.setFirstResult(startIndex)
+				.setMaxResults(endIndex)
 				.getResultList();
 		
 		final List<AppliedVacancy> appliedVacancies = new ArrayList<>();
@@ -165,12 +176,15 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 				appliedVacancy.setJobVacancy(jobVacancy);
 				
 				final AppliedProgress appliedProgress = new AppliedProgress();
-				appliedProgress.setProgressName(appObjArr[3].toString());
+				appliedProgress.setProgressCode(appObjArr[3].toString());
+				appliedProgress.setProgressName(appObjArr[4].toString());
 				appliedVacancy.setAppliedProgress(appliedProgress);
 				
 				final AppliedStatus appliedStatus = new AppliedStatus();
-				appliedStatus.setStatusName(appObjArr[4].toString());
+				appliedStatus.setStatusCode(appObjArr[5].toString());
+				appliedStatus.setStatusName(appObjArr[6].toString());
 				appliedVacancy.setAppliedStatus(appliedStatus);
+				appliedVacancy.setCreatedAt(Timestamp.valueOf(appObjArr[7].toString()).toLocalDateTime());
 				
 				appliedVacancies.add(appliedVacancy);
 			}
@@ -181,7 +195,7 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 	
 	public List<AppliedVacancy> getByProgressId(String progressId) {
 		final String sql = "SELECT "
-				+ "		tav.id, tav.job_vacancy_id, tjv.vacancy_code, tap.progress_name , tas.status_name "
+				+ "		tav.id, tav.job_vacancy_id, tjv.vacancy_code, tap.progress_name , tas.status_name, tap.progress_code, tas.status_code "
 				+ "FROM "
 				+ "	t_applied_vacancy tav "
 				+ "INNER JOIN "
@@ -214,13 +228,15 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 				
 				final AppliedStatus appliedStatus = new AppliedStatus();
 				appliedStatus.setStatusName(appObjArr[2].toString());
+				appliedStatus.setStatusCode(appObjArr[6].toString());
 				appliedVacancy.setAppliedStatus(appliedStatus);
 				
 				final AppliedProgress appliedProgress = new AppliedProgress();
 				appliedProgress.setProgressName(appObjArr[3].toString());
+				appliedProgress.setProgressCode(appObjArr[5].toString());
 				appliedVacancy.setAppliedProgress(appliedProgress);
 				
-				appliedVacancy.setCreatedAt(DateUtil.dateTimeParse(appObjArr[4].toString()));
+				appliedVacancy.setCreatedAt(Timestamp.valueOf(appObjArr[4].toString()).toLocalDateTime());
 				
 				appliedVacancies.add(appliedVacancy);
 			}

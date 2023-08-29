@@ -1,9 +1,10 @@
 package com.lawencon.admin.dao;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+
+import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +19,7 @@ import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.admin.model.Profile;
 import com.lawencon.admin.model.User;
 import com.lawencon.admin.model.VacancyDescription;
+import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
@@ -91,9 +93,9 @@ public class JobVacancyDao extends AbstractJpaDao {
 	}
 
 	public List<JobVacancy> getAllWithLimit(int startIndex, int endIndex, String vacancyTitle, String degreeId, String cityId, String jobTypeId){
-		final String sql = "SELECT "
+		String sql = "SELECT "
 				+ "	tjv.id, tjv.vacancy_code, tjv.vacancy_title, tc.company_name, tc.photo_id, "
-				+ " tvd.salary, td.degree_name, tjt.type_name, tc2.city_name "
+				+ " tvd.salary, td.degree_name, tjt.type_name, tc2.city_name, tjv.created_at "
 				+ "FROM "
 				+ "	t_job_vacancy tjv "
 				+ "INNER JOIN "
@@ -109,39 +111,43 @@ public class JobVacancyDao extends AbstractJpaDao {
 				+ "INNER JOIN "
 				+ "	t_job_type tjt ON tvd.job_type_id = tjt.id "
 				+ "WHERE "
-				+ "	tjv.vacancy_title ILIKE '%' || :vacancyTitle || '%' "
-				+ "AND "
-				+ "	tvd.degree_id ILIKE :degreeId || '%' "
-				+ "AND "
-				+ "	tvd.city_id ILIKE :cityId || '%' "
-				+ "AND "
-				+ "	tvd.job_type_id ILIKE :jobTypeId || '%' ";
+				+ " 1 = 1 ";
 		
-		if(vacancyTitle == null) {
-			vacancyTitle = "";
+		if(vacancyTitle != null && !vacancyTitle.equalsIgnoreCase("")) {
+			sql += "AND tjv.vacancy_title ILIKE '%' || :vacancyTitle || '%' ";
 		}
 		
-		if(degreeId == null) {
-			degreeId = "";
+		if(degreeId != null && !degreeId.equalsIgnoreCase("")) {
+			sql += " AND tvd.degree_id ILIKE :degreeId || '%' ";
 		}
 		
-		if(cityId == null) {
-			cityId = "";
+		if(cityId != null && !cityId.equalsIgnoreCase("")) {
+			sql += " AND tvd.city_id ILIKE :cityId || '%' ";
 		}
 		
-		if(jobTypeId == null) {
-			jobTypeId = "";
+		if(jobTypeId != null && !jobTypeId.equalsIgnoreCase("")) {
+			sql += " AND tvd.job_type_id ILIKE :jobTypeId || '%' ";
 		}
 		
-		final List<?> jobObjs = ConnHandler.getManager()
-				.createNativeQuery(sql)
-				.setParameter("vacancyTitle", vacancyTitle)
-				.setParameter("degreeId", degreeId)
-				.setParameter("cityId", cityId)
-				.setParameter("jobTypeId", jobTypeId)
-				.setFirstResult(startIndex)
-				.setMaxResults(endIndex)
-				.getResultList();
+		final Query query = ConnHandler.getManager().createNativeQuery(sql);
+		
+		if(vacancyTitle != null && !vacancyTitle.equalsIgnoreCase("")) {
+			query.setParameter("vacancyTitle", vacancyTitle);
+		}
+		
+		if(degreeId != null && !degreeId.equalsIgnoreCase("")) {
+			query.setParameter("degreeId", degreeId);
+		}
+		
+		if(cityId != null && !cityId.equalsIgnoreCase("")) {
+			query.setParameter("cityId", cityId);
+		}
+		
+		if(jobTypeId != null && !jobTypeId.equalsIgnoreCase("")) {
+			query.setParameter("jobTypeId", jobTypeId);
+		}
+		
+		final List<?> jobObjs = query.getResultList();
 		
 		final List<JobVacancy> jobVacancies = new ArrayList<>();
 		
@@ -179,6 +185,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 				vacancyDescription.setCity(city);
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
+				jobVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(objArr[9].toString()));
 				
 				jobVacancies.add(jobVacancy);
 			}
@@ -191,7 +198,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 		final String sql = "SELECT "
 				+ "	tjv.id, tjv.vacancy_code, tjv.vacancy_title, "
 				+ "tc.company_name, tc.photo_id, tvd.salary, "
-				+ "td.degree_name, tjt.type_name , tc2.city_name "
+				+ "td.degree_name, tjt.type_name , tc2.city_name, tjv.created_at "
 				+ "FROM "
 				+ "	t_job_vacancy tjv "
 				+ "INNER JOIN "
@@ -251,6 +258,8 @@ public class JobVacancyDao extends AbstractJpaDao {
 				vacancyDescription.setCity(city);
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
+				jobVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(objArr[9].toString()));
+
 				
 				jobVacancies.add(jobVacancy);
 			}
@@ -263,7 +272,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 		final String sql = "SELECT "
 				+ "	tjv.id, tjv.vacancy_code, tjv.vacancy_title, "
 				+ "tc.company_name, tc.photo_id, tvd.salary, "
-				+ "td.degree_name , tjt.type_name , tc2.city_name "
+				+ "td.degree_name , tjt.type_name , tc2.city_name, tjv.created_at "
 				+ "FROM "
 				+ "	t_job_vacancy tjv "
 				+ "INNER JOIN "
@@ -288,7 +297,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 		final List<JobVacancy> jobVacancies = new ArrayList<>();
 		
 		if(jobObjs.size() > 0) {
-			for(Object jobObj:jobObjs) {
+			for(Object jobObj : jobObjs) {
 				final Object[] objArr = (Object[]) jobObj;
 				final JobVacancy jobVacancy = new JobVacancy();
 				
@@ -321,6 +330,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 				vacancyDescription.setCity(city);
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
+				jobVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(objArr[9].toString()));
 				
 				jobVacancies.add(jobVacancy);
 			}
@@ -331,7 +341,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 	
 	public List<JobVacancy> getJobByCompany(int startIndex, int endIndex, String companyId){
 		final String sql = "SELECT "
-				+ "tjv.id, tjv.vancacy_code, tjv.vacancy_title, tp.profile_name as hrName, tp2.profile_name as userName, "
+				+ "tjv.id, tjv.vacancy_code, tjv.vacancy_title, tp.profile_name as hrName, tp2.profile_name as userName, "
 				+ "tjv.start_date, tjv.end_date, tel.level_name, tas.status_name, "
 				+ "tc.company_name, tjv.vacancy_description_id "
 				+ "FROM "
@@ -385,8 +395,8 @@ public class JobVacancyDao extends AbstractJpaDao {
 				picUser.setProfile(hrProfile);
 				jobVacancy.setPicUser(picUser);
 				
-				jobVacancy.setStartDate(LocalDate.parse(objArr[5].toString()));
-				jobVacancy.setEndDate(LocalDate.parse(objArr[6].toString()));
+				jobVacancy.setStartDate(DateUtil.dateParseCustom((objArr[5].toString())));
+				jobVacancy.setEndDate(DateUtil.dateParseCustom(objArr[6].toString()));
 				
 				final ExperienceLevel experienceLevel = new ExperienceLevel();
 				experienceLevel.setLevelName(objArr[7].toString());

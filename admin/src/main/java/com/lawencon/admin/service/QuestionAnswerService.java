@@ -58,7 +58,7 @@ public class QuestionAnswerService {
 				
 				final Candidate candidate = candidateDao.getByEmail(data.get(i).getCandidateEmail());
 				
-				final JobVacancy jobVacancy = jobVacancyDao.getByCode(data.get(i).getJobVacancyCode());
+				final JobVacancy jobVacancy = jobVacancyDao.getById(data.get(i).getJobVacancyId());
 				
 				final AppliedVacancy appliedVacancyId = appliedVacancyDao.getByJobVacancyAndCandidate(jobVacancy.getId(), candidate.getId());
 				
@@ -78,7 +78,7 @@ public class QuestionAnswerService {
 			
 			final Candidate candidate = candidateDao.getByEmail(data.get(0).getCandidateEmail());
 			
-			final JobVacancy jobVacancy = jobVacancyDao.getByCode(data.get(0).getJobVacancyCode());
+			final JobVacancy jobVacancy = jobVacancyDao.getById(data.get(0).getJobVacancyId());
 			
 			assessmentVacancy.setScore(questionAnswerDao.countScore(jobVacancy.getId(), candidate.getId()));
 			

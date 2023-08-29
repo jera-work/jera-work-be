@@ -1,4 +1,4 @@
-package com.lawencon.admin.dto.document;
+package com.lawencon.admin.dto.candidatedocument;
 
 public class CandidateDocumentCreateReqDto {
 

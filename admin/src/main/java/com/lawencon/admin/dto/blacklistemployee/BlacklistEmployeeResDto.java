@@ -4,7 +4,10 @@ public class BlacklistEmployeeResDto {
 	private String blacklistEmployeeId;
 	private String candidateId;
 	private String candidateName;
-	private String companyName;
+	private String jobTypeName;
+	private String levelName;
+	private String vacancyTitle;
+	private String createdAt;
 	public String getBlacklistEmployeeId() {
 		return blacklistEmployeeId;
 	}
@@ -23,11 +26,29 @@ public class BlacklistEmployeeResDto {
 	public void setCandidateName(String candidateName) {
 		this.candidateName = candidateName;
 	}
-	public String getCompanyName() {
-		return companyName;
+	public String getJobTypeName() {
+		return jobTypeName;
 	}
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
+	public void setJobTypeName(String jobTypeName) {
+		this.jobTypeName = jobTypeName;
+	}
+	public String getLevelName() {
+		return levelName;
+	}
+	public void setLevelName(String levelName) {
+		this.levelName = levelName;
+	}
+	public String getVacancyTitle() {
+		return vacancyTitle;
+	}
+	public void setVacancyTitle(String vacancyTitle) {
+		this.vacancyTitle = vacancyTitle;
+	}
+	public String getCreatedAt() {
+		return createdAt;
+	}
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
 	}
 	
 }

@@ -22,8 +22,9 @@ public class QuestionAnswerController {
 	private QuestionAnswerService questionAnswerService;
 	
 	@PostMapping
-	public ResponseEntity<InsertResDto> register(@RequestBody List<InsertQuestionAnswerReqDto> data) {
+	public ResponseEntity<InsertResDto> insertAnswer(@RequestBody List<InsertQuestionAnswerReqDto> data) {
 		final InsertResDto response = questionAnswerService.submitAnswer(data);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
+	
 }

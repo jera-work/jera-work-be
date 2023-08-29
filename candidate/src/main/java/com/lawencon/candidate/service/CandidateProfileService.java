@@ -24,7 +24,6 @@ public class CandidateProfileService {
 	@Autowired
 	private ApiService apiService;
 
-	@SuppressWarnings("null")
 	public CandidateProfileResDto getProfile() {
 		
 		final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
@@ -35,7 +34,7 @@ public class CandidateProfileService {
 		
 		final CandidateProfile profile = profileDao.getById(candidate.getCandidateProfile().getId());
 		if(profile.getPhoto() != null) {
-			dto.setPhotoId(profile.getPhoto().getId());			
+			dto.setPhotoId(profile.getPhoto().getId());
 		}
 		
 		return dto;

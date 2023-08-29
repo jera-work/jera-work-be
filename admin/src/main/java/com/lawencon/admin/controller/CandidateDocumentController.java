@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.admin.dto.InsertResDto;
-import com.lawencon.admin.dto.document.CandidateDocumentCreateReqDto;
-import com.lawencon.admin.dto.document.CandidateDocumentResDto;
+import com.lawencon.admin.dto.candidatedocument.CandidateDocumentCreateReqDto;
+import com.lawencon.admin.dto.candidatedocument.CandidateDocumentResDto;
 import com.lawencon.admin.service.CandidateDocumentService;
 
 @RestController

@@ -1,4 +1,4 @@
-package com.lawencon.admin.dto.profile;
+package com.lawencon.candidate.dto.profile;
 
 public class CandidateProfileReqDto {
 	
