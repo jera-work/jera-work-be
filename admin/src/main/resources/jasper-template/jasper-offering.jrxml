@@ -55,61 +55,65 @@
 		<property name="com.jaspersoft.studio.field.label" value="startWork"/>
 		<property name="com.jaspersoft.studio.field.name" value="startWork"/>
 	</field>
+	<field name="endDate" class="java.time.LocalDate">
+		<property name="com.jaspersoft.studio.field.name" value="endDate"/>
+		<property name="com.jaspersoft.studio.field.label" value="endDate"/>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="81" splitType="Stretch">
+		<band height="90" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="50" y="0" width="470" height="81" backcolor="#FFFFFF" uuid="87fbb598-b08e-4688-9be2-b4ff93f54c3a">
+				<reportElement mode="Opaque" x="0" y="0" width="570" height="90" backcolor="#FFFFFF" uuid="87fbb598-b08e-4688-9be2-b4ff93f54c3a">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
 				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textField>
-					<reportElement x="129" y="62" width="170" height="12" uuid="8b9e3039-8ac8-4689-afb8-6f0ad99cedc3">
+					<reportElement x="80" y="69" width="458" height="18" uuid="8b9e3039-8ac8-4689-afb8-6f0ad99cedc3">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
+						<font size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Telp. : " + $F{phoneNumber}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="ScaleFont">
-					<reportElement x="129" y="29" width="320" height="21" uuid="16dd8745-d989-43a3-9481-e40fba053325">
+					<reportElement x="80" y="29" width="458" height="21" uuid="16dd8745-d989-43a3-9481-e40fba053325">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[$P{companyDescriptionFontColor}]]></propertyExpression>
 					</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
-						<font size="12" isBold="true"/>
+						<font size="14" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
 				</textField>
 				<image scaleImage="FillFrame">
-					<reportElement x="41" y="14" width="55" height="55" uuid="d95526d0-f8c6-4b80-8151-1b40faa4eca0">
+					<reportElement x="0" y="14" width="55" height="55" uuid="d95526d0-f8c6-4b80-8151-1b40faa4eca0">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<graphicElement fill="Solid"/>
 					<imageExpression><![CDATA[new ByteArrayInputStream(java.util.Base64.getDecoder().decode($P{img}))]]></imageExpression>
 				</image>
 				<textField textAdjust="ScaleFont">
-					<reportElement x="129" y="51" width="170" height="12" uuid="86b988ec-c333-4c2b-87c9-bb902e9cedea">
+					<reportElement x="80" y="51" width="458" height="18" uuid="86b988ec-c333-4c2b-87c9-bb902e9cedea">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
+						<font size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="ScaleFont">
-					<reportElement x="129" y="7" width="320" height="22" uuid="7e655819-e5f7-4b97-b598-76a0269c359f">
+					<reportElement x="80" y="7" width="458" height="22" uuid="7e655819-e5f7-4b97-b598-76a0269c359f">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<propertyExpression name="net.sf.jasperreports.style.forecolor"><![CDATA[$P{companyNameFontColor}]]></propertyExpression>
 					</reportElement>
@@ -122,368 +126,172 @@
 		</band>
 	</title>
 	<detail>
-		<band height="60" splitType="Stretch">
+		<band height="150" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="50" y="0" width="470" height="60" backcolor="#FFFFFF" uuid="d49b2f8b-2046-4241-87a1-b107181fb179">
+				<reportElement mode="Opaque" x="0" y="0" width="570" height="150" backcolor="#FFFFFF" uuid="d49b2f8b-2046-4241-87a1-b107181fb179">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<staticText>
-					<reportElement x="184" y="23" width="30" height="12" uuid="2eeb4fd2-5b97-4186-aa50-a2029da3e0e3">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[:]]></text>
-				</staticText>
 				<textField>
-					<reportElement x="202" y="36" width="170" height="12" uuid="0754e239-5392-4ed8-ae50-d99fe35d3e06">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
+					<reportElement x="30" y="40" width="507" height="20" uuid="705baa20-7d41-45a0-bc7c-3a7c02a39d9c"/>
+					<textElement>
+						<font size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{typeName}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Dear " + $F{candidateName}]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement x="184" y="10" width="30" height="12" uuid="d2ac14e3-29dd-4080-ab22-03b25c263f84">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="30" y="10" width="131" height="12" uuid="8f0cfaec-3908-44c3-962a-16bd7f19ed3f">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[Nama Karyawan]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="30" y="36" width="131" height="12" uuid="1fb97700-abb9-4629-95d7-6aef36710a08">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[Tipe]]></text>
-				</staticText>
 				<textField>
-					<reportElement x="202" y="23" width="170" height="12" uuid="24c605a8-9a8b-4cab-807c-21de51eb9253">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
+					<reportElement stretchType="RelativeToTallestObject" x="30" y="70" width="507" height="30" uuid="0e033385-61f0-409c-8e20-6e9daa2da9d5"/>
+					<textElement>
+						<font size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{levelName} + " " + $F{vacancyTitle}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["We are excited on your profile and offer you " + $F{typeName} + " position of " + $F{levelName} + " " + $F{vacancyTitle} + " at " + $F{companyName} + ". We believe your skills and experience are an excellent match for our company."]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement x="184" y="36" width="30" height="12" uuid="b305daf8-18d1-4d62-a785-29c6f2d8c1a1">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="30" y="23" width="131" height="12" uuid="78febd2a-ea6b-4cb9-8bfd-bb3c15d2af50">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[Posisi]]></text>
-				</staticText>
 				<textField>
-					<reportElement x="202" y="10" width="170" height="12" uuid="b3a47172-2696-4ea0-9854-ab9af5bf245b">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
+					<reportElement stretchType="RelativeToTallestObject" x="30" y="120" width="507" height="30" uuid="9f0205c3-1c1e-4084-81e3-fc2ef2e0352d"/>
+					<textElement>
+						<font size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{candidateName}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["The starting salary for this position is " + $F{salary} + " per month. " + "In addition to this starting salary, we’re offering you benefit "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement stretchType="RelativeToTallestObject" x="30" y="100" width="507" height="20" uuid="7f394aa1-7a80-44ab-8914-b52e046c2282"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["You should start work on " + $F{startWork} + " and report directly  to " + $F{picHrName}]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
-		<band height="81">
+		<band height="30" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="50" y="0" width="470" height="81" backcolor="#FFFFFF" uuid="9bdd68c5-2ed5-4616-b1c0-010b3b6bb009">
+				<reportElement stretchType="ContainerHeight" mode="Opaque" x="0" y="0" width="570" height="30" backcolor="#FFFFFF" uuid="92d0c372-296a-40c5-89a5-75ef71690964">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textField>
-					<reportElement x="202" y="62" width="170" height="12" uuid="d64a94a9-ada4-425b-985c-884cb39ed5e1">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{salary}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="30" y="8" width="132" height="11" uuid="96cd93fe-689c-4f48-a8c7-7d74720bfa36"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Perhitungan jumlah pendapatan :]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="30" y="20" width="132" height="11" uuid="11c6ac9f-d233-4912-8a62-5171ad4d9aed"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Pendapatan tetap]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="30" y="31" width="132" height="11" uuid="e2a3f816-223d-47af-afbb-41634b103332"/>
-					<textElement>
-						<font size="8" isBold="false"/>
-					</textElement>
-					<text><![CDATA[Gaji Pokok]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="184" y="29" width="30" height="12" uuid="aaa509e4-b90a-44bd-b3e1-0edb6e36f9c2">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="30" y="63" width="132" height="11" uuid="c87261d1-fafe-4131-bbc4-2c5383ad5e20"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Jumlah Pendapatan]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="184" y="62" width="30" height="12" uuid="7a8a84d4-cf6b-4c55-9b59-a1539d517f0d">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[:]]></text>
-				</staticText>
-				<textField>
-					<reportElement x="202" y="29" width="170" height="12" uuid="6d963220-f00e-4bab-a8b6-a9ab9690ba03">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{salary} +"/bulan"]]></textFieldExpression>
-				</textField>
-			</frame>
-		</band>
-		<band height="22" splitType="Stretch">
-			<frame>
-				<reportElement stretchType="ContainerHeight" mode="Opaque" x="50" y="0" width="470" height="22" backcolor="#FFFFFF" uuid="9afc5045-950a-4bfc-a796-640db28d03e0">
-					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<staticText>
-					<reportElement x="184" y="10" width="30" height="12" uuid="34376422-c3bb-4785-a36e-e17435fa58f1">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[:]]></text>
-				</staticText>
 				<textField textAdjust="StretchHeight">
-					<reportElement stretchType="RelativeToBandHeight" x="203" y="10" width="228" height="12" uuid="efdb2fbf-929b-490f-bab4-a62ee46a5aaf">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Top" markup="html">
-						<font size="8"/>
+					<reportElement stretchType="RelativeToBandHeight" x="30" y="0" width="507" height="20" uuid="72aad615-4588-4ca9-a7b6-42b90f6fd790"/>
+					<textElement markup="html">
+						<font size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{benefit}]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement x="30" y="11" width="132" height="11" uuid="45f53c80-2a2b-41d0-bf02-ceebebfaf34f"/>
-					<textElement>
-						<font size="8" isBold="false"/>
-					</textElement>
-					<text><![CDATA[Fasilitas & Benefit Lain Lain]]></text>
-				</staticText>
 			</frame>
 		</band>
-		<band height="81">
+		<band height="19">
 			<frame>
-				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="50" y="0" width="470" height="81" backcolor="#FFFFFF" uuid="4bd8d156-54f1-47c5-bd34-74457f02b1c3">
+				<reportElement mode="Opaque" x="0" y="0" width="570" height="19" backcolor="#FFFFFF" uuid="a3b38bf9-9f4f-45d1-9457-fefc26767341">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<staticText>
-					<reportElement x="30" y="9" width="132" height="11" uuid="56e0f343-b41a-47b1-8600-2822013b66e5"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Efektif masuk per tanggal]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="184" y="8" width="30" height="12" uuid="db07895e-2d8d-4f28-b029-d7d2099cd605">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="8"/>
-					</textElement>
-					<text><![CDATA[:]]></text>
-				</staticText>
 				<textField>
-					<reportElement x="203" y="8" width="170" height="12" uuid="92ffb21f-af7f-4951-95de-78e1ff4b68b6">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
+					<reportElement stretchType="RelativeToTallestObject" x="30" y="0" width="507" height="20" uuid="47378ff4-1db4-4048-a0ce-f006cb0687c8"/>
+					<textElement>
+						<font size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{startWork}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["This letter is not to be taken as a contract indicating employment terms or duration"]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement x="311" y="60" width="126" height="11" uuid="4428a6ca-d470-4fce-95ea-a3cd9a22e471"/>
-					<textElement>
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[Jakarta,                        2023]]></text>
-				</staticText>
 			</frame>
 		</band>
-		<band height="81">
+		<band height="33">
 			<frame>
-				<reportElement mode="Opaque" x="50" y="0" width="470" height="81" backcolor="#FFFFFF" uuid="bd238a28-1231-4a25-ac3b-015b432b8852">
+				<reportElement stretchType="ContainerHeight" mode="Opaque" x="0" y="0" width="570" height="33" backcolor="#FFFFFF" uuid="5cc33c84-9888-4794-a589-cc59220380ff">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textField textAdjust="StretchHeight">
+					<reportElement stretchType="RelativeToBandHeight" x="30" y="0" width="507" height="24" uuid="38721165-d0ac-48de-8739-6c3575844bbb"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Please confirm your acceptance of this offer by signin and returning this letter to " + $F{address} + " by " + $F{endDate}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+		<band height="50">
+			<frame>
+				<reportElement stretchType="ContainerHeight" mode="Opaque" x="0" y="0" width="570" height="50" backcolor="#FFFFFF" uuid="db6ed951-8c26-4bae-8a1b-e226364d246a">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textField>
-					<reportElement x="312" y="40" width="100" height="11" uuid="a909be98-6354-44e4-83a1-294c528482b3"/>
+					<reportElement stretchType="RelativeToTallestObject" x="30" y="0" width="507" height="31" uuid="3a793498-70e8-4512-8f1f-7b1a60aa8276"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA["We are excited to have you join our team! If you have any questions, contact us for details."]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+		<band height="173">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="570" height="172" backcolor="#FFFFFF" uuid="bd238a28-1231-4a25-ac3b-015b432b8852">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textField>
+					<reportElement x="353" y="131" width="168" height="19" uuid="a909be98-6354-44e4-83a1-294c528482b3"/>
 					<textElement textAlignment="Center">
-						<font size="8"/>
+						<font size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA["(" + $F{picHrName} + ")"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="71" y="40" width="100" height="11" uuid="d00860a0-c712-49f8-b988-34bae360364b"/>
+					<reportElement x="41" y="131" width="168" height="19" uuid="d00860a0-c712-49f8-b988-34bae360364b"/>
 					<textElement textAlignment="Center">
-						<font size="8"/>
+						<font size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA["(" + $F{candidateName} + ")"]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="296" y="51" width="132" height="11" uuid="50de6d83-cdf5-4a75-a399-2229c6e7d3f5"/>
+					<reportElement x="371" y="150" width="132" height="19" uuid="50de6d83-cdf5-4a75-a399-2229c6e7d3f5"/>
 					<textElement textAlignment="Center">
-						<font size="8" isBold="false"/>
+						<font size="12" isBold="false"/>
 					</textElement>
 					<text><![CDATA[HRD]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="55" y="51" width="132" height="11" uuid="03a12a9f-547d-439d-99ef-10e52640e82c"/>
+					<reportElement x="55" y="150" width="132" height="19" uuid="03a12a9f-547d-439d-99ef-10e52640e82c"/>
 					<textElement textAlignment="Center">
-						<font size="8" isBold="false"/>
+						<font size="12" isBold="false"/>
 					</textElement>
 					<text><![CDATA[Karyawan]]></text>
 				</staticText>
-			</frame>
-		</band>
-		<band height="119">
-			<frame>
-				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="50" y="0" width="470" height="119" backcolor="#FFFFFF" uuid="51fce3c7-ceaa-4df2-b434-77fe45f13a44"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
 				<staticText>
-					<reportElement x="30" y="10" width="132" height="11" uuid="fe77659e-cd38-4147-9936-a8adfc8ee265"/>
-					<textElement textAlignment="Left">
-						<font size="8" isBold="false"/>
+					<reportElement x="360" y="40" width="176" height="19" uuid="3a1764ca-ecef-4118-b930-7b6828f356b9"/>
+					<textElement>
+						<font size="12"/>
 					</textElement>
-					<text><![CDATA[Ketentuan penggajian :]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="30" y="42" width="405" height="11" uuid="2c593b96-a718-4dc6-b4ca-5aad6b21850b"/>
-					<textElement textAlignment="Left">
-						<font size="8" isBold="false"/>
-					</textElement>
-					<text><![CDATA[2. Perhitungan absensi dari tanggal 26 bulan ini ke tanggal 25 bulan berikutnya]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="30" y="64" width="405" height="11" uuid="854cd883-9f5f-4788-9ed4-a83196df03dd"/>
-					<textElement textAlignment="Left">
-						<font size="8" isBold="false"/>
-					</textElement>
-					<text><![CDATA[4. THR 1 bulan gaji pokok dan tunjangan tetap atau proporsional jika masa kerja dibawah 12 bulan]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="30" y="86" width="405" height="11" uuid="d1fc6201-240d-4c0a-8feb-821354f0f448"/>
-					<textElement textAlignment="Left">
-						<font size="8" isBold="false"/>
-					</textElement>
-					<text><![CDATA[6. Status karyawan PKWT 6 bulan (Probation)
-]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="30" y="75" width="405" height="11" uuid="5eb9966a-ce36-46aa-9475-cad5fd1cae0b"/>
-					<textElement textAlignment="Left">
-						<font size="8" isBold="false"/>
-					</textElement>
-					<text><![CDATA[5. Tarif cuti tahunan per hari = GP/20
-]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="30" y="21" width="405" height="21" uuid="07b3a1cb-6cfb-4cb9-a9ba-644a864decf9"/>
-					<textElement textAlignment="Left">
-						<font size="8" isBold="false"/>
-					</textElement>
-					<text><![CDATA[1. Gaji bulan pertama dan bulan terakhir akan dihitung proposional berdasarkan jumlah kehadiran pada hari kerja
-(diluar sabtu)
-]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="30" y="53" width="405" height="11" uuid="bc208708-242c-4ca3-ac8b-1f0abb508696"/>
-					<textElement textAlignment="Left">
-						<font size="8" isBold="false"/>
-					</textElement>
-					<text><![CDATA[3. Pembagian gaji selambat-lambatnya setiap tanggal 2 bulan berikutnya melalui transfer
-]]></text>
+					<text><![CDATA[Jakarta,                             2023]]></text>
 				</staticText>
 			</frame>
 		</band>

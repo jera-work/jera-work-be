@@ -10,6 +10,7 @@ import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.CandidateProfile;
 import com.lawencon.admin.model.Company;
 import com.lawencon.admin.model.HiredEmployee;
+import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
@@ -50,7 +51,7 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 
 	public List<HiredEmployee> getByCompany(int firstIndex, int endIndex, String companyId) {
 		final String sql = "SELECT "
-				+ "	the.id, tcp.profile_name, tc2.company_name "
+				+ "	the.id, tc.id as candidateId, tcp.profile_name, tc2.company_name, the.created_at "
 				+ "FROM "
 				+ "	t_hired_employee the "
 				+ "INNER JOIN "
@@ -76,17 +77,19 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 				final Object[] hirObjArr = (Object[]) hirObj;
 				final HiredEmployee hiredEmployee = new HiredEmployee();
 				hiredEmployee.setId(hirObjArr[0].toString());
+				hiredEmployee.setCreatedAt(DateUtil.dateTimeParseCustom(hirObjArr[4].toString()));
 				
 				final Candidate candidate = new Candidate();
+				candidate.setId(hirObjArr[1].toString());
 				
 				final CandidateProfile candidateProfile = new CandidateProfile();
-				candidateProfile.setProfileName(hirObjArr[1].toString());
+				candidateProfile.setProfileName(hirObjArr[2].toString());
 				candidate.setCandidateProfile(candidateProfile);
 				
 				hiredEmployee.setCandidate(candidate);
 				
 				final Company company = new Company();
-				company.setCompanyName(hirObjArr[2].toString());
+				company.setCompanyName(hirObjArr[3].toString());
 				hiredEmployee.setCompany(company);
 				
 				hiredEmployees.add(hiredEmployee);
