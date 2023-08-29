@@ -7,6 +7,8 @@ import com.lawencon.admin.dao.AppliedVacancyDao;
 import com.lawencon.admin.dao.InterviewVacancyDao;
 import com.lawencon.admin.dao.JobVacancyDao;
 import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.UpdateResDto;
+import com.lawencon.admin.dto.assessmentvacancy.UpdateNotesProgressReqDto;
 import com.lawencon.admin.dto.email.EmailReqDto;
 import com.lawencon.admin.dto.email.InterviewVacancyReqDto;
 import com.lawencon.admin.dto.interviewvacancy.InsertInterviewVacancyReqDto;
@@ -81,11 +83,34 @@ public class InterviewVacancyService {
 	public InterviewVacancyResDto getByAppliedId(String appliedVacancyId) {
 		final InterviewVacancy interviewVacancy = interviewDao.getByAppliedVacancyId(appliedVacancyId);
 		
-		final InterviewVacancyResDto response = new InterviewVacancyResDto();
-		response.setStartDate(DateUtil.dateFormat(interviewVacancy.getStartDate()));
-		response.setEndDate(DateUtil.dateFormat(interviewVacancy.getEndDate()));
-		response.setNotes(interviewVacancy.getNotes());
-		response.setLocation(interviewVacancy.getInterviewLocation());
+		if(interviewVacancy != null) {
+			final InterviewVacancyResDto response = new InterviewVacancyResDto();
+			response.setStartDate(DateUtil.dateFormat(interviewVacancy.getStartDate()));
+			response.setEndDate(DateUtil.dateFormat(interviewVacancy.getEndDate()));
+			response.setNotes(interviewVacancy.getNotes());
+			response.setLocation(interviewVacancy.getInterviewLocation());
+			response.setInterviewId(interviewVacancy.getId());
+			return response;			
+		} else {
+			return null;
+		}
+	}
+	
+	public UpdateResDto updateNotes(UpdateNotesProgressReqDto data) {
+		ConnHandler.begin();
+		final UpdateResDto response = new UpdateResDto();
+		
+		final InterviewVacancy interview = interviewDao.getById(data.getProgressId());
+		interview.setNotes(data.getNotes());
+		final InterviewVacancy interviewDb = interviewDao.saveAndFlush(interview);
+		
+		if(interviewDb != null) {
+			response.setVer(interviewDb.getVersion());
+			response.setMessage("Notes has been updated!");
+			ConnHandler.commit();			
+		} else {
+			ConnHandler.rollback();
+		}
 		
 		return response;
 	}

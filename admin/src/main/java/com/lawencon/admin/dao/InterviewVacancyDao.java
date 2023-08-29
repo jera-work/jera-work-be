@@ -46,20 +46,20 @@ public class InterviewVacancyDao extends AbstractJpaDao {
 	}
 	public InterviewVacancy getByAppliedVacancyId(String appliedVacancyId) {
 		final String sql = "SELECT "
-				+ "	tiv.id, tiv.start_date, tiv.end_date, tiv.notes, tiv.location "
+				+ "	tiv.id, tiv.start_date, tiv.end_date, tiv.notes, tiv.interview_location "
 				+ "FROM "
 				+ "	t_interview_vacancy tiv  "
 				+ "WHERE "
 				+ "	tiv.applied_vacancy_id = :appliedVacancyId";
 		
-		final Object intObj = ConnHandler.getManager()
-				.createNativeQuery(sql)
-				.setParameter("appliedVacancyId", appliedVacancyId)
-				.getSingleResult();
-		
-		final Object[] intObjArr = (Object[]) intObj;
-		
 		try {
+			final Object intObj = ConnHandler.getManager()
+					.createNativeQuery(sql)
+					.setParameter("appliedVacancyId", appliedVacancyId)
+					.getSingleResult();
+			
+			final Object[] intObjArr = (Object[]) intObj;
+			
 			final InterviewVacancy interviewVacancy = new InterviewVacancy();
 			interviewVacancy.setId(intObjArr[0].toString());
 			interviewVacancy.setStartDate(LocalDate.parse(intObjArr[1].toString()));

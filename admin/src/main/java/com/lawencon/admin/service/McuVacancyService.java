@@ -83,9 +83,14 @@ public class McuVacancyService {
 		final McuVacancy mcuVacancy = mcuDao.getByAppliedVacancyId(appliedVacancyId);
 		
 		final McuVacancyResDto response = new McuVacancyResDto();
-		response.setStartDate(DateUtil.dateFormat(mcuVacancy.getStartDate()));
-		response.setEndDate(DateUtil.dateFormat(mcuVacancy.getEndDate()));
 		
-		return response;
+		if(mcuVacancy != null) {
+			response.setStartDate(DateUtil.dateFormat(mcuVacancy.getStartDate()));
+			response.setEndDate(DateUtil.dateFormat(mcuVacancy.getEndDate()));			
+			return response;
+		} else {
+			return null;
+		}
+		
 	}
 }

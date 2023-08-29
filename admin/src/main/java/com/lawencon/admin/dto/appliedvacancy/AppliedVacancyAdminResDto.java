@@ -6,7 +6,25 @@ public class AppliedVacancyAdminResDto {
 	private String profileName;
 	private String statusName;
 	private String progressName;
+	private String statusCode;
+	private String progressCode;
 	private String createdAt;
+
+	public String getStatusCode() {
+		return statusCode;
+	}
+
+	public void setStatusCode(String statusCode) {
+		this.statusCode = statusCode;
+	}
+
+	public String getProgressCode() {
+		return progressCode;
+	}
+
+	public void setProgressCode(String progressCode) {
+		this.progressCode = progressCode;
+	}
 
 	public String getId() {
 		return id;

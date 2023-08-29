@@ -46,20 +46,20 @@ public class OfferingDao extends AbstractJpaDao {
 	}
 	public Offering getByAppliedVacancyId(String appliedVacancyId) {
 		final String sql = "SELECT "
-				+ "to.id, to.is_approve, to.start_date, to.end_date, to.description, to.offering_location "
-				+ "FROM "
-				+ "t_offering to "
-				+ "WHERE "
-				+ "	to.applied_vacancy_id = :appliedVacancyId";
-		
-		final Object offObj = ConnHandler.getManager()
-				.createNativeQuery(sql)
-				.setParameter("appliedVacancyId", appliedVacancyId)
-				.getSingleResult();
-		
-		final Object[] offObjArr = (Object[]) offObj;
+				+ " tof.id, tof.is_approve, tof.start_date, tof.end_date, tof.description, tof.offering_location "
+				+ " FROM "
+				+ " t_offering tof "
+				+ " WHERE "
+				+ "	tof.applied_vacancy_id = :appliedVacancyId ";
 		
 		try {
+			final Object offObj = ConnHandler.getManager()
+					.createNativeQuery(sql)
+					.setParameter("appliedVacancyId", appliedVacancyId)
+					.getSingleResult();
+			
+			final Object[] offObjArr = (Object[]) offObj;
+			
 			final Offering offering = new Offering();
 			offering.setId(offObjArr[0].toString());
 			offering.setIsApprove(Boolean.valueOf(offObjArr[1].toString()));

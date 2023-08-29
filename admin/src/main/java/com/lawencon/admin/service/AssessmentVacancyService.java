@@ -7,8 +7,10 @@ import com.lawencon.admin.dao.AppliedVacancyDao;
 import com.lawencon.admin.dao.AssessmentVacancyDao;
 import com.lawencon.admin.dao.JobVacancyDao;
 import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.assessmentvacancy.AssessmentVacancyResDto;
 import com.lawencon.admin.dto.assessmentvacancy.InsertAssessmentVacancyReqDto;
+import com.lawencon.admin.dto.assessmentvacancy.UpdateNotesProgressReqDto;
 import com.lawencon.admin.dto.email.AssessmentVacancyReqDto;
 import com.lawencon.admin.dto.email.EmailReqDto;
 import com.lawencon.admin.model.AppliedVacancy;
@@ -85,17 +87,39 @@ public class AssessmentVacancyService {
 	public AssessmentVacancyResDto getByAppliedId(String appliedVacancyId) {
 		final AssessmentVacancy assessmentVacancy = assessmentVacancyDao.getByAppliedVacancyId(appliedVacancyId);
 		
-		final AssessmentVacancyResDto response = new AssessmentVacancyResDto();
-		response.setStartDate(DateUtil.dateFormat(assessmentVacancy.getStartDate()));
-		response.setEndDate(DateUtil.dateFormat(assessmentVacancy.getEndDate()));
-		response.setIsQuestion(assessmentVacancy.getIsQuestion());
-		response.setLocation(assessmentVacancy.getAssessmentLocation());
-		response.setNotes(assessmentVacancy.getNotes());
-		response.setScore(assessmentVacancy.getScore());
+		if(assessmentVacancy != null) {
+			final AssessmentVacancyResDto response = new AssessmentVacancyResDto();
+			response.setStartDate(DateUtil.dateFormat(assessmentVacancy.getStartDate()));
+			response.setEndDate(DateUtil.dateFormat(assessmentVacancy.getEndDate()));
+			response.setIsQuestion(assessmentVacancy.getIsQuestion());
+			response.setLocation(assessmentVacancy.getAssessmentLocation());
+			response.setNotes(assessmentVacancy.getNotes());
+			response.setScore(assessmentVacancy.getScore());
+			response.setAssessmentId(assessmentVacancy.getId());
+			
+			return response;			
+		} else {
+			return null;
+		}
+	}
+	
+	public UpdateResDto updateNotes(UpdateNotesProgressReqDto data) {
+		ConnHandler.begin();
+		final UpdateResDto response = new UpdateResDto();
+		
+		final AssessmentVacancy assessment = assessmentVacancyDao.getById(data.getProgressId());
+		assessment.setNotes(data.getNotes());
+		final AssessmentVacancy assessmentDb = assessmentVacancyDao.saveAndFlush(assessment);
+		
+		if(assessmentDb != null) {
+			response.setVer(assessmentDb.getVersion());
+			response.setMessage("Notes has been updated!");
+			ConnHandler.commit();			
+		} else {
+			ConnHandler.rollback();
+		}
 		
 		return response;
 	}
-	
-	
 	
 }

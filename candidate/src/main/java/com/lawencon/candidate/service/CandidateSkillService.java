@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawencon.base.ConnHandler;
 import com.lawencon.candidate.dao.CandidateDao;
 import com.lawencon.candidate.dao.CandidateSkillDao;
+import com.lawencon.candidate.dto.DeleteResDto;
 import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.candidateskill.CandidateSkillReqDto;
 import com.lawencon.candidate.dto.candidateskill.CandidateSkillResDto;
@@ -77,4 +78,25 @@ public class CandidateSkillService {
 		
 		return responses;
 	}
+	
+	/* delete skills for candidate */
+	public DeleteResDto deleteSkill(String skillId) {
+		ConnHandler.begin();
+		
+		final CandidateSkill cs = candidateSkillDao.getById(skillId);
+		final Candidate cdt = candidateDao.getById(principalService.getAuthPrincipal());
+		
+		final DeleteResDto response = new DeleteResDto();
+		final Boolean skill = candidateSkillDao.deleteById(skillId);
+		
+		if(skill) {
+			response.setMessage("Skill has been deleted!");
+			ConnHandler.commit();
+		} else {
+			ConnHandler.rollback();
+		}
+		
+		return response;
+	}
+	
 }
