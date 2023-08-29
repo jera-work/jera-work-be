@@ -1,5 +1,6 @@
 package com.lawencon.admin.dao;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -11,6 +12,7 @@ import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.CandidateProfile;
 import com.lawencon.admin.model.Company;
 import com.lawencon.admin.model.HiredEmployee;
+import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
@@ -51,7 +53,7 @@ public class BlacklistEmployeeDao extends AbstractJpaDao {
 
 	public List<BlacklistEmployee> getByCompany(int firstIndex, int endIndex, String companyId){
 		final String sql = "SELECT "
-				+ "	tbe.id, tc.id AS candidateId, tcp.profile_name, tc2.company_name "
+				+ "	tbe.id, tc.id AS candidateId, tcp.profile_name, tc2.company_name, tbe.created_at "
 				+ "FROM "
 				+ "	t_blacklist_employee tbe "
 				+ "INNER JOIN "
@@ -78,6 +80,7 @@ public class BlacklistEmployeeDao extends AbstractJpaDao {
 				final Object[] blkObjArr = (Object[]) blkObj;
 				final BlacklistEmployee blacklistEmployee = new BlacklistEmployee();
 				blacklistEmployee.setId(blkObjArr[0].toString());
+				blacklistEmployee.setCreatedAt(DateUtil.dateTimeParseCustom(blkObjArr[4].toString()));
 				
 				final Candidate candidate = new Candidate();
 				candidate.setId(blkObjArr[1].toString());
