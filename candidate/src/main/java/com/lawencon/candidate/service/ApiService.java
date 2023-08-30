@@ -72,4 +72,15 @@ public class ApiService {
 		
 		return result;
 	}
+	
+	public <T> T delete(String url, Class<T> type) {
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setBearerAuth(JwtConfig.get());
+		
+		final RequestEntity<Void> request = RequestEntity.delete(url).headers(headers).build();
+		final ResponseEntity<T> response = restTemplate.exchange(request, type);
+		
+		return response.getBody(); 
+	}
 }

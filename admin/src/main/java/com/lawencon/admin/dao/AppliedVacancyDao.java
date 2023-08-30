@@ -88,7 +88,7 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 
 	public List<AppliedVacancy> getByJobVacancyId(String jobVacancyId) {
 		final String sql = "SELECT "
-				+ "	tav.id, tcp.profile_name, tap.progress_name, tas.status_name, tav.created_at  "
+				+ "	tav.id, tcp.profile_name, tap.progress_name, tas.status_name, tav.created_at, tap.progress_code, tas.status_code  "
 				+ "FROM "
 				+ "	t_applied_vacancy tav "
 				+ "INNER JOIN "
@@ -122,11 +122,13 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 				appliedVacancy.setCandidate(candidate);
 				
 				final AppliedStatus appliedStatus = new AppliedStatus();
-				appliedStatus.setStatusName(appObjArr[2].toString());
+				appliedStatus.setStatusName(appObjArr[3].toString());
+				appliedStatus.setStatusCode(appObjArr[6].toString());
 				appliedVacancy.setAppliedStatus(appliedStatus);
 				
 				final AppliedProgress appliedProgress = new AppliedProgress();
-				appliedProgress.setProgressName(appObjArr[3].toString());
+				appliedProgress.setProgressName(appObjArr[2].toString());
+				appliedProgress.setProgressCode(appObjArr[5].toString());
 				appliedVacancy.setAppliedProgress(appliedProgress);
 				
 				appliedVacancy.setCreatedAt(Timestamp.valueOf(appObjArr[4].toString()).toLocalDateTime());
@@ -193,7 +195,7 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 	
 	public List<AppliedVacancy> getByProgressId(String progressId) {
 		final String sql = "SELECT "
-				+ "		tav.id, tav.job_vacancy_id, tjv.vacancy_code, tap.progress_name , tas.status_name "
+				+ "		tav.id, tav.job_vacancy_id, tjv.vacancy_code, tap.progress_name , tas.status_name, tap.progress_code, tas.status_code "
 				+ "FROM "
 				+ "	t_applied_vacancy tav "
 				+ "INNER JOIN "
@@ -226,10 +228,12 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 				
 				final AppliedStatus appliedStatus = new AppliedStatus();
 				appliedStatus.setStatusName(appObjArr[2].toString());
+				appliedStatus.setStatusCode(appObjArr[6].toString());
 				appliedVacancy.setAppliedStatus(appliedStatus);
 				
 				final AppliedProgress appliedProgress = new AppliedProgress();
 				appliedProgress.setProgressName(appObjArr[3].toString());
+				appliedProgress.setProgressCode(appObjArr[5].toString());
 				appliedVacancy.setAppliedProgress(appliedProgress);
 				
 				appliedVacancy.setCreatedAt(Timestamp.valueOf(appObjArr[4].toString()).toLocalDateTime());

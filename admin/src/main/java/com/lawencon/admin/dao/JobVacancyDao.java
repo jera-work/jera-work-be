@@ -286,9 +286,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 				+ "INNER JOIN "
 				+ "	t_degree td ON tvd.degree_id = td.id "
 				+ "INNER JOIN "
-				+ "	t_job_type tjt ON tvd.job_type_id = tjt.id "
-				+ "ORDER BY "
-				+ " random()";
+				+ "	t_job_type tjt ON tvd.job_type_id = tjt.id ";
 		
 		final List<?> jobObjs = ConnHandler.getManager()
 				.createNativeQuery(sql)

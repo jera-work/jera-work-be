@@ -133,13 +133,17 @@ public class OfferingService {
 		final Offering offering = offeringDao.getByAppliedVacancyId(appliedVacancyId);
 		
 		final OfferingResDto response = new OfferingResDto();
-		response.setApprove(offering.getIsApprove());
-		response.setDescription(offering.getDescription());
-		response.setStartDate(DateUtil.dateFormat(offering.getStartDate()));
-		response.setEndDate(DateUtil.dateFormat(offering.getEndDate()));
-		response.setLocation(offering.getOfferingLocation());
+		if(offering != null) {
+			response.setDescription(offering.getDescription());
+			response.setStartDate(DateUtil.dateFormat(offering.getStartDate()));
+			response.setEndDate(DateUtil.dateFormat(offering.getEndDate()));
+			response.setLocation(offering.getOfferingLocation());
+			response.setApprove(offering.getIsApprove());
+			return response;			
+		} else {
+			return null;
+		}
 		
-		return response;
 	}
 	
 	public DeleteResDto deleteOffering(String offeringId) {

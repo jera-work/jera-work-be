@@ -101,7 +101,7 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 	
 	public HiredEmployee getByCandidate(String companyId, String candidateId) {
 		final String sql = "SELECT "
-				+ "	the.id "
+				+ "	the.id, the.company_id "
 				+ "FROM "
 				+ "	t_hired_employee the "
 				+ "INNER JOIN "
@@ -124,6 +124,9 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 					employee = new HiredEmployee();
 					employee.setId(hirObjArr[0].toString());
 					
+					final Company company = new Company();
+					company.setId(hirObjArr[1].toString());
+					employee.setCompany(company);
 				}
 			}
 			return employee;

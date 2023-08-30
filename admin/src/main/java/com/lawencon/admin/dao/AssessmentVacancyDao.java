@@ -47,7 +47,7 @@ public class AssessmentVacancyDao extends AbstractJpaDao {
 	
 	public AssessmentVacancy getByAppliedVacancyId(String appliedVacancyId) {
 		final String sql = "SELECT "
-				+ "	tav.id, tav.is_question, tav.score, tav.notes, tav.start_date, tav.end_date, tav.location "
+				+ "	tav.id, tav.is_question, tav.score, tav.notes, tav.start_date, tav.end_date, tav.assessment_location "
 				+ "FROM "
 				+ "	t_assessment_vacancy tav "
 				+ "WHERE "

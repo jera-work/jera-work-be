@@ -217,7 +217,9 @@ public class AppliedVacancyService {
 			response.setStatusName(av.getAppliedStatus().getStatusName());
 			response.setProgressName(av.getAppliedProgress().getProgressName());
 			response.setCreatedAt(DateUtil.dateTimeFormat(av.getCreatedAt()));
-
+			response.setStatusCode(av.getAppliedStatus().getStatusCode());
+			response.setProgressCode(av.getAppliedProgress().getProgressCode());
+			
 			responses.add(response);
 		});
 
@@ -234,6 +236,8 @@ public class AppliedVacancyService {
 			response.setStatusName(av.getAppliedStatus().getStatusName());
 			response.setProgressName(av.getAppliedProgress().getProgressName());
 			response.setCreatedAt(DateUtil.dateTimeFormat(av.getCreatedAt()));
+			response.setStatusCode(av.getAppliedStatus().getStatusCode());
+			response.setProgressCode(av.getAppliedProgress().getProgressCode());
 
 			responses.add(response);
 		});

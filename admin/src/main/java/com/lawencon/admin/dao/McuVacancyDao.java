@@ -47,20 +47,20 @@ public class McuVacancyDao extends AbstractJpaDao {
 
 	public McuVacancy getByAppliedVacancyId(String appliedVacancyId) {
 		final String sql = "SELECT "
-				+ "tmv.id, tmv.start_date, tmv.end_date"
+				+ "tmv.id, tmv.start_date, tmv.end_date "
 				+ "FROM "
 				+ "t_mcu_vacancy tmv "
 				+ "WHERE "
 				+ "	tmv.applied_vacancy_id = :appliedVacancyId";
 		
-		final Object mcuObj = ConnHandler.getManager()
-				.createNativeQuery(sql)
-				.setParameter("appliedVacancyId", appliedVacancyId)
-				.getSingleResult();
-		
-		final Object[] mcuObjArr = (Object[]) mcuObj;
-		
 		try {
+			final Object mcuObj = ConnHandler.getManager()
+					.createNativeQuery(sql)
+					.setParameter("appliedVacancyId", appliedVacancyId)
+					.getSingleResult();
+			
+			final Object[] mcuObjArr = (Object[]) mcuObj;
+			
 			final McuVacancy mcuVacancy = new McuVacancy();
 			mcuVacancy.setId(mcuObjArr[0].toString());
 			mcuVacancy.setStartDate(LocalDate.parse(mcuObjArr[1].toString()));

@@ -24,6 +24,7 @@ import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.Company;
 import com.lawencon.admin.model.HiredEmployee;
 import com.lawencon.admin.model.JobVacancy;
+import com.lawencon.admin.model.User;
 import com.lawencon.admin.model.VacancyDescription;
 import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.ConnHandler;
@@ -124,5 +125,22 @@ public class HiredEmployeeService {
 		});
 		
 		return responses;
+	}
+	
+	public HiredEmployeeResDto getByCandidateId(String candidateId) {
+		final User user = userDao.getById(principalService.getAuthPrincipal());
+		final HiredEmployee employee = hiredDao.getByCandidate(user.getProfile().getCompany().getId(), candidateId);
+		final Candidate cdt = candidateDao.getById(candidateId);
+		
+		if(employee != null) {
+			final HiredEmployeeResDto response = new HiredEmployeeResDto();
+			response.setCandidateName(cdt.getCandidateProfile().getProfileName());
+			response.setCompanyName(employee.getCompany().getCompanyName());
+			response.setHiredEmployeeId(employee.getId());
+			
+			return response;			
+		} else {
+			return null;
+		}
 	}
 }

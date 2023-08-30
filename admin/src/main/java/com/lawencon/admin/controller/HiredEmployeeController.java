@@ -34,4 +34,10 @@ public class HiredEmployeeController {
 		final List<HiredEmployeeResDto> responses = hiredEmployeeService.getByCompany(startIndex, endIndex);
 		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}
+	
+	@GetMapping("/employee")
+	public ResponseEntity<HiredEmployeeResDto> getByCandidateId(String candidateId){
+		final HiredEmployeeResDto response = hiredEmployeeService.getByCandidateId(candidateId);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }
