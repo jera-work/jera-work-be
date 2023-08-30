@@ -10,12 +10,14 @@ import org.springframework.stereotype.Service;
 import com.lawencon.base.ConnHandler;
 import com.lawencon.candidate.dao.CandidateDao;
 import com.lawencon.candidate.dao.CandidateExperienceDao;
+import com.lawencon.candidate.dto.DeleteResDto;
 import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.experience.CandidateExperienceReqDto;
 import com.lawencon.candidate.dto.experience.CandidateExperienceResDto;
 import com.lawencon.candidate.model.Candidate;
 import com.lawencon.candidate.model.CandidateExperience;
 import com.lawencon.candidate.util.DateUtil;
+import com.lawencon.candidate.util.GenerateUtil;
 import com.lawencon.security.principal.PrincipalServiceImpl;
 
 @Service
@@ -47,11 +49,14 @@ public class CandidateExperienceService {
 					candidateExperience.setFormerPosition(data.get(i).getFormerPosition());
 					candidateExperience.setFormerJobdesk(data.get(i).getFormerJobdesc());
 					candidateExperience.setFormerLocation(data.get(i).getFormerLocation());
-					candidateExperience.setStartDate(DateUtil.dateParse(data.get(i).getStartDate()));
-					candidateExperience.setEndDate(DateUtil.dateParse(data.get(i).getEndDate()));
-
-					candidateExperienceDao.save(candidateExperience);
+					candidateExperience.setStartDate(DateUtil.dateTimeParse(data.get(i).getStartDate()));
+					candidateExperience.setEndDate(DateUtil.dateTimeParse(data.get(i).getEndDate()));
+					candidateExperience.setExperienceCode(GenerateUtil.generateRandomCode());
+					
+					final CandidateExperience expDb = candidateExperienceDao.save(candidateExperience);
+					
 					data.get(i).setCandidateEmail(candidate.getCandidateEmail());
+					data.get(i).setExperienceCode(expDb.getExperienceCode());
 				}
 			}
 
@@ -79,17 +84,35 @@ public class CandidateExperienceService {
 		
 		for (CandidateExperience experience : experiences) {
 			final CandidateExperienceResDto response = new CandidateExperienceResDto();
-			response.setEndDate(experience.getEndDate().toString());
+			response.setEndDate(DateUtil.dateTimeFormatMonthYear(experience.getEndDate()));
 			response.setFormerInstitution(experience.getFormerInstitution());
 			response.setFormerJobdesc(experience.getFormerJobdesk());
 			response.setFormerLocation(experience.getFormerLocation());
 			response.setFormerPosition(experience.getFormerPosition());
 			response.setId(experience.getId());
-			response.setStartDate(experience.getStartDate().toString());
+			response.setStartDate(DateUtil.dateTimeFormatMonthYear(experience.getStartDate()));
 			responses.add(response);
 		}
 		
 		return responses;
+	}
+	
+	/* delete experiences for candidate */
+	public DeleteResDto deleteExperience(String expId) {
+		ConnHandler.begin();
+		final DeleteResDto response = new DeleteResDto();
+		final CandidateExperience exp = candidateExperienceDao.getById(expId);
+		apiService.delete("http://localhost:8081/experiences/?experienceCode=" + exp.getExperienceCode(), DeleteResDto.class);
+		final Boolean result = candidateExperienceDao.deleteById(exp.getId());
+		
+		if(result) {
+			response.setMessage("Experience has been deleted!");
+			ConnHandler.commit();
+		} else {
+			ConnHandler.rollback();
+		}
+		
+		return response;
 	}
 
 }

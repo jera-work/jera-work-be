@@ -7,20 +7,21 @@ import java.time.format.DateTimeFormatter;
 public class DateUtil {
 
 	public static String dateTimeFormat(LocalDateTime localDateTime) {
-		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss");
 
 		return localDateTime.format(formatter);
 	}
 
 	public static String dateFormat(LocalDate date) {
-		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 		return date.format(formatter);
 	}
 
 	public static LocalDateTime dateTimeParse(String dateStr) {
+//		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
 		final LocalDateTime date = LocalDateTime.parse(dateStr, DateTimeFormatter.ISO_DATE_TIME);
-
+		
 		return date;
 	}
 
@@ -44,7 +45,7 @@ public class DateUtil {
 		return date;
 	}
 	
-	public static String yearFormat(LocalDate date) {
+	public static String yearFormat(LocalDateTime date) {
 		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
 
 		return date.format(formatter);

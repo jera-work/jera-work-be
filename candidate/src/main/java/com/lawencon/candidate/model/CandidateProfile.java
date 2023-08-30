@@ -12,6 +12,8 @@ import com.lawencon.base.BaseEntity;
 @Table(name = "t_candidate_profile")
 public class CandidateProfile extends BaseEntity {
 
+	@Column(name = "profile_code", length = 5, nullable = false)
+	private String profileCode;
 	@Column(name = "profile_name", length = 50, nullable = false)
 	private String profileName;
 	@Column(name = "profile_address", length = 50, nullable = true)
@@ -36,6 +38,14 @@ public class CandidateProfile extends BaseEntity {
 
 	@Column(name = "religion_id", nullable = true)
 	private String religion;
+
+	public String getProfileCode() {
+		return profileCode;
+	}
+
+	public void setProfileCode(String profileCode) {
+		this.profileCode = profileCode;
+	}
 
 	public String getProfileName() {
 		return profileName;

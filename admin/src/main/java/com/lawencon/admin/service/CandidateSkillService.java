@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.lawencon.admin.dao.CandidateDao;
 import com.lawencon.admin.dao.CandidateSkillDao;
 import com.lawencon.admin.dao.SkillDao;
+import com.lawencon.admin.dto.DeleteResDto;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.candidateskill.CandidateSkillReqDto;
 import com.lawencon.admin.dto.candidateskill.CandidateSkillResDto;
@@ -38,14 +39,13 @@ public class CandidateSkillService {
 				final Candidate candidate = candidateDao.getByEmail(data.getCandidateEmail());
 				final CandidateSkill skill = new CandidateSkill();
 				skill.setCandidate(candidate);
+				skill.setSkillCode(data.getSkillCode());
 				if(skillDao.getById(data.getSkillId()) != null && data.getSkillId() != "") {
 					skill.setSkill(skillDao.getById(data.getSkillId()));
 				} else {
 					skill.setSkillName(data.getSkillId());
 				}
 				final CandidateSkill skillDb = candidateSkillDao.save(skill);
-				
-				data.setCandidateEmail(candidate.getCandidateEmail());
 				response.setId(skillDb.getId());
 			}
 			response.setMessage("Skill choosen successfully");
@@ -93,5 +93,22 @@ public class CandidateSkillService {
 			responses.add(response);
 		}
 		return responses;
+	}
+	
+	/* delete skills for candidate */
+	public DeleteResDto deleteByCode(String skillCode) {
+		ConnHandler.begin();
+		
+		final DeleteResDto response = new DeleteResDto();
+		final CandidateSkill skill = candidateSkillDao.getByCode(skillCode);
+		final Boolean result = candidateSkillDao.deleteById(skill.getId());
+		if(result) {
+			response.setMessage("deleted");
+			ConnHandler.commit();
+		} else {
+			ConnHandler.rollback();
+		}
+		
+		return response;
 	}
 }

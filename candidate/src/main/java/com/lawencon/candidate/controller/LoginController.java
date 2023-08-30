@@ -60,6 +60,7 @@ public class LoginController {
 		if(user.getCandidateProfile().getPhoto() != null) {
 			loginRes.setPhotoId(user.getCandidateProfile().getPhoto().getId());
 		}
+		loginRes.setCandidateCode(user.getCandidateCode());
 
 		return new ResponseEntity<>(loginRes, HttpStatus.OK);
 	}

@@ -38,7 +38,6 @@
 --DROP TABLE IF EXISTS t_role;
 --DROP TABLE IF EXISTS t_file;
 
-
 CREATE TABLE t_file (
 	id VARCHAR(36) NOT NULL,
 	file_content TEXT NOT NULL,
@@ -77,7 +76,8 @@ CREATE TABLE t_nationality (
 	is_active boolean NOT NULL,
 	ver int NOT NULL,
 	
-	PRIMARY KEY (id)
+	PRIMARY KEY (id),
+	UNIQUE (nationality_code)
 );
 
 CREATE TABLE t_age_vacancy (
@@ -415,6 +415,7 @@ CREATE TABLE t_question (
 	is_active boolean NOT NULL,
 	ver int NOT NULL,
 	PRIMARY KEY (id),
+	UNIQUE (question_code),
 	FOREIGN KEY (job_vacancy_id)
 		REFERENCES t_job_vacancy (id)
 );
@@ -437,6 +438,7 @@ CREATE TABLE t_question_option(
 
 CREATE TABLE t_candidate_profile (
 	id varchar(36) NOT NULL,
+	profile_code varchar(5) NOT NULL,
 	profile_name varchar(50) NOT NULL,
 	profile_address varchar(50),
 	phone_number varchar(14),
@@ -454,6 +456,7 @@ CREATE TABLE t_candidate_profile (
 	ver int NOT NULL,
 	
 	PRIMARY KEY(id),
+	UNIQUE (profile_code),
 	FOREIGN KEY(gender_id)
 		REFERENCES t_gender(id),
 	FOREIGN KEY(nationality_id)
@@ -468,6 +471,7 @@ CREATE TABLE t_candidate_profile (
 
 CREATE TABLE t_candidate (
 	id varchar(36) NOT NULL,
+	candidate_code varchar(5) NOT NULL,
 	candidate_email varchar(30) NOT NULL,
 	candidate_profile_id varchar NOT NULL,
 	created_by varchar NOT NULL,
@@ -479,19 +483,21 @@ CREATE TABLE t_candidate (
 	
 	PRIMARY KEY(id),
 	UNIQUE (candidate_email),
+	UNIQUE (candidate_code),
 	FOREIGN KEY(candidate_profile_id)
 		REFERENCES t_candidate_profile(id)
 );
 
 CREATE TABLE t_candidate_education (
 	id varchar(36) NOT NULL,
+	education_code varchar(5) NOT NULL,
 	candidate_id varchar NOT NULL,
 	institution_name varchar(50) NOT NULL,
 	degree_id varchar NOT NULL,
 	majors_id varchar NOT NULL,
 	gpa numeric NOT NULL,
-	start_year date NOT NULL,
-	end_year date NOT NULL,
+	start_year timestamp NOT NULL,
+	end_year timestamp NOT NULL,
 	institution_adress TEXT,
 	created_by varchar NOT NULL,
 	created_at timestamp NOT NULL,
@@ -500,12 +506,14 @@ CREATE TABLE t_candidate_education (
 	is_active boolean NOT NULL,
 	ver int NOT NULL,
 	PRIMARY KEY(id),
+	UNIQUE (education_code),
 	FOREIGN KEY(candidate_id)
 		REFERENCES t_candidate(id)
 );
 
 CREATE TABLE t_candidate_document (
 	id varchar(36) NOT NULL,
+	document_code varchar(5) NOT NULL,
 	candidate_id varchar NOT NULL,
 	file_id varchar NOT NULL,
 	document_type_id varchar NOT NULL,
@@ -516,6 +524,7 @@ CREATE TABLE t_candidate_document (
 	is_active boolean NOT NULL,
 	ver int NOT NULL,
 	PRIMARY KEY (id),
+	UNIQUE (document_code),
 	FOREIGN KEY (candidate_id)
 		REFERENCES t_candidate(id),
 	FOREIGN KEY (file_id)
@@ -526,13 +535,14 @@ CREATE TABLE t_candidate_document (
 
 CREATE TABLE t_candidate_experience (
 	id varchar(36) NOT NULL,
+	experience_code varchar(5) NOT NULL,
 	candidate_id varchar NOT NULL,
 	former_position TEXT NOT NULL,
 	former_institution varchar NOT NULL,
 	former_location varchar NOT NULL,
 	former_jobdesk varchar NOT NULL,
-	start_date date NOT NULL,
-	end_date date NOT NULL,
+	start_date timestamp NOT NULL,
+	end_date timestamp NOT NULL,
 	created_by varchar NOT NULL,
 	created_at timestamp NOT NULL,
 	updated_by varchar,
@@ -540,12 +550,14 @@ CREATE TABLE t_candidate_experience (
 	is_active boolean NOT NULL,
 	ver int NOT NULL,
 	PRIMARY KEY (id),
+	UNIQUE (experience_code),
 	FOREIGN KEY (candidate_id)
 		REFERENCES t_candidate(id)
 );
 
 CREATE TABLE t_candidate_skill (
 	id varchar(36) NOT NULL,
+	skill_code varchar(5) NOT NULL,
 	candidate_id varchar NOT NULL,
 	skill_id varchar,
 	skill_name varchar(255),
@@ -556,6 +568,7 @@ CREATE TABLE t_candidate_skill (
 	is_active boolean NOT NULL,
 	ver int NOT NULL,
 	PRIMARY KEY (id),
+	UNIQUE (skill_code),
 	FOREIGN KEY (candidate_id)
 		REFERENCES t_candidate(id),
 	FOREIGN KEY (skill_id)
@@ -647,8 +660,8 @@ CREATE TABLE t_assessment_vacancy (
 	is_question BOOLEAN,
 	score FLOAT,
 	notes TEXT,
-	start_date DATE NOT NULL,
-	end_date DATE NOT NULL,
+	start_date timestamp NOT NULL,
+	end_date timestamp NOT NULL,
 	assessment_location TEXT NOT NULL,
 	created_by varchar NOT NULL,
 	created_at timestamp NOT NULL,
@@ -665,8 +678,8 @@ CREATE TABLE t_interview_vacancy (
 	id VARCHAR(36) NOT NULL,
 	applied_vacancy_id VARCHAR NOT NULL,
 	notes TEXT,
-	start_date DATE NOT NULL,
-	end_date DATE NOT NULL,
+	start_date timestamp NOT NULL,
+	end_date timestamp NOT NULL,
 	interview_location TEXT NOT NULL,
 	created_by varchar NOT NULL,
 	created_at timestamp NOT NULL,
@@ -682,8 +695,8 @@ CREATE TABLE t_interview_vacancy (
 CREATE TABLE t_mcu_vacancy (
 	id VARCHAR(36) NOT NULL,
 	applied_vacancy_id VARCHAR NOT NULL,
-	start_date DATE NOT NULL,
-	end_date DATE NOT NULL,
+	start_date timestamp NOT NULL,
+	end_date timestamp NOT NULL,
 	created_by varchar NOT NULL,
 	created_at timestamp NOT NULL,
 	updated_by varchar,
@@ -697,8 +710,8 @@ CREATE TABLE t_offering(
 	id VARCHAR(36) NOT NULL,
 	applied_vacancy_id VARCHAR NOT NULL,
 	is_approve BOOLEAN,
-	start_date DATE NOT NULL,
-	end_date DATE NOT NULL,
+	start_date timestamp NOT NULL,
+	end_date timestamp NOT NULL,
 	description TEXT NOT NULL,
 	offering_location TEXT NOT NULL,
 	created_by varchar NOT NULL,

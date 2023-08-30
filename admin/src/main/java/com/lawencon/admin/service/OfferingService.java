@@ -15,6 +15,7 @@ import com.lawencon.admin.dao.OfferingDao;
 import com.lawencon.admin.dao.UserDao;
 import com.lawencon.admin.dao.VacancyDescriptionDao;
 import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.email.EmailReqDto;
 import com.lawencon.admin.dto.email.OfferingReqDto;
 import com.lawencon.admin.dto.offering.InsertOfferingReqDto;
@@ -60,10 +61,10 @@ public class OfferingService {
 		final Offering offering = new Offering();
 		offering.setAppliedVacancy(appliedVacancy);
 		offering.setDescription(data.getDescription());
-		offering.setEndDate(DateUtil.dateParse(data.getEndDate()));
+		offering.setEndDate(DateUtil.dateTimeParse(data.getEndDate()));
 		offering.setIsApprove(data.getIsApprove());
 		offering.setOfferingLocation(data.getOfferingLocation());
-		offering.setStartDate(DateUtil.dateParse(data.getStartDate()));
+		offering.setStartDate(DateUtil.dateTimeParse(data.getStartDate()));
 		final Offering offeringDb = offeringDao.saveAndFlush(offering);
 		ConnHandler.commit();
 		sendOffering(data, appliedVacancy.getCandidate().getCandidateEmail());
@@ -131,14 +132,34 @@ public class OfferingService {
 		final OfferingResDto response = new OfferingResDto();
 		if(offering != null) {
 			response.setDescription(offering.getDescription());
-			response.setStartDate(DateUtil.dateFormat(offering.getStartDate()));
-			response.setEndDate(DateUtil.dateFormat(offering.getEndDate()));
+			response.setStartDate(DateUtil.dateTimeFormat(offering.getStartDate()));
+			response.setEndDate(DateUtil.dateTimeFormat(offering.getEndDate()));
 			response.setLocation(offering.getOfferingLocation());
 			response.setApprove(offering.getIsApprove());
+			response.setOfferingId(offering.getId());
 			return response;			
 		} else {
 			return null;
 		}
 		
+	}
+	
+	public UpdateResDto updateIsApproved(String offeringId) {
+		ConnHandler.begin();
+		final UpdateResDto response = new UpdateResDto();
+		
+		final Offering offering = offeringDao.getById(offeringId);
+		offering.setIsApprove(true);
+		final Offering offeringDb = offeringDao.saveAndFlush(offering);
+		
+		if(offeringDb.getIsApprove()) {
+			response.setVer(offeringDb.getVersion());
+			response.setMessage("You have accepted the offer!");
+			ConnHandler.commit();
+		} else {
+			ConnHandler.rollback();
+		}
+		
+		return response;
 	}
 }

@@ -10,6 +10,15 @@ public class CandidateEducationCreateReqDto {
 	private String startYear;
 	private String endYear;
 	private String institutionAddress;
+	private String educationCode;
+
+	public String getEducationCode() {
+		return educationCode;
+	}
+
+	public void setEducationCode(String educationCode) {
+		this.educationCode = educationCode;
+	}
 
 	public String getCandidateEmail() {
 		return candidateEmail;

@@ -5,12 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lawencon.candidate.dto.DeleteResDto;
 import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.education.CandidateEducationCreateReqDto;
 import com.lawencon.candidate.dto.education.CandidateEducationResDto;
@@ -33,5 +35,11 @@ public class CandidateEducationController {
 	public ResponseEntity<List<CandidateEducationResDto>> getEducations(){
 		final List<CandidateEducationResDto> responses = eduService.getEducationsList();
 		return new ResponseEntity<List<CandidateEducationResDto>>(responses, HttpStatus.OK);
+	}
+	
+	@DeleteMapping
+	public ResponseEntity<DeleteResDto> deleteEducation(String educationId){
+		final DeleteResDto response = eduService.deleteEducation(educationId);
+		return new ResponseEntity<DeleteResDto>(response, HttpStatus.OK);
 	}
 }

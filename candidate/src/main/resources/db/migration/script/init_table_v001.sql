@@ -70,6 +70,7 @@ CREATE TABLE t_job_vacancy (
 
 CREATE TABLE t_candidate_profile (
 	id varchar(36) NOT NULL,
+	profile_code varchar(5) NOT NULL,
 	profile_name varchar(50) NOT NULL,
 	profile_address varchar(50),
 	phone_number varchar(14),
@@ -87,12 +88,14 @@ CREATE TABLE t_candidate_profile (
 	ver int NOT NULL,
 	
 	PRIMARY KEY(id),
+	UNIQUE (profile_code),
 	FOREIGN KEY(photo_id)
 		REFERENCES t_file(id)
 );
 
 CREATE TABLE t_candidate (
 	id varchar(36) NOT NULL,
+	candidate_code varchar(5) NOT NULL,
 	candidate_email varchar(30) NOT NULL,
 	candidate_password text NOT NULL,
 	candidate_profile_id varchar NOT NULL,
@@ -105,12 +108,14 @@ CREATE TABLE t_candidate (
 	
 	PRIMARY KEY(id),
 	UNIQUE (candidate_email),
+	UNIQUE (candidate_code),
 	FOREIGN KEY(candidate_profile_id)
 		REFERENCES t_candidate_profile(id)
 );
 
 CREATE TABLE t_candidate_education (
 	id varchar(36) NOT NULL,
+	education_code varchar(5) NOT NULL,
 	candidate_id varchar NOT NULL,
 	institution_name varchar(50) NOT NULL,
 	degree_id varchar NOT NULL,
@@ -127,12 +132,14 @@ CREATE TABLE t_candidate_education (
 	ver int NOT NULL,
 	
 	PRIMARY KEY(id),
+	UNIQUE (education_code),
 	FOREIGN KEY(candidate_id)
 		REFERENCES t_candidate(id)
 );
 
 CREATE TABLE t_candidate_document (
 	id varchar(36) NOT NULL,
+	document_code varchar(5) NOT NULL,
 	candidate_id varchar NOT NULL,
 	file_id varchar NOT NULL,
 	document_type_id varchar NOT NULL,
@@ -144,12 +151,14 @@ CREATE TABLE t_candidate_document (
 	ver int NOT NULL,
 	
 	PRIMARY KEY (id),
+	UNIQUE (document_code),
 	FOREIGN KEY (candidate_id)
 		REFERENCES t_candidate(id)
 );
 
 CREATE TABLE t_candidate_experience (
 	id varchar(36) NOT NULL,
+	experience_code varchar(5) NOT NULL,
 	candidate_id varchar NOT NULL,
 	former_position TEXT NOT NULL,
 	former_institution varchar NOT NULL,
@@ -165,12 +174,14 @@ CREATE TABLE t_candidate_experience (
 	ver int NOT NULL,
 	
 	PRIMARY KEY (id),
+	UNIQUE (experience_code),
 	FOREIGN KEY (candidate_id)
 		REFERENCES t_candidate(id)
 );
 
 CREATE TABLE t_candidate_skill (
 	id varchar(36) NOT NULL,
+	skill_code varchar(5) NOT NULL,
 	candidate_id varchar NOT NULL,
 	skill_id varchar,
 	skill_name varchar(255),
@@ -182,6 +193,7 @@ CREATE TABLE t_candidate_skill (
 	ver int NOT NULL,
 	
 	PRIMARY KEY (id),
+	UNIQUE (skill_code),
 	FOREIGN KEY (candidate_id)
 		REFERENCES t_candidate(id)
 );

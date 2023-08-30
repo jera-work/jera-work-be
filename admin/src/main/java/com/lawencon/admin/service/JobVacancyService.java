@@ -208,8 +208,8 @@ public class JobVacancyService {
 	public List<JobVacancyResDto> jobByCompany(int startIndex, int endIndex) {
 		final List<JobVacancyResDto> responses = new ArrayList<>();
 
-		final Company company = companyDao
-				.getById(userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId());
+		final User user = userDao.getById(principalService.getAuthPrincipal());
+		final Company company = companyDao.getById(user.getProfile().getCompany().getId());
 
 		jobDao.getJobByCompany(startIndex, endIndex, company.getId()).forEach(jv -> {
 			final JobVacancyResDto response = new JobVacancyResDto();

@@ -2,18 +2,27 @@ package com.lawencon.admin.dto.offering;
 
 public class OfferingResDto {
 
-	private boolean isApprove;
+	private boolean approve;
 	private String startDate;
 	private String endDate;
 	private String description;
 	private String location;
+	private String offeringId;
 
-	public boolean isApprove() {
-		return isApprove;
+	public String getOfferingId() {
+		return offeringId;
 	}
 
-	public void setApprove(boolean isApprove) {
-		this.isApprove = isApprove;
+	public void setOfferingId(String offeringId) {
+		this.offeringId = offeringId;
+	}
+
+	public boolean isApprove() {
+		return approve;
+	}
+
+	public void setApprove(boolean approve) {
+		this.approve = approve;
 	}
 
 	public String getStartDate() {

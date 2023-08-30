@@ -99,8 +99,13 @@ public class SendMailService {
 				
 				final Context context = new Context();
 				context.setVariable("data", data);
-				final String htmlContent = templateEngine.process("assessment", context);
-				helper.setText(htmlContent, true);
+				if(data.getUrl() != null) {
+					final String htmlContent = templateEngine.process("assessment-test", context);					
+					helper.setText(htmlContent, true);
+				} else {
+					final String htmlContent = templateEngine.process("assessment-test", context);
+					helper.setText(htmlContent, true);
+				}
 				
 				byte[] decodedBytes = Base64.getDecoder().decode(data.getCompanyPhoto());
 				final Resource imageJeraWork = new ClassPathResource("/html-template/image/JERA-WORK.jpg");

@@ -36,8 +36,8 @@ public class McuVacancyService {
 			final AppliedVacancy appliedVacancy = appliedVacancyDao.getById(data.getAppliedVacancyId()); 
 			final McuVacancy mcu = new McuVacancy();
 			mcu.setAppliedVacancy(appliedVacancy);
-			mcu.setEndDate(DateUtil.dateParse(data.getEndDate()));
-			mcu.setStartDate(DateUtil.dateParse(data.getStartDate()));
+			mcu.setEndDate(DateUtil.dateTimeParse(data.getEndDate()));
+			mcu.setStartDate(DateUtil.dateTimeParse(data.getStartDate()));
 			final McuVacancy mcuDb = mcuDao.saveAndFlush(mcu);
 			ConnHandler.commit();
 			
@@ -85,8 +85,8 @@ public class McuVacancyService {
 		final McuVacancyResDto response = new McuVacancyResDto();
 		
 		if(mcuVacancy != null) {
-			response.setStartDate(DateUtil.dateFormat(mcuVacancy.getStartDate()));
-			response.setEndDate(DateUtil.dateFormat(mcuVacancy.getEndDate()));			
+			response.setStartDate(DateUtil.dateTimeFormat(mcuVacancy.getStartDate()));
+			response.setEndDate(DateUtil.dateTimeFormat(mcuVacancy.getEndDate()));			
 			return response;
 		} else {
 			return null;

@@ -49,6 +49,7 @@ public class CandidateDocumentService {
 				final CandidateDocument doc = new CandidateDocument();
 				doc.setCandidate(candidate);
 				doc.setDocumentType(typeDao.getByIdRef(data.getDocumentTypeId()));
+				doc.setDocumentCode(data.getDocumentCode());
 				doc.setFile(fileDb);
 				final CandidateDocument docDb = docsDao.save(doc);
 

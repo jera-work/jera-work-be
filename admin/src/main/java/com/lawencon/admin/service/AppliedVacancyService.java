@@ -235,7 +235,7 @@ public class AppliedVacancyService {
 			response.setProfileName(av.getCandidate().getCandidateProfile().getProfileName());
 			response.setStatusName(av.getAppliedStatus().getStatusName());
 			response.setProgressName(av.getAppliedProgress().getProgressName());
-			response.setCreatedAt(DateUtil.dateTimeFormat(av.getCreatedAt()));
+			response.setCreatedAt(av.getCreatedAt().toString());
 			response.setStatusCode(av.getAppliedStatus().getStatusCode());
 			response.setProgressCode(av.getAppliedProgress().getProgressCode());
 
@@ -293,6 +293,7 @@ public class AppliedVacancyService {
 				jobVacancyDao.getByCode(jobCode).getId(), candidateDao.getByEmail(candidateEmail).getId());
 		
 		response.setProgressCode(appliedVacancy.getAppliedProgress().getProgressCode());
+		response.setAppliedVacancyFromAdminId(appliedVacancy.getId());
 		return response;
 	}
 }

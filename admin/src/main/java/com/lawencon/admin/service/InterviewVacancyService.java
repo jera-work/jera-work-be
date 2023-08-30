@@ -37,10 +37,10 @@ public class InterviewVacancyService {
 		final AppliedVacancy appliedVacancy = appliedVacancyDao.getById(data.getAppliedVacancyId());
 		final InterviewVacancy interview = new InterviewVacancy();
 		interview.setAppliedVacancy(appliedVacancy);
-		interview.setEndDate(DateUtil.dateParse(data.getEndDate()));
+		interview.setEndDate(DateUtil.dateTimeParse(data.getEndDate()));
 		interview.setInterviewLocation(data.getInterviewLocation());
 		interview.setNotes(data.getNotes());
-		interview.setStartDate(DateUtil.dateParse(data.getStartDate()));
+		interview.setStartDate(DateUtil.dateTimeParse(data.getStartDate()));
 		final InterviewVacancy interviewDb = interviewDao.saveAndFlush(interview);
 		
 		ConnHandler.commit();
@@ -85,8 +85,8 @@ public class InterviewVacancyService {
 		
 		if(interviewVacancy != null) {
 			final InterviewVacancyResDto response = new InterviewVacancyResDto();
-			response.setStartDate(DateUtil.dateFormat(interviewVacancy.getStartDate()));
-			response.setEndDate(DateUtil.dateFormat(interviewVacancy.getEndDate()));
+			response.setStartDate(DateUtil.dateTimeFormat(interviewVacancy.getStartDate()));
+			response.setEndDate(DateUtil.dateTimeFormat(interviewVacancy.getEndDate()));
 			response.setNotes(interviewVacancy.getNotes());
 			response.setLocation(interviewVacancy.getInterviewLocation());
 			response.setInterviewId(interviewVacancy.getId());

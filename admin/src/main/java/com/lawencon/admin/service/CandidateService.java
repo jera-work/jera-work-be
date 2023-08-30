@@ -45,12 +45,14 @@ public class CandidateService {
 			ConnHandler.begin();
 			final CandidateProfile candidateProfile = new CandidateProfile();
 			candidateProfile.setProfileName(data.getProfileName());
+			candidateProfile.setProfileCode(data.getProfileCode());
 			final Supplier<String> systemId = () -> candidateDao.getSystemId();
 			final CandidateProfile candidateProfileDb = candidateProfileDao.saveNoLogin(candidateProfile, systemId);
 
 			final Candidate candidate = new Candidate();
 			candidate.setCandidateEmail(data.getCandidateEmail());
 			candidate.setCandidateProfile(candidateProfileDb);
+			candidate.setCandidateCode(data.getCandidateCode());
 			final Candidate candidateDb = candidateDao.saveNoLogin(candidate, systemId);
 
 			final InsertResDto response = new InsertResDto();

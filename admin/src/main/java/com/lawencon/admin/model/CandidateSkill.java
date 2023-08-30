@@ -12,6 +12,9 @@ import com.lawencon.base.BaseEntity;
 @Table(name = "t_candidate_skill")
 public class CandidateSkill extends BaseEntity {
 
+	@Column(name = "skill_code", length = 5, nullable = false)
+	private String skillCode;
+
 	@OneToOne
 	@JoinColumn(name = "skill_id")
 	private Skill skill;
@@ -22,6 +25,14 @@ public class CandidateSkill extends BaseEntity {
 
 	@Column(name = "skill_name", length = 255)
 	private String skillName;
+
+	public String getSkillCode() {
+		return skillCode;
+	}
+
+	public void setSkillCode(String skillCode) {
+		this.skillCode = skillCode;
+	}
 
 	public String getSkillName() {
 		return skillName;

@@ -53,5 +53,15 @@ public class CandidateSkillDao extends AbstractJpaDao {
 				.getResultList();
 		return results;
 	}
+	
+	public CandidateSkill getByCode(String code) {
+		final String sql = "SELECT * FROM t_candidate_skill WHERE skill_code LIKE :code ; ";
+		
+		final CandidateSkill result = (CandidateSkill)ConnHandler.getManager().createNativeQuery(sql, CandidateSkill.class)
+				.setParameter("code", code)
+				.getSingleResult();
+		
+		return result;
+	}
 
 }

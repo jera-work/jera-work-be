@@ -54,4 +54,13 @@ public class CandidateEducationDao extends AbstractJpaDao {
 		return results;
 	}
 
+	public CandidateEducation getByCode(String code) {
+		final String sql = "SELECT * FROM t_candidate_education WHERE education_code LIKE :code ; ";
+		
+		final CandidateEducation result = (CandidateEducation)ConnHandler.getManager().createNativeQuery(sql, CandidateEducation.class)
+				.setParameter("code", code)
+				.getSingleResult();
+		
+		return result;
+	}
 }

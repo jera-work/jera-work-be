@@ -5,12 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lawencon.candidate.dto.DeleteResDto;
 import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.experience.CandidateExperienceReqDto;
 import com.lawencon.candidate.dto.experience.CandidateExperienceResDto;
@@ -33,5 +35,11 @@ public class CandidateExperienceController {
 	public ResponseEntity<List<CandidateExperienceResDto>> getExperiences(){
 		final List<CandidateExperienceResDto> responses = expService.getExperiences();
 		return new ResponseEntity<List<CandidateExperienceResDto>>(responses, HttpStatus.OK);
+	}
+	
+	@DeleteMapping
+	public ResponseEntity<DeleteResDto> deleteExperience(String experienceId){
+		final DeleteResDto response = expService.deleteExperience(experienceId);
+		return new ResponseEntity<DeleteResDto>(response, HttpStatus.OK);
 	}
 }

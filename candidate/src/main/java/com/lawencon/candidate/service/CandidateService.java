@@ -24,6 +24,7 @@ import com.lawencon.candidate.login.LoginReqDto;
 import com.lawencon.candidate.model.Candidate;
 import com.lawencon.candidate.model.CandidateProfile;
 import com.lawencon.candidate.model.File;
+import com.lawencon.candidate.util.GenerateUtil;
 import com.lawencon.security.principal.PrincipalServiceImpl;
 
 @Service
@@ -49,17 +50,20 @@ public class CandidateService implements UserDetailsService {
 			ConnHandler.begin();
 			final CandidateProfile candidateProfile = new CandidateProfile();
 			candidateProfile.setProfileName(data.getProfileName());
-
+			candidateProfile.setProfileCode(GenerateUtil.generateRandomCode());
 			final Supplier<String> systemId = () -> candidateDao.getSystemId();
 			final CandidateProfile candidateProfileDb = candidateProfileDao.saveNoLogin(candidateProfile, systemId);
-
+			
 			final String passwordEncoded = passwordEncoder.encode(data.getCandidatePassword());
 			final Candidate candidate = new Candidate();
 			candidate.setCandidateEmail(data.getCandidateEmail());
 			candidate.setCandidatePassword(passwordEncoded);
 			candidate.setCandidateProfile(candidateProfileDb);
+			candidate.setCandidateCode(GenerateUtil.generateRandomCode());
 			final Candidate candidateDb = candidateDao.saveNoLogin(candidate, systemId);
 
+			data.setCandidateCode(candidateDb.getCandidateCode());
+			data.setProfileCode(candidateProfileDb.getProfileCode());
 			final HttpStatus adminResponse = apiService.writeTo("http://localhost:8081/candidates/register", data);
 
 			if (adminResponse.equals(HttpStatus.CREATED)) {
@@ -153,7 +157,7 @@ public class CandidateService implements UserDetailsService {
 				cdt.setCandidatePassword(passwordEncoder.encode(data.getNewPassword()));
 				final Candidate cdtDb = candidateDao.saveAndFlush(cdt);
 				final UpdateResDto response = new UpdateResDto();
-				response.setMessage("Update Password Berhasil");
+				response.setMessage("Your password has been successfully changed!");
 				response.setVer(cdtDb.getVersion());
 				ConnHandler.commit();
 				return response;

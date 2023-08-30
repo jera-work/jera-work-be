@@ -205,6 +205,8 @@ ConnHandler.begin();
 		
 		response.setProgressCode(responseFromAdmins.getProgressCode());
 		response.setJobVacancyId(appliedVacancy.getJobVacancy().getId());
+		response.setAppliedVacancyFromAdminId(responseFromAdmins.getAppliedVacancyFromAdminId());
+		
 		return response;
 	}
 }

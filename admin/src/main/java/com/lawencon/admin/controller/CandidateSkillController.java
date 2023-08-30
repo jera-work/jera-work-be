@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lawencon.admin.dto.DeleteResDto;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.candidateskill.CandidateSkillReqDto;
 import com.lawencon.admin.dto.candidateskill.CandidateSkillResDto;
@@ -36,4 +38,9 @@ public class CandidateSkillController {
 		return new ResponseEntity<List<CandidateSkillResDto>>(responses, HttpStatus.CREATED);
 	}
 
+	@DeleteMapping
+	public ResponseEntity<DeleteResDto> deleteSkill(String skillCode){
+		final DeleteResDto response = skillService.deleteByCode(skillCode);
+		return new ResponseEntity<DeleteResDto>(response, HttpStatus.OK);
+	}
 }
