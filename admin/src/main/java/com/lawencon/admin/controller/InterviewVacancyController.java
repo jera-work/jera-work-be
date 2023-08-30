@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lawencon.admin.dto.DeleteResDto;
 import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.interviewvacancy.DeleteInterviewVacancyReqDto;
 import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.assessmentvacancy.UpdateNotesProgressReqDto;
 import com.lawencon.admin.dto.interviewvacancy.InsertInterviewVacancyReqDto;
@@ -28,6 +30,12 @@ public class InterviewVacancyController {
 	public ResponseEntity<InsertResDto> insertInterview(@RequestBody InsertInterviewVacancyReqDto data) {
 		final InsertResDto response = interviewService.insertInterview(data);
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/delete")
+	public ResponseEntity<DeleteResDto> deleteInterview(@RequestBody DeleteInterviewVacancyReqDto data){
+		final DeleteResDto response = interviewService.deleteInterview(data.getId());
+		return new ResponseEntity<DeleteResDto>(response, HttpStatus.OK);
 	}
 
 	@GetMapping

@@ -14,6 +14,7 @@ import com.lawencon.admin.dao.JobVacancyDao;
 import com.lawencon.admin.dao.OfferingDao;
 import com.lawencon.admin.dao.UserDao;
 import com.lawencon.admin.dao.VacancyDescriptionDao;
+import com.lawencon.admin.dto.DeleteResDto;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.email.EmailReqDto;
@@ -119,7 +120,8 @@ public class OfferingService {
 	        final EmailReqDto emailReqDto = new EmailReqDto();
 			emailReqDto.setSubject("Surat Penawaran Kerja");
 			emailReqDto.setEmail(email);
-			mailService.sendOffering(emailReqDto, offering, dataOut);				
+			mailService.sendOffering(emailReqDto, offering, dataOut);	
+			            
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -161,5 +163,19 @@ public class OfferingService {
 		}
 		
 		return response;
+	}
+	
+	public DeleteResDto deleteOffering(String offeringId) {
+		try {
+			ConnHandler.begin();
+			offeringDao.deleteById(offeringId);
+			ConnHandler.commit();
+			final DeleteResDto response = new DeleteResDto();
+			response.setMessage("Offering has been deleted!");
+			return response;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
