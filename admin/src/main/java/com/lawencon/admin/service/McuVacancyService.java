@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.lawencon.admin.dao.AppliedVacancyDao;
 import com.lawencon.admin.dao.JobVacancyDao;
 import com.lawencon.admin.dao.McuVacancyDao;
+import com.lawencon.admin.dto.DeleteResDto;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.email.EmailReqDto;
 import com.lawencon.admin.dto.email.McuVacancyReqDto;
@@ -36,8 +37,8 @@ public class McuVacancyService {
 			final AppliedVacancy appliedVacancy = appliedVacancyDao.getById(data.getAppliedVacancyId()); 
 			final McuVacancy mcu = new McuVacancy();
 			mcu.setAppliedVacancy(appliedVacancy);
-			mcu.setEndDate(DateUtil.dateParse(data.getEndDate()));
-			mcu.setStartDate(DateUtil.dateParse(data.getStartDate()));
+			mcu.setEndDate(DateUtil.dateTimeParse(data.getEndDate()));
+			mcu.setStartDate(DateUtil.dateTimeParse(data.getStartDate()));
 			final McuVacancy mcuDb = mcuDao.saveAndFlush(mcu);
 			ConnHandler.commit();
 			
@@ -85,12 +86,26 @@ public class McuVacancyService {
 		final McuVacancyResDto response = new McuVacancyResDto();
 		
 		if(mcuVacancy != null) {
-			response.setStartDate(DateUtil.dateFormat(mcuVacancy.getStartDate()));
-			response.setEndDate(DateUtil.dateFormat(mcuVacancy.getEndDate()));			
+			response.setStartDate(DateUtil.dateTimeFormat(mcuVacancy.getStartDate()));
+			response.setEndDate(DateUtil.dateTimeFormat(mcuVacancy.getEndDate()));			
 			return response;
 		} else {
 			return null;
 		}
 		
+	}
+	
+	public DeleteResDto deleteMcu(String mcuId) {
+		try {
+			ConnHandler.begin();
+			mcuDao.deleteById(mcuId);
+			ConnHandler.commit();
+			final DeleteResDto response = new DeleteResDto();
+			response.setMessage("MCU has been deleted!");
+			return response;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

@@ -16,6 +16,7 @@ import com.lawencon.candidate.dto.candidateskill.CandidateSkillReqDto;
 import com.lawencon.candidate.dto.candidateskill.CandidateSkillResDto;
 import com.lawencon.candidate.model.Candidate;
 import com.lawencon.candidate.model.CandidateSkill;
+import com.lawencon.candidate.util.GenerateUtil;
 import com.lawencon.security.principal.PrincipalServiceImpl;
 
 @Service
@@ -42,6 +43,7 @@ public class CandidateSkillService {
 				final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
 				final CandidateSkill skill = new CandidateSkill();
 				skill.setCandidate(candidate);
+				skill.setSkillCode(GenerateUtil.generateRandomCode());
 				if(data.getSkillId() != null && data.getSkillId() != "") {
 					skill.setSkill(data.getSkillId());
 					skill.setSkillName(data.getSkillId());
@@ -49,6 +51,7 @@ public class CandidateSkillService {
 				final CandidateSkill skillDb = candidateSkillDao.save(skill);
 				
 				data.setCandidateEmail(candidate.getCandidateEmail());
+				data.setSkillCode(skillDb.getSkillCode());
 				response.setId(skillDb.getId());
 			}
 			response.setMessage("Skill choosen successfully");
@@ -82,14 +85,13 @@ public class CandidateSkillService {
 	/* delete skills for candidate */
 	public DeleteResDto deleteSkill(String skillId) {
 		ConnHandler.begin();
+		final DeleteResDto response = new DeleteResDto();
 		
 		final CandidateSkill cs = candidateSkillDao.getById(skillId);
-		final Candidate cdt = candidateDao.getById(principalService.getAuthPrincipal());
+		apiService.delete("http://localhost:8081/skills/?skillCode=" + cs.getSkillCode(), DeleteResDto.class);
+		final Boolean result = candidateSkillDao.deleteById(skillId);
 		
-		final DeleteResDto response = new DeleteResDto();
-		final Boolean skill = candidateSkillDao.deleteById(skillId);
-		
-		if(skill) {
+		if(result) {
 			response.setMessage("Skill has been deleted!");
 			ConnHandler.commit();
 		} else {

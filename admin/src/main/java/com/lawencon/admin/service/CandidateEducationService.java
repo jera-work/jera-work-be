@@ -10,6 +10,7 @@ import com.lawencon.admin.dao.CandidateDao;
 import com.lawencon.admin.dao.CandidateEducationDao;
 import com.lawencon.admin.dao.DegreeDao;
 import com.lawencon.admin.dao.MajorDao;
+import com.lawencon.admin.dto.DeleteResDto;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.education.CandidateEducationCreateReqDto;
 import com.lawencon.admin.dto.education.CandidateEducationResDto;
@@ -43,12 +44,13 @@ public class CandidateEducationService {
 				final CandidateEducation education = new CandidateEducation();
 				education.setCandidate(candidate);
 				education.setDegree(degreeDao.getByIdRef(data.getDegreeId()));
-				education.setEndYear(DateUtil.dateParse(data.getEndYear()));
+				education.setEndYear(DateUtil.dateTimeParse(data.getEndYear()));
 				education.setGpa(data.getGpa());
-				education.setStartYear(DateUtil.dateParse(data.getStartYear()));
+				education.setStartYear(DateUtil.dateTimeParse(data.getStartYear()));
 				education.setInstitutionAddress(data.getInstitutionAddress());
 				education.setInstitutionName(data.getInstitutionName());
 				education.setMajor(majorDao.getByIdRef(data.getMajorId()));
+				education.setEducationCode(data.getEducationCode());
 
 				final CandidateEducation educationDb = educationDao.save(education);
 
@@ -103,6 +105,24 @@ public class CandidateEducationService {
 		}
 
 		return responses;
+	}
+	
+	/* delete educations for candidate */
+	public DeleteResDto deleteEducation(String eduCode) {
+		ConnHandler.begin();
+		
+		final DeleteResDto response = new DeleteResDto();
+		final CandidateEducation edu = educationDao.getByCode(eduCode);
+		final Boolean result = educationDao.deleteById(edu.getId());
+		
+		if(result) {
+			response.setMessage("deleted");
+			ConnHandler.commit();
+		} else {
+			ConnHandler.rollback();
+		}
+		
+		return response;
 	}
 
 }

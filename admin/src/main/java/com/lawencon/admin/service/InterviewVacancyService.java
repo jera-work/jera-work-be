@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.lawencon.admin.dao.AppliedVacancyDao;
 import com.lawencon.admin.dao.InterviewVacancyDao;
 import com.lawencon.admin.dao.JobVacancyDao;
+import com.lawencon.admin.dto.DeleteResDto;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.assessmentvacancy.UpdateNotesProgressReqDto;
@@ -37,10 +38,10 @@ public class InterviewVacancyService {
 		final AppliedVacancy appliedVacancy = appliedVacancyDao.getById(data.getAppliedVacancyId());
 		final InterviewVacancy interview = new InterviewVacancy();
 		interview.setAppliedVacancy(appliedVacancy);
-		interview.setEndDate(DateUtil.dateParse(data.getEndDate()));
+		interview.setEndDate(DateUtil.dateTimeParse(data.getEndDate()));
 		interview.setInterviewLocation(data.getInterviewLocation());
 		interview.setNotes(data.getNotes());
-		interview.setStartDate(DateUtil.dateParse(data.getStartDate()));
+		interview.setStartDate(DateUtil.dateTimeParse(data.getStartDate()));
 		final InterviewVacancy interviewDb = interviewDao.saveAndFlush(interview);
 		
 		ConnHandler.commit();
@@ -85,8 +86,8 @@ public class InterviewVacancyService {
 		
 		if(interviewVacancy != null) {
 			final InterviewVacancyResDto response = new InterviewVacancyResDto();
-			response.setStartDate(DateUtil.dateFormat(interviewVacancy.getStartDate()));
-			response.setEndDate(DateUtil.dateFormat(interviewVacancy.getEndDate()));
+			response.setStartDate(DateUtil.dateTimeFormat(interviewVacancy.getStartDate()));
+			response.setEndDate(DateUtil.dateTimeFormat(interviewVacancy.getEndDate()));
 			response.setNotes(interviewVacancy.getNotes());
 			response.setLocation(interviewVacancy.getInterviewLocation());
 			response.setInterviewId(interviewVacancy.getId());
@@ -114,4 +115,19 @@ public class InterviewVacancyService {
 		
 		return response;
 	}
+	
+	public DeleteResDto deleteInterview(String interviewId) {
+		try {
+			ConnHandler.begin();
+			interviewDao.deleteById(interviewId);
+			ConnHandler.commit();
+			final DeleteResDto response = new DeleteResDto();
+			response.setMessage("Interview has been deleted!");
+			return response;			
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 }

@@ -12,6 +12,9 @@ import com.lawencon.base.BaseEntity;
 @Table(name = "t_candidate_document")
 public class CandidateDocument extends BaseEntity {
 
+	@Column(name = "document_code", length = 5, nullable = false)
+	private String documentCode;
+
 	@OneToOne
 	@JoinColumn(name = "candidate_id")
 	private Candidate candidate;
@@ -22,6 +25,14 @@ public class CandidateDocument extends BaseEntity {
 
 	@Column(name = "document_type_id")
 	private String documentType;
+
+	public String getDocumentCode() {
+		return documentCode;
+	}
+
+	public void setDocumentCode(String documentCode) {
+		this.documentCode = documentCode;
+	}
 
 	public Candidate getCandidate() {
 		return candidate;

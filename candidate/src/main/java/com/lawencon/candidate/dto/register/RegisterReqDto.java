@@ -1,10 +1,28 @@
 package com.lawencon.candidate.dto.register;
 
 public class RegisterReqDto {
-	
+
 	private String candidateEmail;
 	private String candidatePassword;
+	private String candidateCode;
 	private String profileName;
+	private String profileCode;
+
+	public String getProfileCode() {
+		return profileCode;
+	}
+
+	public void setProfileCode(String profileCode) {
+		this.profileCode = profileCode;
+	}
+
+	public String getCandidateCode() {
+		return candidateCode;
+	}
+
+	public void setCandidateCode(String candidateCode) {
+		this.candidateCode = candidateCode;
+	}
 
 	public String getCandidateEmail() {
 		return candidateEmail;

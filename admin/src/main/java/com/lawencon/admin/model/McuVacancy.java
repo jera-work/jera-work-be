@@ -1,6 +1,6 @@
 package com.lawencon.admin.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,10 +19,10 @@ public class McuVacancy extends BaseEntity {
 	private AppliedVacancy appliedVacancy;
 
 	@Column(name = "start_date", nullable = false)
-	private LocalDate startDate;
+	private LocalDateTime startDate;
 
 	@Column(name = "end_date", nullable = false)
-	private LocalDate endDate;
+	private LocalDateTime endDate;
 
 	public AppliedVacancy getAppliedVacancy() {
 		return appliedVacancy;
@@ -32,19 +32,19 @@ public class McuVacancy extends BaseEntity {
 		this.appliedVacancy = appliedVacancy;
 	}
 
-	public LocalDate getStartDate() {
+	public LocalDateTime getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
+	public void setStartDate(LocalDateTime startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDate getEndDate() {
+	public LocalDateTime getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDate endDate) {
+	public void setEndDate(LocalDateTime endDate) {
 		this.endDate = endDate;
 	}
 

@@ -17,6 +17,7 @@ import com.lawencon.candidate.dto.document.CandidateDocumentResDto;
 import com.lawencon.candidate.model.Candidate;
 import com.lawencon.candidate.model.CandidateDocument;
 import com.lawencon.candidate.model.File;
+import com.lawencon.candidate.util.GenerateUtil;
 import com.lawencon.security.principal.PrincipalServiceImpl;
 
 @Service
@@ -51,11 +52,12 @@ public class CandidateDocumentService {
 				final CandidateDocument doc = new CandidateDocument();
 				doc.setCandidate(candidate);
 				doc.setDocumentType(data.getDocumentTypeId());
+				doc.setDocumentCode(GenerateUtil.generateRandomCode());
 				doc.setFile(fileDb);
 				final CandidateDocument docDb = docsDao.save(doc);
 
 				data.setCandidateEmail(candidate.getCandidateEmail());
-
+				data.setDocumentCode(docDb.getDocumentCode());
 				response = new InsertResDto();
 				response.setId(docDb.getId());
 				response.setMessage("Documents has been added!");

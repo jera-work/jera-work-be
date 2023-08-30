@@ -11,12 +11,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawencon.base.ConnHandler;
 import com.lawencon.candidate.dao.CandidateDao;
 import com.lawencon.candidate.dao.CandidateEducationDao;
+import com.lawencon.candidate.dto.DeleteResDto;
 import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.education.CandidateEducationCreateReqDto;
 import com.lawencon.candidate.dto.education.CandidateEducationResDto;
 import com.lawencon.candidate.model.Candidate;
 import com.lawencon.candidate.model.CandidateEducation;
 import com.lawencon.candidate.util.DateUtil;
+import com.lawencon.candidate.util.GenerateUtil;
 import com.lawencon.security.principal.PrincipalServiceImpl;
 
 @Service
@@ -44,15 +46,17 @@ public class CandidateEducationService {
 				final CandidateEducation education = new CandidateEducation();
 				education.setCandidate(candidate);
 				education.setDegree(data.getDegreeId());
-				education.setEndYear(DateUtil.dateParse(data.getEndYear()));
+				education.setEndYear(DateUtil.dateTimeParse(data.getEndYear()));
 				education.setGpa(data.getGpa());
-				education.setStartYear(DateUtil.dateParse(data.getStartYear()));
+				education.setStartYear(DateUtil.dateTimeParse(data.getStartYear()));
 				education.setInstitutionAddress(data.getInstitutionAddress());
 				education.setInstitutionName(data.getInstitutionName());
 				education.setMajor(data.getMajorId());
-
+				education.setEducationCode(GenerateUtil.generateRandomCode());
+				final CandidateEducation educationDb = educationDao.saveAndFlush(education);
+				
 				data.setCandidateEmail(candidate.getCandidateEmail());
-				educationDao.saveAndFlush(education);
+				data.setEducationCode(educationDb.getEducationCode());
 			}
 
 			final HttpStatus status = apiService.writeTo("http://localhost:8081/educations", datas);
@@ -79,7 +83,7 @@ public class CandidateEducationService {
 		final Candidate candidate = candidateDao.getById(principalService.getAuthPrincipal());
 		final List<CandidateEducation> educations = educationDao.getByCandidateId(candidate.getId());
 		final String encodedEmail = encoderService.encodeEmail(candidate.getCandidateEmail());
-		
+
 		final String url = "http://localhost:8081/educations/?email=" + encodedEmail;
 		final List<CandidateEducationResDto> responseFromAdmin = apiService.getListFrom(url,
 				CandidateEducationResDto.class);
@@ -100,4 +104,22 @@ public class CandidateEducationService {
 		return response;
 	}
 
+	/* delete educations for candidate */
+	public DeleteResDto deleteEducation(String educationId) {
+		ConnHandler.begin();
+		
+		final DeleteResDto response = new DeleteResDto();
+		final CandidateEducation edu = educationDao.getById(educationId);
+		apiService.delete("http://localhost:8081/educations/?educationCode=" + edu.getEducationCode(), DeleteResDto.class);
+		final Boolean result = educationDao.deleteById(edu.getId());
+		
+		if(result) {
+			response.setMessage("Education has been deleted!");
+			ConnHandler.commit();
+		} else {
+			ConnHandler.rollback();
+		}
+		
+		return response;
+	}
 }

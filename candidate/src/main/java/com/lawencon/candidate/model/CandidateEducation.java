@@ -1,6 +1,6 @@
 package com.lawencon.candidate.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +14,8 @@ import com.lawencon.base.BaseEntity;
 @Table(name = "t_candidate_education")
 public class CandidateEducation extends BaseEntity {
 
+	@Column(name = "education_code", length = 5, nullable = false)
+	private String educationCode;
 	@OneToOne
 	@JoinColumn(name = "candidate_id")
 	private Candidate candidate;
@@ -26,11 +28,19 @@ public class CandidateEducation extends BaseEntity {
 	@Column(name = "gpa", nullable = false)
 	private Float gpa;
 	@Column(name = "start_year", nullable = false)
-	private LocalDate startYear;
+	private LocalDateTime startYear;
 	@Column(name = "end_year", nullable = false)
-	private LocalDate endYear;
+	private LocalDateTime endYear;
 	@Column(name = "institution_adress", nullable = false)
 	private String institutionAddress;
+
+	public String getEducationCode() {
+		return educationCode;
+	}
+
+	public void setEducationCode(String educationCode) {
+		this.educationCode = educationCode;
+	}
 
 	public Candidate getCandidate() {
 		return candidate;
@@ -72,19 +82,19 @@ public class CandidateEducation extends BaseEntity {
 		this.gpa = gpa;
 	}
 
-	public LocalDate getStartYear() {
+	public LocalDateTime getStartYear() {
 		return startYear;
 	}
 
-	public void setStartYear(LocalDate startYear) {
+	public void setStartYear(LocalDateTime startYear) {
 		this.startYear = startYear;
 	}
 
-	public LocalDate getEndYear() {
+	public LocalDateTime getEndYear() {
 		return endYear;
 	}
 
-	public void setEndYear(LocalDate endYear) {
+	public void setEndYear(LocalDateTime endYear) {
 		this.endYear = endYear;
 	}
 

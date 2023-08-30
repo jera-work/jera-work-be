@@ -4,8 +4,17 @@ public class CandidateDocumentCreateReqDto {
 
 	private String candidateEmail;
 	private String documentTypeId;
+	private String documentCode;
 	private String fileContent;
 	private String fileExt;
+
+	public String getDocumentCode() {
+		return documentCode;
+	}
+
+	public void setDocumentCode(String documentCode) {
+		this.documentCode = documentCode;
+	}
 
 	public String getCandidateEmail() {
 		return candidateEmail;

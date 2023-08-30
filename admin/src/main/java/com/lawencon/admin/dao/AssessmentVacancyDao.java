@@ -1,6 +1,6 @@
 package com.lawencon.admin.dao;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -67,8 +67,8 @@ public class AssessmentVacancyDao extends AbstractJpaDao {
 			assessmentVacancy.setIsQuestion(Boolean.valueOf(assObjArr[1].toString()));
 			assessmentVacancy.setScore(Float.valueOf(assObjArr[2].toString()));
 			assessmentVacancy.setNotes(assObjArr[3].toString());
-			assessmentVacancy.setStartDate(LocalDate.parse(assObjArr[4].toString()));
-			assessmentVacancy.setEndDate(LocalDate.parse(assObjArr[5].toString()));
+			assessmentVacancy.setStartDate(Timestamp.valueOf(assObjArr[4].toString()).toLocalDateTime());
+			assessmentVacancy.setEndDate(Timestamp.valueOf(assObjArr[5].toString()).toLocalDateTime());
 			assessmentVacancy.setAssessmentLocation(assObjArr[6].toString());
 			
 			return assessmentVacancy;

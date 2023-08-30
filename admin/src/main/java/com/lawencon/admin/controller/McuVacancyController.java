@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lawencon.admin.dto.DeleteResDto;
 import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.mcuvacancy.DeleteMcuVacancyReqDto;
 import com.lawencon.admin.dto.mcuvacancy.InsertMcuVacancyReqDto;
 import com.lawencon.admin.dto.mcuvacancy.McuVacancyResDto;
 import com.lawencon.admin.service.McuVacancyService;
@@ -27,6 +29,12 @@ public class McuVacancyController {
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
 	}
 	
+	@PostMapping("/delete")
+	public ResponseEntity<DeleteResDto> deleteMcu(@RequestBody DeleteMcuVacancyReqDto data) {
+		final DeleteResDto response = mcuService.deleteMcu(data.getId());
+		return new ResponseEntity<DeleteResDto>(response, HttpStatus.OK);
+	}
+
 	@GetMapping
 	public ResponseEntity<McuVacancyResDto> getMcuByAppliedId(String appliedId){
 		final McuVacancyResDto response = mcuService.getByAppliedId(appliedId);

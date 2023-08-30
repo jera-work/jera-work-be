@@ -5,6 +5,24 @@ public class CandidateInsertReqDto {
 	private String candidateEmail;
 	private String candidatePassword;
 	private String profileName;
+	private String profileCode;
+	private String candidateCode;
+
+	public String getProfileCode() {
+		return profileCode;
+	}
+
+	public void setProfileCode(String profileCode) {
+		this.profileCode = profileCode;
+	}
+
+	public String getCandidateCode() {
+		return candidateCode;
+	}
+
+	public void setCandidateCode(String candidateCode) {
+		this.candidateCode = candidateCode;
+	}
 
 	public String getCandidateEmail() {
 		return candidateEmail;

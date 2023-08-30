@@ -1,6 +1,6 @@
 package com.lawencon.candidate.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,21 +14,32 @@ import com.lawencon.base.BaseEntity;
 @Table(name = "t_candidate_experience")
 public class CandidateExperience extends BaseEntity {
 
+	@Column(name = "experience_code", length = 5, nullable = false)
+	private String experienceCode;
 	@OneToOne
 	@JoinColumn(name = "candidate_id", nullable = false)
 	private Candidate candidate;
-	@Column(name="former_position", nullable=false)
+	@Column(name = "former_position", nullable = false)
 	private String formerPosition;
-	@Column(name="former_institution", nullable=false)
+	@Column(name = "former_institution", nullable = false)
 	private String formerInstitution;
-	@Column(name="former_location", nullable=false)
+	@Column(name = "former_location", nullable = false)
 	private String formerLocation;
-	@Column(name="former_jobdesk", nullable=false)
+	@Column(name = "former_jobdesk", nullable = false)
 	private String formerJobdesk;
-	@Column(name="start_date", nullable=false)
-	private LocalDate startDate;
-	@Column(name="end_date", nullable=false)
-	private LocalDate endDate;
+
+	@Column(name = "start_date", nullable = false)
+	private LocalDateTime startDate;
+	@Column(name = "end_date", nullable = false)
+	private LocalDateTime endDate;
+
+	public String getExperienceCode() {
+		return experienceCode;
+	}
+
+	public void setExperienceCode(String experienceCode) {
+		this.experienceCode = experienceCode;
+	}
 
 	public Candidate getCandidate() {
 		return candidate;
@@ -70,19 +81,20 @@ public class CandidateExperience extends BaseEntity {
 		this.formerJobdesk = formerJobdesk;
 	}
 
-	public LocalDate getStartDate() {
+	public LocalDateTime getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
+	public void setStartDate(LocalDateTime startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDate getEndDate() {
+	public LocalDateTime getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDate endDate) {
+	public void setEndDate(LocalDateTime endDate) {
 		this.endDate = endDate;
 	}
+
 }

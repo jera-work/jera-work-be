@@ -6,6 +6,15 @@ public class LoginResDto {
 	private String photoId;
 	private String profileName;
 	private String token;
+	private String candidateCode;
+
+	public String getCandidateCode() {
+		return candidateCode;
+	}
+
+	public void setCandidateCode(String candidateCode) {
+		this.candidateCode = candidateCode;
+	}
 
 	public String getId() {
 		return id;
@@ -22,7 +31,6 @@ public class LoginResDto {
 	public void setPhotoId(String photoId) {
 		this.photoId = photoId;
 	}
-
 
 	public String getProfileName() {
 		return profileName;

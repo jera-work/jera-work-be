@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.lawencon.admin.dao.CandidateDao;
 import com.lawencon.admin.dao.CandidateExperienceDao;
+import com.lawencon.admin.dto.DeleteResDto;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.candidateexperience.CandidateExperienceReqDto;
 import com.lawencon.admin.dto.candidateexperience.CandidateExperienceResDto;
@@ -41,9 +42,9 @@ public class CandidateExperienceService {
 					candidateExperience.setFormerPosition(data.get(i).getFormerPosition());
 					candidateExperience.setFormerJobdesk(data.get(i).getFormerJobdesc());
 					candidateExperience.setFormerLocation(data.get(i).getFormerLocation());
-					candidateExperience.setStartDate(DateUtil.dateParse(data.get(i).getStartDate()));
-					candidateExperience.setEndDate(DateUtil.dateParse(data.get(i).getEndDate()));
-
+					candidateExperience.setStartDate(DateUtil.dateTimeParse(data.get(i).getStartDate()));
+					candidateExperience.setEndDate(DateUtil.dateTimeParse(data.get(i).getEndDate()));
+					candidateExperience.setExperienceCode(data.get(i).getExperienceCode());
 					candidateExperienceDao.save(candidateExperience);
 					data.get(i).setCandidateEmail(candidate.getCandidateEmail());
 				}
@@ -77,4 +78,21 @@ public class CandidateExperienceService {
 		return responses;
 	}
 
+	/* delete experiences for admin */
+	public DeleteResDto deleteExperience(String expCode) {
+		ConnHandler.begin();
+		
+		final DeleteResDto response = new DeleteResDto();
+		final CandidateExperience experience = candidateExperienceDao.getByCode(expCode);
+		final Boolean result = candidateExperienceDao.deleteById(experience.getId());
+		
+		if(result) {
+			response.setMessage("deleted");
+			ConnHandler.commit();
+		} else {
+			ConnHandler.rollback();
+		}
+		
+		return response;
+	}
 }

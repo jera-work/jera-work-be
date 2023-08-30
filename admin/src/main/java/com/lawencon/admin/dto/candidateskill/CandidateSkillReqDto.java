@@ -6,6 +6,15 @@ public class CandidateSkillReqDto {
 	private String candidateId;
 	private String skillId;
 	private String skillName;
+	private String skillCode;
+
+	public String getSkillCode() {
+		return skillCode;
+	}
+
+	public void setSkillCode(String skillCode) {
+		this.skillCode = skillCode;
+	}
 
 	public String getSkillName() {
 		return skillName;

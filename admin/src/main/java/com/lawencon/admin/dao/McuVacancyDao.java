@@ -1,6 +1,6 @@
 package com.lawencon.admin.dao;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -63,8 +63,8 @@ public class McuVacancyDao extends AbstractJpaDao {
 			
 			final McuVacancy mcuVacancy = new McuVacancy();
 			mcuVacancy.setId(mcuObjArr[0].toString());
-			mcuVacancy.setStartDate(LocalDate.parse(mcuObjArr[1].toString()));
-			mcuVacancy.setEndDate(LocalDate.parse(mcuObjArr[2].toString()));
+			mcuVacancy.setStartDate(Timestamp.valueOf(mcuObjArr[1].toString()).toLocalDateTime());
+			mcuVacancy.setEndDate(Timestamp.valueOf(mcuObjArr[2].toString()).toLocalDateTime());
 			
 			return mcuVacancy;
 		} catch (Exception e) {

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.lawencon.admin.dao.AppliedVacancyDao;
 import com.lawencon.admin.dao.AssessmentVacancyDao;
 import com.lawencon.admin.dao.JobVacancyDao;
+import com.lawencon.admin.dto.DeleteResDto;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.assessmentvacancy.AssessmentVacancyResDto;
@@ -40,11 +41,11 @@ public class AssessmentVacancyService {
 		final AssessmentVacancy assessmentVacancy = new AssessmentVacancy();
 		assessmentVacancy.setAppliedVacancy(appliedVacancy);
 		assessmentVacancy.setAssessmentLocation(data.getAssessmentLocation());
-		assessmentVacancy.setEndDate(DateUtil.dateParse(data.getEndDate()));
+		assessmentVacancy.setEndDate(DateUtil.dateTimeParse(data.getEndDate()));
 		assessmentVacancy.setIsQuestion(data.getIsQuestion());
 		assessmentVacancy.setNotes(data.getNotes());
 		assessmentVacancy.setScore(data.getScore());
-		assessmentVacancy.setStartDate(DateUtil.dateParse(data.getStartDate()));
+		assessmentVacancy.setStartDate(DateUtil.dateTimeParse(data.getStartDate()));
 		final AssessmentVacancy assessmentVacancyDb = assessmentVacancyDao.saveAndFlush(assessmentVacancy);
 
 		ConnHandler.commit();
@@ -73,6 +74,9 @@ public class AssessmentVacancyService {
 		assessmentVacancyReqDto.setEndDate(assessmentVacancyDb.getEndDate());
 		assessmentVacancyReqDto.setNotes(assessmentVacancyDb.getNotes());
 		assessmentVacancyReqDto.setAssessmentLocation(assessmentVacancyDb.getAssessmentLocation());
+		assessmentVacancyReqDto.setUrl("http://localhost:4200/questions-answer/login/" + job.getId() + "/" + assessmentVacancyDb.getId() + "/" + applied.getCandidate().getCandidateCode());
+//		if(assessmentVacancyDb.getIsQuestion()) {
+//		}
 		
 		try {				
 			final EmailReqDto emailReqDto = new EmailReqDto();
@@ -89,8 +93,8 @@ public class AssessmentVacancyService {
 		
 		if(assessmentVacancy != null) {
 			final AssessmentVacancyResDto response = new AssessmentVacancyResDto();
-			response.setStartDate(DateUtil.dateFormat(assessmentVacancy.getStartDate()));
-			response.setEndDate(DateUtil.dateFormat(assessmentVacancy.getEndDate()));
+			response.setStartDate(DateUtil.dateTimeFormat(assessmentVacancy.getStartDate()));
+			response.setEndDate(DateUtil.dateTimeFormat(assessmentVacancy.getEndDate()));
 			response.setIsQuestion(assessmentVacancy.getIsQuestion());
 			response.setLocation(assessmentVacancy.getAssessmentLocation());
 			response.setNotes(assessmentVacancy.getNotes());
@@ -120,6 +124,20 @@ public class AssessmentVacancyService {
 		}
 		
 		return response;
+	}
+	
+	public DeleteResDto deleteAssessment(String assessementId) {
+		try {
+			ConnHandler.begin();
+			assessmentVacancyDao.deleteById(assessementId);
+			ConnHandler.commit();
+			final DeleteResDto response = new DeleteResDto();
+			response.setMessage("Assessment has been deleted!");
+			return response;			
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 }

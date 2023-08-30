@@ -9,6 +9,15 @@ public class CandidateExperienceReqDto {
 	private String formerJobdesc;
 	private String startDate;
 	private String endDate;
+	private String experienceCode;
+
+	public String getExperienceCode() {
+		return experienceCode;
+	}
+
+	public void setExperienceCode(String experienceCode) {
+		this.experienceCode = experienceCode;
+	}
 
 	public String getCandidateEmail() {
 		return candidateEmail;

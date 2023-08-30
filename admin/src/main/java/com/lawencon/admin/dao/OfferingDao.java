@@ -1,6 +1,6 @@
 package com.lawencon.admin.dao;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -63,8 +63,8 @@ public class OfferingDao extends AbstractJpaDao {
 			final Offering offering = new Offering();
 			offering.setId(offObjArr[0].toString());
 			offering.setIsApprove(Boolean.valueOf(offObjArr[1].toString()));
-			offering.setStartDate(LocalDate.parse(offObjArr[2].toString()));
-			offering.setEndDate(LocalDate.parse(offObjArr[3].toString()));
+			offering.setStartDate(Timestamp.valueOf(offObjArr[2].toString()).toLocalDateTime());
+			offering.setEndDate(Timestamp.valueOf(offObjArr[3].toString()).toLocalDateTime());
 			offering.setDescription(offObjArr[4].toString());
 			offering.setOfferingLocation(offObjArr[5].toString());
 			

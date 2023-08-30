@@ -53,5 +53,15 @@ public class CandidateExperienceDao extends AbstractJpaDao {
 				.getResultList();
 		return results;
 	}
+	
+	public CandidateExperience getByCode(String code) {
+		final String sql = "SELECT * FROM t_candidate_experience WHERE experience_code LIKE :code ; ";
+		
+		final CandidateExperience result = (CandidateExperience)ConnHandler.getManager().createNativeQuery(sql, CandidateExperience.class)
+				.setParameter("code", code)
+				.getSingleResult();
+		
+		return result;
+	}
 
 }

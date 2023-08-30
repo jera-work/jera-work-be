@@ -1,6 +1,6 @@
 package com.lawencon.admin.dao;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -62,8 +62,8 @@ public class InterviewVacancyDao extends AbstractJpaDao {
 			
 			final InterviewVacancy interviewVacancy = new InterviewVacancy();
 			interviewVacancy.setId(intObjArr[0].toString());
-			interviewVacancy.setStartDate(LocalDate.parse(intObjArr[1].toString()));
-			interviewVacancy.setEndDate(LocalDate.parse(intObjArr[2].toString()));
+			interviewVacancy.setStartDate(Timestamp.valueOf(intObjArr[1].toString()).toLocalDateTime());
+			interviewVacancy.setEndDate(Timestamp.valueOf(intObjArr[2].toString()).toLocalDateTime());
 			interviewVacancy.setNotes(intObjArr[3].toString());
 			interviewVacancy.setInterviewLocation(intObjArr[4].toString());
 			
