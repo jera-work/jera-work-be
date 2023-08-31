@@ -73,4 +73,10 @@ public class JobVacancyController {
 		final JobSearchResDto response = jobService.getByCode(code);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+	
+	@GetMapping("/report")
+	public ResponseEntity<InsertResDto> getReport(){
+		final InsertResDto response = jobService.getReport();
+		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
+	}
 }

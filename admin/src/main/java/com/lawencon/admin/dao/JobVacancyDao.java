@@ -420,4 +420,31 @@ public class JobVacancyDao extends AbstractJpaDao {
 		
 		return jobVacancies;
 	}
+	
+	public Long getAppliedCandidateTotal(String jobId) {
+		final String sql = "SELECT "
+				+ "	COUNT(tjv.id) "
+				+ "FROM "
+				+ "	t_job_vacancy tjv "
+				+ "INNER JOIN "
+				+ "	t_applied_vacancy tav ON tav.job_vacancy_id = tjv.id "
+				+ "WHERE "
+				+ "	tjv.id = :jobId";
+		
+		try {
+			final Object jobObj = ConnHandler.getManager().createNativeQuery(sql)
+					.setParameter("jobId", jobId)
+					.getSingleResult();
+
+			Long appliedCandidateTotal = null;
+			if(jobObj != null) {
+				appliedCandidateTotal = Long.valueOf(jobObj.toString());
+			}
+			return appliedCandidateTotal;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 }

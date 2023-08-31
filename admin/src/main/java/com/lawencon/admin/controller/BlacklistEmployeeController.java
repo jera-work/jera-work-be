@@ -34,4 +34,10 @@ public class BlacklistEmployeeController {
 		final List<BlacklistEmployeeResDto> responses = employeeService.getByCompany(startIndex, endIndex);
 		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}
+	
+	@GetMapping("/report")
+	public ResponseEntity<InsertResDto> getReport(){
+		final InsertResDto response = employeeService.getReport();
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
 }

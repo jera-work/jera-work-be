@@ -40,4 +40,10 @@ public class HiredEmployeeController {
 		final HiredEmployeeResDto response = hiredEmployeeService.getByCandidateId(candidateId);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+	
+	@GetMapping("/report")
+	public ResponseEntity<InsertResDto> getReport(){
+		final InsertResDto response = hiredEmployeeService.getReport();
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
 }

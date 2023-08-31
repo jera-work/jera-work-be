@@ -1,19 +1,30 @@
 package com.lawencon.admin.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.admin.dao.CompanyDao;
 import com.lawencon.admin.dao.FileDao;
+import com.lawencon.admin.dao.UserDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.company.CompanyCreateReqDto;
 import com.lawencon.admin.dto.company.CompanyResDto;
+import com.lawencon.admin.dto.email.EmailReqDto;
+import com.lawencon.admin.dto.email.ReportReqDto;
 import com.lawencon.admin.model.Company;
 import com.lawencon.admin.model.File;
+import com.lawencon.admin.model.User;
+import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.ConnHandler;
+import com.lawencon.security.principal.PrincipalServiceImpl;
+import com.lawencon.util.JasperUtil;
 
 @Service
 public class CompanyService {
@@ -23,6 +34,18 @@ public class CompanyService {
 	
 	@Autowired
 	private FileDao fileDao;
+	
+	@Autowired
+	private JasperUtil jasperUtil;
+	
+	@Autowired
+	private SendMailService sendMailService;
+	
+	@Autowired
+	private UserDao userDao;
+	
+	@Autowired
+	private PrincipalServiceImpl principalService;
 
 	public InsertResDto createCompany(CompanyCreateReqDto data) {
 
@@ -74,6 +97,54 @@ public class CompanyService {
 		});
 		
 		return responses;
+	}
+	
+	public InsertResDto getReport() {
+		final User userLogin = userDao.getById(principalService.getAuthPrincipal());
+		final Company userCompany = companyDao.getById(userLogin.getProfile().getCompany().getId());
+		final List<Company> companies = companyDao.getAll();
+		final List<CompanyResDto> companiesRes = new ArrayList<>();
+		final InsertResDto response = new InsertResDto();
+		
+		companies.forEach(company -> {
+			final CompanyResDto companyRes = new CompanyResDto();
+			companyRes.setAddress(company.getAddress());
+			companyRes.setCompanyCode(company.getCompanyCode());
+			companyRes.setCompanyName(company.getCompanyName());
+			companyRes.setDescription(company.getDescription());
+			companyRes.setId(company.getId());
+			companyRes.setPhoneNumber(company.getPhoneNumber());
+			companyRes.setPhotoId(company.getPhoto().getId());
+			companiesRes.add(companyRes);
+		});
+		
+		final Collection<List<CompanyResDto>> result = new ArrayList<>();
+		result.add(companiesRes);
+		
+		final Map<String, Object> parameters = new HashMap<>();
+		parameters.put("companyList", companiesRes);
+		
+		try {				
+        	byte[] dataOut = jasperUtil.responseToByteArray(result, parameters, "jasper-companies");
+                	
+	        final EmailReqDto emailReqDto = new EmailReqDto();
+			emailReqDto.setSubject("Companies Report");
+			emailReqDto.setEmail(userLogin.getUserEmail());
+			
+			final ReportReqDto reportReqDto = new ReportReqDto();
+			reportReqDto.setHeader("Company List Report");
+			reportReqDto.setFullName(userLogin.getProfile().getProfileName());
+			reportReqDto.setCompanyName(userCompany.getCompanyName());
+			reportReqDto.setCreatedAt(DateUtil.dateTimeFormat(LocalDateTime.now()));
+			
+			sendMailService.sendCompaniesReport(emailReqDto, reportReqDto, dataOut);
+			            
+			response.setMessage("Report created successfully");
+			return response;		
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}	
 	}
 
 }

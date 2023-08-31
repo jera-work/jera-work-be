@@ -21,6 +21,7 @@ public class JobVacancyResDto {
 	private String cityName;
 	private String address;
 	private String description;
+	private Long appliedCandidateTotal;
 	
 	public String getVacancyId() {
 		return vacancyId;
@@ -141,6 +142,12 @@ public class JobVacancyResDto {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public Long getAppliedCandidateTotal() {
+		return appliedCandidateTotal;
+	}
+	public void setAppliedCandidateTotal(Long appliedCandidateTotal) {
+		this.appliedCandidateTotal = appliedCandidateTotal;
 	}
 	
 }

@@ -1,7 +1,11 @@
 package com.lawencon.admin.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +24,8 @@ import com.lawencon.admin.dao.JobVacancyDao;
 import com.lawencon.admin.dao.UserDao;
 import com.lawencon.admin.dao.VacancyDescriptionDao;
 import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.email.EmailReqDto;
+import com.lawencon.admin.dto.email.ReportReqDto;
 import com.lawencon.admin.dto.jobvacancy.InsertJobVacancyReqDto;
 import com.lawencon.admin.dto.jobvacancy.JobSearchResDto;
 import com.lawencon.admin.dto.jobvacancy.JobVacancyResDto;
@@ -29,7 +35,11 @@ import com.lawencon.admin.model.User;
 import com.lawencon.admin.model.VacancyDescription;
 import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.ConnHandler;
+import com.lawencon.admin.dto.jobvacancy.JobVacancyCountAppliedCandidateResDto;
+import com.lawencon.admin.dto.jobvacancy.JobVacancyCountLevelResDto;
+import com.lawencon.admin.dto.jobvacancy.JobVacancyCountStatusResDto;
 import com.lawencon.security.principal.PrincipalServiceImpl;
+import com.lawencon.util.JasperUtil;
 
 @Service
 public class JobVacancyService {
@@ -60,6 +70,10 @@ public class JobVacancyService {
 	private UserDao userDao;
 	@Autowired
 	private ApiService apiService;
+	@Autowired
+	private JasperUtil jasperUtil;
+	@Autowired
+	private SendMailService sendMailService;
 
 	public InsertResDto insertJob(InsertJobVacancyReqDto data) {
 
@@ -276,5 +290,142 @@ public class JobVacancyService {
 		response.setCreatedAt(DateUtil.dateTimeFormatIso(jv.getCreatedAt()));
 
 		return response;
+	}
+	
+	public InsertResDto getReport() {
+		final InsertResDto response = new InsertResDto();
+		final List<JobVacancyResDto> jobVacancies = new ArrayList<>();
+
+		final User user = userDao.getById(principalService.getAuthPrincipal());
+		final Company company = companyDao.getById(user.getProfile().getCompany().getId());
+
+		jobDao.getJobByCompany(0, 0, company.getId()).forEach(jv -> {
+			final JobVacancyResDto jobVacancy = new JobVacancyResDto();
+			jobVacancy.setCompanyName(jv.getCompany().getCompanyName());
+			jobVacancy.setEndDate(DateUtil.dateFormat(jv.getEndDate()));
+			jobVacancy.setStartDate(DateUtil.dateFormat(jv.getStartDate()));
+			jobVacancy.setHrName(jv.getPicHr().getProfile().getProfileName());
+			jobVacancy.setUserName(jv.getPicUser().getProfile().getProfileName());
+			jobVacancy.setLevelName(jv.getExpLevel().getLevelName());
+			jobVacancy.setStatusName(jv.getAvailableStatus().getStatusname());
+			jobVacancy.setVacancyTitle(jv.getVacancyTitle());
+			jobVacancy.setVacancyCode(jv.getVacancyCode());
+			jobVacancy.setVacancyId(jv.getId());
+			jobVacancy.setAppliedCandidateTotal(jobDao.getAppliedCandidateTotal(jv.getId()));
+
+			jobVacancies.add(jobVacancy);
+		});
+		
+		final List<JobVacancyCountLevelResDto> jobsCountLevel = new ArrayList<>();
+        
+        for(int i = 0; i < jobVacancies.size(); i++) {
+        	JobVacancyCountLevelResDto jobCountLevel = new JobVacancyCountLevelResDto();
+        	jobCountLevel.setLevelName(jobVacancies.get(i).getLevelName());
+        	jobCountLevel.setLevelCount(1);
+        	
+        	boolean levelExist = false;
+        	for(JobVacancyCountLevelResDto j : jobsCountLevel) {
+        		if(j.getLevelName().equals(jobVacancies.get(i).getLevelName())) {
+        			levelExist = true;
+        		}
+        	}
+        	
+        	if(!levelExist) {
+        		jobsCountLevel.add(jobCountLevel);
+        	}else {
+        		for(int j = 0; j < jobsCountLevel.size(); j++) {
+        			if(jobsCountLevel.get(j).getLevelName().equals(jobVacancies.get(i).getLevelName())) {
+        				jobCountLevel.setLevelCount(jobsCountLevel.get(j).getLevelCount()+1);
+        				jobsCountLevel.set(j, jobCountLevel);
+        			}
+        		}
+        	}
+        	
+        }
+        
+        final List<JobVacancyCountStatusResDto> jobsCountStatus = new ArrayList<>();
+        
+        for(int i = 0; i < jobVacancies.size(); i++) {
+        	final JobVacancyCountStatusResDto jobCountStatus = new JobVacancyCountStatusResDto();
+        	jobCountStatus.setStatusName(jobVacancies.get(i).getStatusName());
+        	jobCountStatus.setStatusCount(1);
+        	
+        	boolean statusExist = false;
+        	for(JobVacancyCountStatusResDto j : jobsCountStatus) {
+        		if(j.getStatusName().equals(jobVacancies.get(i).getStatusName())) {
+        			statusExist = true;
+        		}
+        	}
+        	
+        	if(!statusExist) {
+        		jobsCountStatus.add(jobCountStatus);
+        	}else {
+        		for(int j = 0; j < jobsCountStatus.size(); j++) {
+        			if(jobsCountStatus.get(j).getStatusName().equals(jobVacancies.get(i).getStatusName())) {
+        				jobCountStatus.setStatusCount(jobsCountStatus.get(j).getStatusCount()+1);
+        				jobsCountStatus.set(j, jobCountStatus);
+        			}
+        		}
+        	}
+        }
+        
+        final List<JobVacancyCountAppliedCandidateResDto> jobsCountApplied = new ArrayList<>();
+        
+        for(int i = 0; i < jobVacancies.size(); i++) {
+        	final JobVacancyCountAppliedCandidateResDto jobCountApplied = new JobVacancyCountAppliedCandidateResDto();
+        	jobCountApplied.setJobName(jobVacancies.get(i).getVacancyTitle() + " - " + jobVacancies.get(i).getLevelName());
+        	jobCountApplied.setAppliedCount(jobVacancies.get(i).getAppliedCandidateTotal());
+        	
+        	boolean jobExist = false;
+        	for(JobVacancyCountAppliedCandidateResDto j : jobsCountApplied) {
+        		if(j.getJobName().equals(jobVacancies.get(i).getVacancyTitle())) {
+        			jobExist = true;
+        		}
+        	}
+        	
+        	if(!jobExist) {
+        		jobsCountApplied.add(jobCountApplied);
+        	}else {
+        		for(int j = 0; j < jobsCountApplied.size(); j++) {
+        			if(jobsCountApplied.get(j).getJobName().equals(jobVacancies.get(i).getVacancyTitle() + " - " + jobVacancies.get(i).getLevelName())) {
+        				jobCountApplied.setAppliedCount(jobsCountApplied.get(j).getAppliedCount());
+        				jobsCountApplied.set(j, jobCountApplied);
+        			}
+        		}
+        	}
+        	
+        }
+        
+        final Collection<List<JobVacancyResDto>> result = new ArrayList<>();
+        result.add(jobVacancies);
+        
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("jobVacancies", jobVacancies);
+        parameters.put("expLevels", jobsCountLevel);
+        parameters.put("availableStatuses", jobsCountStatus);
+        parameters.put("appliedCandidates", jobsCountApplied);
+        
+        try {				
+        	byte[] dataOut = jasperUtil.responseToByteArray(result, parameters, "jasper-job-vacancies");
+                	
+	        final EmailReqDto emailReqDto = new EmailReqDto();
+			emailReqDto.setSubject("Job Vacancies Report");
+			emailReqDto.setEmail(user.getUserEmail());
+			
+			final ReportReqDto reportReqDto = new ReportReqDto();
+			reportReqDto.setHeader("Job Vacancy List Report");
+			reportReqDto.setFullName(user.getProfile().getProfileName());
+			reportReqDto.setCompanyName(company.getCompanyName());
+			reportReqDto.setCreatedAt(DateUtil.dateTimeFormat(LocalDateTime.now()));
+			
+			sendMailService.sendJobReport(emailReqDto, reportReqDto, dataOut);
+			            
+			response.setMessage("Report created successfully");
+			return response;		
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}	
+
 	}
 }
