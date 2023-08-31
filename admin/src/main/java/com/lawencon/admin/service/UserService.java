@@ -129,6 +129,31 @@ public class UserService implements UserDetailsService {
 
 		return responses;
 	}
+	
+	public List<UserResDto> getByCompany(){
+		final List<UserResDto> responses = new ArrayList<>();
+		final User userPrincipal = userDao.getById(principalService.getAuthPrincipal());
+		final Profile profile = profileDao.getById(userPrincipal.getProfile().getId());
+		final Company company = companyDao.getById(profile.getCompany().getId());
+		final List<User> users = userDao.getByCompany(company.getId());
+		
+		users.forEach(user -> {
+			final UserResDto response = new UserResDto();
+			response.setId(user.getId());
+			response.setProfileName(user.getProfile().getProfileName());
+			response.setCompanyId(user.getProfile().getCompany().getId());
+			response.setCompanyName(user.getProfile().getCompany().getCompanyName());
+			response.setRoleName(user.getRole().getRoleName());
+			response.setPhoneNumber(user.getProfile().getProfilePhone());
+			response.setProfileAddress(user.getProfile().getProfileAddress());
+			if(user.getProfile().getPhoto() != null) {
+				response.setPhotoId(user.getProfile().getPhoto().getId());				
+			}
+			responses.add(response);
+		});
+		
+		return responses;
+	}
 
 	public UpdateResDto changePassword(UserChangePasswordReqDto data) {
 		ConnHandler.begin();

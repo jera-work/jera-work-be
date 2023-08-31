@@ -1,6 +1,5 @@
 package com.lawencon.admin.service;
 
-import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,6 @@ import com.lawencon.admin.dao.VacancyDescriptionDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.blacklistemployee.BlacklistEmployeeResDto;
 import com.lawencon.admin.dto.blacklistemployee.InsertBlacklistEmployeeReqDto;
-import com.lawencon.admin.dto.jobvacancy.JobVacancyResDto;
 import com.lawencon.admin.model.AppliedVacancy;
 import com.lawencon.admin.model.BlacklistEmployee;
 import com.lawencon.admin.model.JobVacancy;
@@ -76,7 +74,7 @@ public class BlacklistService {
 			response.setCandidateId(be.getEmployee().getCandidate().getId());
 			response.setCandidateName(be.getEmployee().getCandidate().getCandidateProfile().getProfileName());
 			
-			final List<JobVacancy> jobVacancies = jobDao.getJobByCompany(firstIndex, lastIndex, userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId());
+			final List<JobVacancy> jobVacancies = jobDao.getJobByCompany(userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId());
 			JobVacancy jobVacancy = new JobVacancy();
 			for(JobVacancy job : jobVacancies) {	
 				final AppliedVacancy applied = appliedDao.getByJobVacancyAndCandidate(job.getId(), response.getCandidateId());

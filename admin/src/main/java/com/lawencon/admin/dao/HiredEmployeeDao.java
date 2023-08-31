@@ -49,7 +49,7 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 		return super.deleteById(HiredEmployee.class, entityId);
 	}
 
-	public List<HiredEmployee> getByCompany(int firstIndex, int endIndex, String companyId) {
+	public List<HiredEmployee> getByCompany(String companyId) {
 		final String sql = "SELECT "
 				+ "	the.id, tc.id as candidateId, tcp.profile_name, tc2.company_name, the.created_at "
 				+ "FROM "
@@ -66,8 +66,6 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 		final List<?> hirObjs = ConnHandler.getManager()
 				.createNativeQuery(sql)
 				.setParameter("companyId", companyId)
-				.setFirstResult(firstIndex)
-				.setMaxResults(endIndex)
 				.getResultList();
 		
 		final List<HiredEmployee> hiredEmployees = new ArrayList<>();

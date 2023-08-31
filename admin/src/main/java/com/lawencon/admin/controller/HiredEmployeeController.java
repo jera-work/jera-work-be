@@ -30,8 +30,8 @@ public class HiredEmployeeController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<HiredEmployeeResDto>> getAll(int startIndex, int endIndex)  {
-		final List<HiredEmployeeResDto> responses = hiredEmployeeService.getByCompany(startIndex, endIndex);
+	public ResponseEntity<List<HiredEmployeeResDto>> getAll()  {
+		final List<HiredEmployeeResDto> responses = hiredEmployeeService.getByCompany();
 		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}
 	

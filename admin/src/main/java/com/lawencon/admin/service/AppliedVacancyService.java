@@ -18,8 +18,10 @@ import com.lawencon.admin.dao.HiredEmployeeDao;
 import com.lawencon.admin.dao.JobVacancyDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.UpdateResDto;
+import com.lawencon.admin.dto.appliedprogress.AppliedProgressResDto;
 import com.lawencon.admin.dto.appliedstatus.UpdateStatusReqDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyAdminResDto;
+import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyByProgressAdminResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCandidateDetailResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyProgressResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyResDto;
@@ -68,6 +70,8 @@ public class AppliedVacancyService {
 	private CandidateEducationService eduService;
 	@Autowired
 	private CandidateSkillService skillService;
+	@Autowired
+	private AppliedProgressService appliedProgressService;
 
 	public InsertResDto insertAppliedVacancy(InsertAppliedVacancyReqDto data) {
 
@@ -153,7 +157,7 @@ public class AppliedVacancyService {
 
 		return response;
 	}
-	
+
 	public UpdateResDto changeAppliedStatus(UpdateStatusReqDto data) {
 		final UpdateResDto response = new UpdateResDto();
 
@@ -207,10 +211,10 @@ public class AppliedVacancyService {
 		return responses;
 	}
 
-	public List<AppliedVacancyAdminResDto> getByProgress(String progressId) {
+	public List<AppliedVacancyAdminResDto> getByProgress(String progressId, String jobVacancyId) {
 		final List<AppliedVacancyAdminResDto> responses = new ArrayList<>();
 
-		appliedVacancyDao.getByProgressId(progressId).forEach(av -> {
+		appliedVacancyDao.getByProgressId(progressId, jobVacancyId).forEach(av -> {
 			final AppliedVacancyAdminResDto response = new AppliedVacancyAdminResDto();
 			response.setId(av.getId());
 			response.setProfileName(av.getCandidate().getCandidateProfile().getProfileName());
@@ -219,7 +223,7 @@ public class AppliedVacancyService {
 			response.setCreatedAt(DateUtil.dateTimeFormat(av.getCreatedAt()));
 			response.setStatusCode(av.getAppliedStatus().getStatusCode());
 			response.setProgressCode(av.getAppliedProgress().getProgressCode());
-			
+
 			responses.add(response);
 		});
 
@@ -249,12 +253,12 @@ public class AppliedVacancyService {
 		final AppliedVacancyCandidateDetailResDto response = new AppliedVacancyCandidateDetailResDto();
 		final AppliedVacancy applied = appliedVacancyDao.getById(appliedId);
 		final Candidate candidate = candidateDao.getById(applied.getCandidate().getId());
-		
+
 		final List<CandidateDocumentResDto> docsDto = docsService.getDocumentsByCandidateId(candidate.getId());
 		final List<CandidateExperienceResDto> expsDto = expService.getExperiencesByCandidateId(candidate.getId());
 		final List<CandidateEducationResDto> edusDto = eduService.getEducationsByCandidateId(candidate.getId());
 		final List<CandidateSkillResDto> skillsDto = skillService.getSkillsByCandidateId(candidate.getId());
-	
+
 		response.setAppliedProgress(applied.getAppliedProgress().getProgressName());
 		response.setAppliedProgressId(applied.getAppliedProgress().getId());
 		response.setAppliedProgressCode(applied.getAppliedProgress().getProgressCode());
@@ -263,19 +267,19 @@ public class AppliedVacancyService {
 		response.setAppliedStatusCode(applied.getAppliedStatus().getStatusCode());
 		response.setCandidateName(candidate.getCandidateProfile().getProfileName());
 		response.setCandidateId(applied.getCandidate().getId());
-		response.setExpectedSalary(candidate.getCandidateProfile().getExpectedSalary());
-		response.setGenderName(candidate.getCandidateProfile().getGender().getGenderName());
+		response.setExpectedSalary((candidate.getCandidateProfile().getExpectedSalary() != null) ? candidate.getCandidateProfile().getExpectedSalary() : null);
+		response.setGenderName((candidate.getCandidateProfile().getGender() != null) ? candidate.getCandidateProfile().getGender().getGenderName() : null);
 		response.setId(appliedId);
-		response.setMaritalName(candidate.getCandidateProfile().getMarital().getMaritalName());
-		response.setNationalityName(candidate.getCandidateProfile().getNationality().getNationalityName());
-		response.setPhoneNumber(candidate.getCandidateProfile().getPhoneNumber());
-		response.setPhotoId(candidate.getCandidateProfile().getPhoto().getId());
+		response.setMaritalName((candidate.getCandidateProfile().getMarital() != null) ? candidate.getCandidateProfile().getMarital().getMaritalName() : null);
+		response.setNationalityName((candidate.getCandidateProfile().getNationality() != null) ? candidate.getCandidateProfile().getNationality().getNationalityName() : null);
+		response.setPhoneNumber((candidate.getCandidateProfile().getPhoneNumber() != null) ? candidate.getCandidateProfile().getPhoneNumber() : null);
+		response.setPhotoId((candidate.getCandidateProfile().getPhoto() != null) ? candidate.getCandidateProfile().getPhoto().getId() : null);
 		response.setPicHrId(applied.getJobVacancy().getPicHr().getId());
 		response.setPicHrName(applied.getJobVacancy().getPicHr().getProfile().getProfileName());
 		response.setPicUserId(applied.getJobVacancy().getPicUser().getId());
 		response.setPicUserName(applied.getJobVacancy().getPicUser().getProfile().getProfileName());
-		response.setProfileAddress(candidate.getCandidateProfile().getProfileAddress());
-		response.setReligionName(candidate.getCandidateProfile().getReligion().getReligionName());
+		response.setProfileAddress((candidate.getCandidateProfile().getProfileAddress() != null) ? candidate.getCandidateProfile().getProfileAddress() : null);
+		response.setReligionName((candidate.getCandidateProfile().getReligion() != null) ? candidate.getCandidateProfile().getReligion().getReligionName() : null);
 		response.setJobTitle(applied.getJobVacancy().getVacancyTitle());
 		response.setDocuments(docsDto);
 		response.setExperiences(expsDto);
@@ -284,16 +288,33 @@ public class AppliedVacancyService {
 
 		return response;
 	}
-	
+
 	public AppliedVacancyProgressResDto getAppliedByJobAndCandidate(String jobCode, String email) {
 		final AppliedVacancyProgressResDto response = new AppliedVacancyProgressResDto();
 		final String candidateEmail = emailEncoderService.decodeEmail(email);
 
 		final AppliedVacancy appliedVacancy = appliedVacancyDao.getByJobVacancyAndCandidate(
 				jobVacancyDao.getByCode(jobCode).getId(), candidateDao.getByEmail(candidateEmail).getId());
-		
+
 		response.setProgressCode(appliedVacancy.getAppliedProgress().getProgressCode());
 		response.setAppliedVacancyFromAdminId(appliedVacancy.getId());
 		return response;
 	}
+	
+	public List<AppliedVacancyByProgressAdminResDto> getProgressCount(String jobVacancyId){
+		final List<AppliedProgressResDto> appliedProgresses = appliedProgressService.getAll();
+		
+		final List<AppliedVacancyByProgressAdminResDto> responses = new ArrayList<>();
+		for(int i = 0; i < appliedProgresses.size(); i++) {
+			final AppliedVacancyByProgressAdminResDto response = new AppliedVacancyByProgressAdminResDto();
+			response.setProgressId(appliedProgresses.get(i).getId());
+			response.setProgressName(appliedProgresses.get(i).getProgressName());
+			response.setProgressCode(appliedProgresses.get(i).getProgressCode());
+			response.setAppliedCount(appliedVacancyDao.getProgressCount(appliedProgresses.get(i).getProgressCode(), jobVacancyId));
+			
+			responses.add(response);
+		}
+		return responses;
+	}
+	
 }

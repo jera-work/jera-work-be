@@ -74,9 +74,9 @@ public class AssessmentVacancyService {
 		assessmentVacancyReqDto.setEndDate(assessmentVacancyDb.getEndDate());
 		assessmentVacancyReqDto.setNotes(assessmentVacancyDb.getNotes());
 		assessmentVacancyReqDto.setAssessmentLocation(assessmentVacancyDb.getAssessmentLocation());
-		assessmentVacancyReqDto.setUrl("http://localhost:4200/questions-answer/login/" + job.getId() + "/" + assessmentVacancyDb.getId() + "/" + applied.getCandidate().getCandidateCode());
-//		if(assessmentVacancyDb.getIsQuestion()) {
-//		}
+		if(assessmentVacancyDb.getIsQuestion()) {
+			assessmentVacancyReqDto.setUrl("http://localhost:4200/questions-answer/login/" + job.getId() + "/" + assessmentVacancyDb.getId() + "/" + applied.getCandidate().getCandidateCode());
+		}
 		
 		try {				
 			final EmailReqDto emailReqDto = new EmailReqDto();

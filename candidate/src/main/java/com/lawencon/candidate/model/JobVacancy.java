@@ -1,6 +1,6 @@
 package com.lawencon.candidate.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,10 +21,10 @@ public class JobVacancy extends BaseEntity {
 	private String vacancyTitle;
 
 	@Column(name = "start_date", nullable = false)
-	private LocalDate startDate;
+	private LocalDateTime startDate;
 
 	@Column(name = "end_date", nullable = false)
-	private LocalDate endDate;
+	private LocalDateTime endDate;
 
 	@Column(name = "exp_level_id", nullable = false)
 	private String expLevel;
@@ -55,19 +55,19 @@ public class JobVacancy extends BaseEntity {
 		this.vacancyTitle = vacancyTitle;
 	}
 
-	public LocalDate getStartDate() {
+	public LocalDateTime getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
+	public void setStartDate(LocalDateTime startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDate getEndDate() {
+	public LocalDateTime getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDate endDate) {
+	public void setEndDate(LocalDateTime endDate) {
 		this.endDate = endDate;
 	}
 

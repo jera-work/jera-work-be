@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 import com.lawencon.candidate.model.JobVacancy;
+import com.lawencon.candidate.model.VacancyDescription;
 
 @Repository
 public class JobVacancyDao extends AbstractJpaDao {
@@ -46,7 +47,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 
 	public JobVacancy getByCode(String vacancyCode)  {
 		final String sql = "SELECT "
-				+ "tjv.id "
+				+ "tjv.id, tjv.vacancy_description_id "
 				+ "FROM "
 				+ "t_job_vacancy tjv "
 				+ "WHERE tjv.vacancy_code = :vacancyCode";
@@ -55,8 +56,14 @@ public class JobVacancyDao extends AbstractJpaDao {
 				.setParameter("vacancyCode", vacancyCode)
 				.getSingleResult();
 		
+		final Object[] jobArr = (Object[]) jobObj;
+		
+		final VacancyDescription desc = new VacancyDescription();
+		desc.setId(jobArr[1].toString());
+		
 		final JobVacancy jobVacancy = new JobVacancy();
-		jobVacancy.setId(jobObj.toString());
+		jobVacancy.setId(jobArr[0].toString());
+		jobVacancy.setVacancyDescription(desc);
 		
 		return jobVacancy;
 	}
