@@ -9,6 +9,15 @@ public class UserResDto {
 	private String companyName;
 	private String phoneNumber;
 	private String profileAddress;
+	private String photoId;
+
+	public String getPhotoId() {
+		return photoId;
+	}
+
+	public void setPhotoId(String photoId) {
+		this.photoId = photoId;
+	}
 
 	public String getPhoneNumber() {
 		return phoneNumber;

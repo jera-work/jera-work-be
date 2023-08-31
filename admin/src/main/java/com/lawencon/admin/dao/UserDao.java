@@ -141,5 +141,60 @@ public class UserDao extends AbstractJpaDao {
 		return users;
 	}
 
-	
+	public List<User> getByCompany(String companyId) {
+		final List<User> users = new ArrayList<>();
+		final String sql =
+				"SELECT "
+				+ "	tu.id, tp.profile_name, tc.company_name, tr.role_name, tp.profile_phone, tp.profile_address, tp.photo_id "
+				+ "FROM "
+				+ "	t_user tu "
+				+ "INNER JOIN "
+				+ "	t_role tr ON tu.role_id = tr.id "
+				+ "INNER JOIN "
+				+ "	t_profile tp ON tu.profile_id = tp.id "
+				+ "INNER JOIN "
+				+ "	t_company tc ON tp.company_id = tc.id "
+				+ "WHERE "
+				+ "	tp.company_id = :companyId ";
+		
+		final List<?> userObj = em().createNativeQuery(sql)
+				.setParameter("companyId", companyId)
+				.getResultList();
+		
+		if(userObj.size() > 0) {
+			for(Object u : userObj) {
+				final Object[] userArr = (Object[]) u;
+								
+				final Company company = new Company();
+				company.setCompanyName(userArr[2].toString());
+				
+				final Profile profile = new Profile();
+				profile.setProfileName(userArr[1].toString());
+				profile.setCompany(company);
+				if(userArr[4] != null) {
+					profile.setProfilePhone(userArr[4].toString());					
+				}
+				if(userArr[5] != null) {
+					profile.setProfileAddress(userArr[5].toString());					
+				}
+				if(userArr[6] != null) {
+					final File file = new File();
+					file.setId(userArr[6].toString());
+					profile.setPhoto(file);
+				}
+				
+				final Role role = new Role();
+				role.setRoleName(userArr[3].toString());
+				
+				final User user = new User();
+				user.setId(userArr[0].toString());
+				user.setProfile(profile);
+				user.setRole(role);
+				
+				users.add(user);
+				
+			}
+		}
+		return users;
+	}
 }

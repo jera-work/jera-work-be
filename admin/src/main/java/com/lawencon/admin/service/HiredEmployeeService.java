@@ -113,26 +113,28 @@ public class HiredEmployeeService {
 		}
 	}
 	
-	public List<HiredEmployeeResDto> getByCompany(int firstIndex, int lastIndex){
+	public List<HiredEmployeeResDto> getByCompany(){
 		final List<HiredEmployeeResDto> responses = new ArrayList<>();
+		final User user = userDao.getById(principalService.getAuthPrincipal());
 		
-		hiredDao.getByCompany(firstIndex, lastIndex, userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId()).forEach(he -> {
+		hiredDao.getByCompany(user.getProfile().getCompany().getId()).forEach(he -> {
 			final HiredEmployeeResDto response = new HiredEmployeeResDto();
 			response.setHiredEmployeeId(he.getId());
 			response.setCandidateName(he.getCandidate().getCandidateProfile().getProfileName());
+			response.setCompanyName(he.getCompany().getCompanyName());
 			
-			final List<JobVacancy> jobVacancies = jobDao.getJobByCompany(firstIndex, lastIndex, userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId());
+			final List<JobVacancy> jobVacancies = jobDao.getJobByCompany(user.getProfile().getCompany().getId());
 			JobVacancy jobVacancy = new JobVacancy();
-			for(JobVacancy job : jobVacancies) {	
-				final AppliedVacancy applied = appliedDao.getByJobVacancyAndCandidate(job.getId(), he.getCandidate().getId());
-				System.err.println(applied.getAppliedProgress().getProgressCode());
-				if(AppliedProgressCode.HIRED.progressCode.equals(applied.getAppliedProgress().getProgressCode())){
+			for(JobVacancy job : jobVacancies) {
+				final AppliedVacancy applied = (appliedDao.getByJobVacancyAndCandidate(job.getId(), he.getCandidate().getId()) != null) ? appliedDao.getByJobVacancyAndCandidate(job.getId(), he.getCandidate().getId()) : null;
+				if(applied != null && AppliedProgressCode.HIRED.progressCode.equals(applied.getAppliedProgress().getProgressCode())){
 					jobVacancy = job;
 					final VacancyDescription jobDetail = jobDetailDao.getById(jobVacancy.getVacancyDescription().getId());			
 					response.setJobTypeName(jobDetail.getJobType().getTypeName());
 					response.setVacancyTitle(jobVacancy.getVacancyTitle());
 					response.setLevelName(jobVacancy.getExpLevel().getLevelName());
-					response.setCreatedAt(DateUtil.dateTimeFormat(he.getCreatedAt()));
+					response.setCreatedAt(DateUtil.dateTimeFormatIso(he.getCreatedAt()));
+					response.setAppliedId(applied.getId());
 					break;
 				}
 			}

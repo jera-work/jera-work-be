@@ -26,9 +26,11 @@ import com.lawencon.admin.dao.VacancyDescriptionDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.email.EmailReqDto;
 import com.lawencon.admin.dto.email.ReportReqDto;
+import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.jobvacancy.InsertJobVacancyReqDto;
 import com.lawencon.admin.dto.jobvacancy.JobSearchResDto;
 import com.lawencon.admin.dto.jobvacancy.JobVacancyResDto;
+import com.lawencon.admin.dto.jobvacancy.JobVacancyUpdateReqDto;
 import com.lawencon.admin.model.Company;
 import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.admin.model.User;
@@ -97,9 +99,9 @@ public class JobVacancyService {
 			final User user = userDao.getById(principalService.getAuthPrincipal());
 			data.setCompanyId(user.getProfile().getCompany().getId());
 			job.setCompany(companyDao.getByIdRef(data.getCompanyId()));
-			job.setEndDate(DateUtil.dateParse(data.getEndDate()));
+			job.setEndDate(DateUtil.dateTimeParse(data.getEndDate()));
 			job.setExpLevel(levelDao.getByIdRef(data.getExpLevelId()));
-			job.setStartDate(DateUtil.dateParse(data.getStartDate()));
+			job.setStartDate(DateUtil.dateTimeParse(data.getStartDate()));
 			job.setVacancyCode(data.getVacancyCode());
 			job.setVacancyTitle(data.getVacancyTitle());
 			job.setPicHr(userDao.getByIdRef(data.getPicHrId()));
@@ -219,17 +221,17 @@ public class JobVacancyService {
 		return responses;
 	}
 
-	public List<JobVacancyResDto> jobByCompany(int startIndex, int endIndex) {
+	public List<JobVacancyResDto> jobByCompany() {
 		final List<JobVacancyResDto> responses = new ArrayList<>();
 
 		final User user = userDao.getById(principalService.getAuthPrincipal());
 		final Company company = companyDao.getById(user.getProfile().getCompany().getId());
 
-		jobDao.getJobByCompany(startIndex, endIndex, company.getId()).forEach(jv -> {
+		jobDao.getJobByCompany(company.getId()).forEach(jv -> {
 			final JobVacancyResDto response = new JobVacancyResDto();
 			response.setCompanyName(jv.getCompany().getCompanyName());
-			response.setEndDate(DateUtil.dateFormat(jv.getEndDate()));
-			response.setStartDate(DateUtil.dateFormat(jv.getStartDate()));
+			response.setEndDate(DateUtil.dateTimeFormat(jv.getEndDate()));
+			response.setStartDate(DateUtil.dateTimeFormat(jv.getStartDate()));
 			response.setHrName(jv.getPicHr().getProfile().getProfileName());
 			response.setUserName(jv.getPicUser().getProfile().getProfileName());
 			response.setLevelName(jv.getExpLevel().getLevelName());
@@ -252,18 +254,26 @@ public class JobVacancyService {
 		response.setCompanyName(jv.getCompany().getCompanyName());
 		response.setCompanyDesc(jv.getCompany().getDescription());
 		response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
+		response.setDegreeId(vd.getDegree().getId());
 		response.setDegreeName(vd.getDegree().getDegreeName());
+		response.setGenderId(vd.getGender().getId());
 		response.setGenderName(vd.getGender().getGenderName());
+		response.setAgeVacancyId(vd.getAgeVacancy().getId());
 		response.setAgeVacancyName(vd.getAgeVacancy().getAgeName());
+		response.setJobTypeId(vd.getJobType().getId());
 		response.setJobTypeName(vd.getJobType().getTypeName());
 		response.setSalary(vd.getSalary());
+		response.setCityId(vd.getCity().getId());
 		response.setCityName(vd.getCity().getCityName());
 		response.setAddress(vd.getAddress());
 		response.setDescription(vd.getDescription());
-		response.setEndDate(DateUtil.dateFormat(jv.getEndDate()));
-		response.setStartDate(DateUtil.dateFormat(jv.getStartDate()));
+		response.setEndDate(DateUtil.dateTimeFormat(jv.getEndDate()));
+		response.setStartDate(DateUtil.dateTimeFormat(jv.getStartDate()));
+		response.setHrId(jv.getPicHr().getId());
 		response.setHrName(jv.getPicHr().getProfile().getProfileName());
+		response.setUserId(jv.getPicUser().getId());
 		response.setUserName(jv.getPicUser().getProfile().getProfileName());
+		response.setLevelId(jv.getExpLevel().getId());
 		response.setLevelName(jv.getExpLevel().getLevelName());
 		response.setStatusName(jv.getAvailableStatus().getStatusname());
 		response.setVacancyTitle(jv.getVacancyTitle());
@@ -299,11 +309,11 @@ public class JobVacancyService {
 		final User user = userDao.getById(principalService.getAuthPrincipal());
 		final Company company = companyDao.getById(user.getProfile().getCompany().getId());
 
-		jobDao.getJobByCompany(0, 0, company.getId()).forEach(jv -> {
+		jobDao.getJobByCompany(company.getId()).forEach(jv -> {
 			final JobVacancyResDto jobVacancy = new JobVacancyResDto();
 			jobVacancy.setCompanyName(jv.getCompany().getCompanyName());
-			jobVacancy.setEndDate(DateUtil.dateFormat(jv.getEndDate()));
-			jobVacancy.setStartDate(DateUtil.dateFormat(jv.getStartDate()));
+			jobVacancy.setEndDate(DateUtil.dateTimeFormat(jv.getEndDate()));
+			jobVacancy.setStartDate(DateUtil.dateTimeFormat(jv.getStartDate()));
 			jobVacancy.setHrName(jv.getPicHr().getProfile().getProfileName());
 			jobVacancy.setUserName(jv.getPicUser().getProfile().getProfileName());
 			jobVacancy.setLevelName(jv.getExpLevel().getLevelName());
@@ -425,7 +435,50 @@ public class JobVacancyService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		}	
+		}
+	}
 
+	public UpdateResDto editJob(JobVacancyUpdateReqDto data) {
+		UpdateResDto response = new UpdateResDto();
+		
+		try {
+			ConnHandler.begin();
+			final JobVacancy job = jobDao.getById(data.getJobVacancyId());
+			final VacancyDescription desc = descDao.getById(job.getVacancyDescription().getId());
+			
+			desc.setAddress(data.getAddress());
+			desc.setAgeVacancy(ageDao.getByIdRef(data.getAgeVacancyId()));
+			desc.setCity(cityDao.getByIdRef(data.getCityId()));
+			desc.setDegree(degreeDao.getByIdRef(data.getDegreeId()));
+			desc.setDescription(data.getDescription());
+			desc.setGender(genderDao.getByIdRef(data.getGenderId()));
+			desc.setJobType(typeDao.getByIdRef(data.getJobTypeId()));
+			desc.setSalary(data.getSalary());
+			final VacancyDescription descDb = descDao.saveAndFlush(desc);
+			
+			job.setAvailableStatus(statusDao.getByIdRef(data.getAvailableStatusId()));
+			job.setCompany(companyDao.getByIdRef(data.getCompanyId()));
+			job.setEndDate(DateUtil.dateTimeParse(data.getEndDate()));
+			job.setExpLevel(levelDao.getByIdRef(data.getExpLevelId()));
+			job.setPicHr(userDao.getByIdRef(data.getPicHrId()));
+			job.setPicUser(userDao.getByIdRef(data.getPicUserId()));
+			job.setStartDate(DateUtil.dateTimeParse(data.getStartDate()));
+			job.setVacancyCode(data.getVacancyCode());
+			job.setVacancyDescription(descDb);
+			job.setVacancyTitle(data.getVacancyTitle());
+			final JobVacancy jobDb = jobDao.saveAndFlush(job);
+			
+			data.setVacancyCode(job.getVacancyCode());
+			apiService.putTo("http://localhost:8080/jobs/edit", data);
+			ConnHandler.commit();
+			
+			response.setMessage("Job has been edited!");
+			response.setVer(jobDb.getVersion());
+		} catch (Exception e) {
+			e.printStackTrace();
+			ConnHandler.rollback();
+		}
+		
+		return response;
 	}
 }

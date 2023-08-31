@@ -104,7 +104,7 @@ public class SendMailService {
 					final String htmlContent = templateEngine.process("assessment-test", context);					
 					helper.setText(htmlContent, true);
 				} else {
-					final String htmlContent = templateEngine.process("assessment-test", context);
+					final String htmlContent = templateEngine.process("assessment", context);
 					helper.setText(htmlContent, true);
 				}
 				

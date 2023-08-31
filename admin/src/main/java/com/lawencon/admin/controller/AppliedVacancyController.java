@@ -16,6 +16,7 @@ import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.appliedstatus.UpdateStatusReqDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyAdminResDto;
+import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyByProgressAdminResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCandidateDetailResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyProgressResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyResDto;
@@ -61,8 +62,8 @@ public class AppliedVacancyController {
 	}
 	
 	@GetMapping("/progress")
-	public ResponseEntity<List<AppliedVacancyAdminResDto>> getByProgress(String progressId) {
-		final List<AppliedVacancyAdminResDto> responses = appliedVacancyService.getByProgress(progressId);
+	public ResponseEntity<List<AppliedVacancyAdminResDto>> getByProgress(String progressId, String jobVacancyId) {
+		final List<AppliedVacancyAdminResDto> responses = appliedVacancyService.getByProgress(progressId, jobVacancyId);
 		
 		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}
@@ -84,5 +85,11 @@ public class AppliedVacancyController {
 	public ResponseEntity<InsertResDto> getReport(String jobId){
 		final InsertResDto response = appliedVacancyService.getReport(jobId);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/counts")
+	public ResponseEntity<List<AppliedVacancyByProgressAdminResDto>> getProgressCount(String jobVacancyId){
+		final List<AppliedVacancyByProgressAdminResDto> results = appliedVacancyService.getProgressCount(jobVacancyId);
+		return new ResponseEntity<>(results, HttpStatus.OK);
 	}
 }

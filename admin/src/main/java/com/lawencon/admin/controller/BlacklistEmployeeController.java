@@ -17,7 +17,7 @@ import com.lawencon.admin.dto.blacklistemployee.InsertBlacklistEmployeeReqDto;
 import com.lawencon.admin.service.BlacklistService;
 
 @RestController
-@RequestMapping("/blacklist")
+@RequestMapping("/blacklists")
 public class BlacklistEmployeeController {
 
 	@Autowired

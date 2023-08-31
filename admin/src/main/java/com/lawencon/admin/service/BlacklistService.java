@@ -92,7 +92,7 @@ public class BlacklistService {
 			response.setCandidateId(be.getEmployee().getCandidate().getId());
 			response.setCandidateName(be.getEmployee().getCandidate().getCandidateProfile().getProfileName());
 			
-			final List<JobVacancy> jobVacancies = jobDao.getJobByCompany(firstIndex, lastIndex, userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId());
+			final List<JobVacancy> jobVacancies = jobDao.getJobByCompany(userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId());
 			JobVacancy jobVacancy = new JobVacancy();
 			for(JobVacancy job : jobVacancies) {	
 				final AppliedVacancy applied = appliedDao.getByJobVacancyAndCandidate(job.getId(), response.getCandidateId());
@@ -128,7 +128,7 @@ public class BlacklistService {
 			blacklistEmployeeRes.setCandidateId(be.getEmployee().getCandidate().getId());
 			blacklistEmployeeRes.setCandidateName(be.getEmployee().getCandidate().getCandidateProfile().getProfileName());
 			
-			final List<JobVacancy> jobVacancies = jobDao.getJobByCompany(0, 0, userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId());
+			final List<JobVacancy> jobVacancies = jobDao.getJobByCompany(userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId());
 			JobVacancy jobVacancy = new JobVacancy();
 			for(JobVacancy job : jobVacancies) {	
 				final AppliedVacancy applied = appliedDao.getByJobVacancyAndCandidate(job.getId(), blacklistEmployeeRes.getCandidateId());

@@ -7,14 +7,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.jobvacancy.InsertJobVacancyReqDto;
 import com.lawencon.admin.dto.jobvacancy.JobSearchResDto;
 import com.lawencon.admin.dto.jobvacancy.JobVacancyResDto;
+import com.lawencon.admin.dto.jobvacancy.JobVacancyUpdateReqDto;
 import com.lawencon.admin.service.JobVacancyService;
 
 @RestController
@@ -57,8 +60,8 @@ public class JobVacancyController {
 	}
 
 	@GetMapping("/company-vacancy")
-	public ResponseEntity<List<JobVacancyResDto>> getJobByCompany(int startIndex, int endIndex) {
-		final List<JobVacancyResDto> responses = jobService.jobByCompany(startIndex, endIndex);
+	public ResponseEntity<List<JobVacancyResDto>> getJobByCompany() {
+		final List<JobVacancyResDto> responses = jobService.jobByCompany();
 		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}
 	
@@ -78,5 +81,10 @@ public class JobVacancyController {
 	public ResponseEntity<InsertResDto> getReport(){
 		final InsertResDto response = jobService.getReport();
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
+	}
+	@PutMapping("/edit")
+	public ResponseEntity<UpdateResDto> editjob(JobVacancyUpdateReqDto data){
+		final UpdateResDto response = jobService.editJob(data);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

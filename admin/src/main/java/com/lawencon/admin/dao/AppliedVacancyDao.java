@@ -1,5 +1,6 @@
 package com.lawencon.admin.dao;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,8 +68,8 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 		
 		try {
 			final Object appJobObj = ConnHandler.getManager().createNativeQuery(sql)
-					.setParameter("job_id", jobId)
 					.setParameter("candidate_id", candidateId)
+					.setParameter("job_id", jobId)
 					.getSingleResult();
 
 			final Object[] appJobObjArr = (Object[]) appJobObj;
@@ -193,23 +194,26 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 		return appliedVacancies;
 	}
 	
-	public List<AppliedVacancy> getByProgressId(String progressId) {
+	public List<AppliedVacancy> getByProgressId(String progressId, String jobVacancyId) {
 		final String sql = "SELECT "
-				+ "		tav.id, tav.job_vacancy_id, tjv.vacancy_code, tap.progress_name , tas.status_name, tap.progress_code, tas.status_code "
+				+ "	tav.id, tcp.profile_name, tap.progress_name, tas.status_name, tav.created_at, tap.progress_code, tas.status_code "
 				+ "FROM "
 				+ "	t_applied_vacancy tav "
 				+ "INNER JOIN "
 				+ "	t_candidate tc ON tav.candidate_id = tc.id "
 				+ "INNER JOIN "
+				+ "	t_applied_progress tap ON tav.applied_progress_id = tap.id "
+				+ "INNER JOIN "
 				+ "	t_candidate_profile tcp ON tc.candidate_profile_id = tcp.id "
 				+ "INNER JOIN "
 				+ "	t_applied_status tas ON tav.applied_status_id = tas.id "
 				+ "WHERE "
-				+ "	tav.applied_progress_id = :progressId";
+				+ "	tav.applied_progress_id = :progressId AND tav.job_vacancy_id = :jobVacancyId";
 		
 		final List<?> appObjs = ConnHandler.getManager()
 				.createNativeQuery(sql)
 				.setParameter("progressId", progressId)
+				.setParameter("jobVacancyId", jobVacancyId)
 				.getResultList();
 		
 		final List<AppliedVacancy> appliedVacancies = new ArrayList<>();
@@ -227,12 +231,12 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 				appliedVacancy.setCandidate(candidate);
 				
 				final AppliedStatus appliedStatus = new AppliedStatus();
-				appliedStatus.setStatusName(appObjArr[2].toString());
+				appliedStatus.setStatusName(appObjArr[3].toString());
 				appliedStatus.setStatusCode(appObjArr[6].toString());
 				appliedVacancy.setAppliedStatus(appliedStatus);
 				
 				final AppliedProgress appliedProgress = new AppliedProgress();
-				appliedProgress.setProgressName(appObjArr[3].toString());
+				appliedProgress.setProgressName(appObjArr[2].toString());
 				appliedProgress.setProgressCode(appObjArr[5].toString());
 				appliedVacancy.setAppliedProgress(appliedProgress);
 				
@@ -243,5 +247,23 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 		}
 		
 		return appliedVacancies;
+	}
+	
+	public Integer getProgressCount(String progressCode, String jobVacancyId) {
+		final String sql = "SELECT "
+				+ "	count(tav.id) "
+				+ "FROM "
+				+ "	t_applied_vacancy tav "
+				+ "JOIN "
+				+ "	t_applied_progress tap ON tav.applied_progress_id = tap.id "
+				+ "WHERE "
+				+ "	tap.progress_code LIKE :progressCode AND tav.job_vacancy_id = :jobVacancyId";
+		
+		final Integer result = ((BigInteger) ConnHandler.getManager().createNativeQuery(sql)
+				.setParameter("progressCode", progressCode)
+				.setParameter("jobVacancyId", jobVacancyId)
+				.getSingleResult()).intValue();
+		
+		return result;
 	}
 }

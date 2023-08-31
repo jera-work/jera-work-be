@@ -1,5 +1,6 @@
 package com.lawencon.admin.dao;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -19,7 +20,6 @@ import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.admin.model.Profile;
 import com.lawencon.admin.model.User;
 import com.lawencon.admin.model.VacancyDescription;
-import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
@@ -185,7 +185,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 				vacancyDescription.setCity(city);
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
-				jobVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(objArr[9].toString()));
+				jobVacancy.setCreatedAt(Timestamp.valueOf(objArr[9].toString()).toLocalDateTime());
 				
 				jobVacancies.add(jobVacancy);
 			}
@@ -258,7 +258,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 				vacancyDescription.setCity(city);
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
-				jobVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(objArr[9].toString()));
+				jobVacancy.setCreatedAt(Timestamp.valueOf(objArr[9].toString()).toLocalDateTime());
 
 				
 				jobVacancies.add(jobVacancy);
@@ -330,7 +330,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 				vacancyDescription.setCity(city);
 				
 				jobVacancy.setVacancyDescription(vacancyDescription);
-				jobVacancy.setCreatedAt(DateUtil.dateTimeParseCustom(objArr[9].toString()));
+				jobVacancy.setCreatedAt(Timestamp.valueOf(objArr[9].toString()).toLocalDateTime());
 				
 				jobVacancies.add(jobVacancy);
 			}
@@ -339,7 +339,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 		return jobVacancies;
 	}
 	
-	public List<JobVacancy> getJobByCompany(int startIndex, int endIndex, String companyId){
+	public List<JobVacancy> getJobByCompany(String companyId){
 		final String sql = "SELECT "
 				+ "tjv.id, tjv.vacancy_code, tjv.vacancy_title, tp.profile_name as hrName, tp2.profile_name as userName, "
 				+ "tjv.start_date, tjv.end_date, tel.level_name, tas.status_name, "
@@ -368,8 +368,6 @@ public class JobVacancyDao extends AbstractJpaDao {
 		final List<?> jobObjs = ConnHandler.getManager()
 				.createNativeQuery(sql)
 				.setParameter("companyId", companyId)
-				.setFirstResult(startIndex)
-				.setMaxResults(endIndex)
 				.getResultList();
 		
 		final List<JobVacancy> jobVacancies = new ArrayList<>();
@@ -395,8 +393,8 @@ public class JobVacancyDao extends AbstractJpaDao {
 				picUser.setProfile(hrProfile);
 				jobVacancy.setPicUser(picUser);
 				
-				jobVacancy.setStartDate(DateUtil.dateParseCustom((objArr[5].toString())));
-				jobVacancy.setEndDate(DateUtil.dateParseCustom(objArr[6].toString()));
+				jobVacancy.setStartDate(Timestamp.valueOf(objArr[5].toString()).toLocalDateTime());
+				jobVacancy.setEndDate(Timestamp.valueOf(objArr[6].toString()).toLocalDateTime());
 				
 				final ExperienceLevel experienceLevel = new ExperienceLevel();
 				experienceLevel.setLevelName(objArr[7].toString());

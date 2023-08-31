@@ -73,4 +73,10 @@ public class UserController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
+	@GetMapping("/company")
+	public ResponseEntity<List<UserResDto>> getUserByCompany() {
+		final List<UserResDto> response = userService.getByCompany();
+		return new ResponseEntity<List<UserResDto>>(response, HttpStatus.OK);
+	}
+
 }
