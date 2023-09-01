@@ -66,8 +66,8 @@ public class McuVacancyService {
 		mcuVacancyReqDto.setCompanyPhoto(job.getCompany().getPhoto().getFileContent());
 		mcuVacancyReqDto.setVacancyTitle(job.getVacancyTitle());
 		mcuVacancyReqDto.setLevelName(job.getExpLevel().getLevelName());
-		mcuVacancyReqDto.setStartDate(mcuDb.getStartDate());
-		mcuVacancyReqDto.setEndDate(mcuDb.getEndDate());
+		mcuVacancyReqDto.setStartDate(DateUtil.dateTimeFormat(mcuDb.getStartDate()));
+		mcuVacancyReqDto.setEndDate(DateUtil.dateTimeFormat(mcuDb.getEndDate()));
 		mcuVacancyReqDto.setAddress(job.getCompany().getAddress());
 		
 		try {				

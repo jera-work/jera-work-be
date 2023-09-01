@@ -1,5 +1,7 @@
 package com.lawencon.admin.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,8 +72,8 @@ public class AssessmentVacancyService {
 		assessmentVacancyReqDto.setCompanyPhoto(job.getCompany().getPhoto().getFileContent());
 		assessmentVacancyReqDto.setVacancyTitle(job.getVacancyTitle());
 		assessmentVacancyReqDto.setLevelName(job.getExpLevel().getLevelName());
-		assessmentVacancyReqDto.setStartDate(assessmentVacancyDb.getStartDate());
-		assessmentVacancyReqDto.setEndDate(assessmentVacancyDb.getEndDate());
+		assessmentVacancyReqDto.setStartDate(DateUtil.dateTimeFormat(assessmentVacancyDb.getStartDate()));
+		assessmentVacancyReqDto.setEndDate(DateUtil.dateTimeFormat(assessmentVacancyDb.getEndDate()));
 		assessmentVacancyReqDto.setNotes(assessmentVacancyDb.getNotes());
 		assessmentVacancyReqDto.setAssessmentLocation(assessmentVacancyDb.getAssessmentLocation());
 		if(assessmentVacancyDb.getIsQuestion()) {

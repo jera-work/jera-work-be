@@ -1,5 +1,6 @@
 package com.lawencon.admin.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -97,12 +98,15 @@ public class OfferingService {
 		offering.setCandidateName(candidate.getCandidateProfile().getProfileName());
 		offering.setPicHrName(picHr.getProfile().getProfileName());
 		offering.setSalary(jobDesc.getSalary());	
-		offering.setStartDate(DateUtil.dateParse(data.getEndDate()));
-		offering.setEndDate(DateUtil.dateParse(data.getEndDate()));
+		LocalDateTime startDateTime = DateUtil.dateTimeParse(data.getStartDate());
+		offering.setStartDate(DateUtil.dateTimeFormat(startDateTime));
+		LocalDateTime endDateTime = DateUtil.dateTimeParse(data.getStartDate());
+		offering.setEndDate(DateUtil.dateTimeFormat(endDateTime));
 		offering.setOfferingLocation(data.getOfferingLocation());
 
 		offering.setDescription(data.getCompanyDescription());
-		offering.setStartWork(data.getStartWork());
+		LocalDateTime date = DateUtil.dateTimeParse(data.getStartWork());
+		offering.setStartWork(DateUtil.dateTimeFormat(date));
 		offering.setBenefit(data.getBenefit());	
 //		offering.setBenefit(offering.getBenefit().replace("<p>", "<br><br>").replace("</p>", ""));
 		

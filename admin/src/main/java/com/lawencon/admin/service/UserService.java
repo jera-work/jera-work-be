@@ -23,6 +23,7 @@ import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.email.EmailReqDto;
 import com.lawencon.admin.dto.email.ReportReqDto;
+import com.lawencon.admin.dto.email.UserCreateReportReqDto;
 import com.lawencon.admin.dto.login.LoginReqDto;
 import com.lawencon.admin.dto.profile.ProfileUpdateReqDto;
 import com.lawencon.admin.dto.role.RoleCountResDto;
@@ -96,10 +97,19 @@ public class UserService implements UserDetailsService {
 
 		ConnHandler.commit();
 
-		sendMailService.sendEmail(userDb.getUserEmail(), "Account created successfully", "Hello, "
-				+ data.getProfileName()
-				+ "! Your account has been created successfully for jera-work app, you can login using this password : "
-				+ generatedString);
+		final EmailReqDto emailReqDto = new EmailReqDto();
+		emailReqDto.setEmail(userDb.getUserEmail());
+		emailReqDto.setSubject("Account created Successfully");
+		
+		final UserCreateReportReqDto userCreate = new UserCreateReportReqDto();
+		userCreate.setProfileName(userDb.getProfile().getProfileName());
+		userCreate.setEmail(userDb.getUserEmail());
+		userCreate.setPassword(generatedString);
+		userCreate.setCompanyName(userDb.getProfile().getCompany().getCompanyName());
+		userCreate.setRoleName(userDb.getRole().getRoleName());
+		
+		sendMailService.sendCreateAccount(emailReqDto, userCreate);
+
 		final InsertResDto response = new InsertResDto();
 		response.setId(userDb.getId());
 		response.setMessage("User created successfully");
@@ -306,16 +316,22 @@ public class UserService implements UserDetailsService {
 			if(!roleExist) {
 				rolesCount.add(roleCount);
 			}else {
-				for(RoleCountResDto r : rolesCount) {
-					if(r.getRoleName().equals(roleCount.getRoleName())) {
-						roleCount.setRoleCount(r.getRoleCount()+1);
-						rolesCount.set(i, roleCount);
+				for(int j = 0; j < rolesCount.size(); j++) {
+					if(rolesCount.get(j).getRoleName().equals(roleCount.getRoleName())) {
+						roleCount.setRoleCount(rolesCount.get(j).getRoleCount()+1);
+						rolesCount.set(j, roleCount);
 					}
 				}
 			}
 		}
-		final Collection<List<UserResDto>> result = new ArrayList<>();
-		result.add(usersRes);
+		
+		final ReportReqDto report = new ReportReqDto();
+        report.setFullName(userLogin.getProfile().getProfileName());
+        report.setCompanyName(userCompany.getCompanyName());
+        report.setCreatedAt(DateUtil.dateTimeFormat(LocalDateTime.now()));
+        
+		final Collection<ReportReqDto> result = new ArrayList<>();
+		result.add(report);
 		
 		final Map<String, Object> parameters = new HashMap<>();
 		parameters.put("usersList", usersRes);

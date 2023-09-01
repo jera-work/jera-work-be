@@ -1,14 +1,12 @@
 package com.lawencon.admin.dto.email;
 
-import java.time.LocalDateTime;
-
 public class McuVacancyReqDto {
 	private String companyName;
 	private String companyPhoto;
 	private String vacancyTitle;
 	private String levelName;
-	private LocalDateTime startDate;
-	private LocalDateTime endDate;
+	private String startDate;
+	private String endDate;
 	private String address;
 
 	public String getCompanyName() {
@@ -43,19 +41,19 @@ public class McuVacancyReqDto {
 		this.levelName = levelName;
 	}
 
-	public LocalDateTime getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDateTime startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDateTime getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDateTime endDate) {
+	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
 

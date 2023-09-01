@@ -116,13 +116,37 @@
 		<field name="jobName" class="java.lang.String"/>
 		<field name="appliedCount" class="java.lang.Long"/>
 	</subDataset>
+	<subDataset name="hiredRangeDates" uuid="90eda7b3-920a-4847-9269-f4f67aefe136">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="jobName" class="java.lang.String"/>
+		<field name="hiredRange" class="java.lang.Long"/>
+	</subDataset>
 	<parameter name="jobVacancies" class="java.util.List"/>
 	<parameter name="expLevels" class="java.util.List"/>
 	<parameter name="availableStatuses" class="java.util.List"/>
 	<parameter name="appliedCandidates" class="java.util.List"/>
+	<parameter name="hiredRangeDates" class="java.util.List"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
+	<field name="createdAt" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="createdAt"/>
+		<property name="com.jaspersoft.studio.field.name" value="createdAt"/>
+	</field>
+	<field name="fullName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="fullName"/>
+		<property name="com.jaspersoft.studio.field.name" value="fullName"/>
+	</field>
+	<field name="companyName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="companyName"/>
+		<property name="com.jaspersoft.studio.field.label" value="companyName"/>
+	</field>
+	<field name="header" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="header"/>
+		<property name="com.jaspersoft.studio.field.label" value="header"/>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -138,7 +162,16 @@
 		</band>
 	</title>
 	<detail>
-		<band height="480" splitType="Stretch">
+		<band height="116" splitType="Stretch">
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="40" y="15" width="490" height="101" uuid="d28d9e2d-ee85-47c5-87ad-4bb385d35038"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["This Report is created at " + $F{createdAt} + " and reported to " + $F{fullName}  + " of company " + $F{companyName} + ". If you have any problem of this report, contact Customer Service of Jerawork for detail"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="730" splitType="Stretch">
 			<pieChart>
 				<chart evaluationTime="Report">
 					<reportElement x="330" y="30" width="200" height="200" uuid="16de44e0-03d3-4076-8708-5b7cce474e56">
@@ -210,6 +243,31 @@
 					<keyExpression><![CDATA[$F{jobName}]]></keyExpression>
 					<valueExpression><![CDATA[$F{appliedCount}]]></valueExpression>
 					<labelExpression><![CDATA[$F{appliedCount}.toString()]]></labelExpression>
+				</pieDataset>
+				<piePlot>
+					<plot/>
+					<itemLabel/>
+				</piePlot>
+			</pieChart>
+			<pieChart>
+				<chart evaluationTime="Report">
+					<reportElement stretchType="RelativeToTallestObject" x="80" y="518" width="399" height="200" uuid="cc069e09-84c7-42eb-929e-85ffb7d67c5b"/>
+					<chartTitle color="#3FBDF1">
+						<font fontName="Comic Sans MS" size="12"/>
+						<titleExpression><![CDATA["Average Hired Range Date"]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<dataset>
+						<datasetRun subDataset="hiredRangeDates" uuid="b8a6fa9d-44a2-4a22-a371-6a48a3167b13">
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{hiredRangeDates})]]></dataSourceExpression>
+						</datasetRun>
+					</dataset>
+					<keyExpression><![CDATA[$F{jobName}]]></keyExpression>
+					<valueExpression><![CDATA[$F{hiredRange}]]></valueExpression>
+					<labelExpression><![CDATA[$F{hiredRange}.toString() + " Day"]]></labelExpression>
 				</pieDataset>
 				<piePlot>
 					<plot/>

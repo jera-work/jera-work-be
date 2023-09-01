@@ -110,6 +110,22 @@
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
+	<field name="createdAt" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="createdAt"/>
+		<property name="com.jaspersoft.studio.field.name" value="createdAt"/>
+	</field>
+	<field name="fullName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="fullName"/>
+		<property name="com.jaspersoft.studio.field.name" value="fullName"/>
+	</field>
+	<field name="companyName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="companyName"/>
+		<property name="com.jaspersoft.studio.field.label" value="companyName"/>
+	</field>
+	<field name="header" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="header"/>
+		<property name="com.jaspersoft.studio.field.label" value="header"/>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -125,6 +141,15 @@
 		</band>
 	</title>
 	<detail>
+		<band height="116">
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="40" y="15" width="490" height="101" uuid="f64b4475-77e0-406c-a3cc-d7db5029bee2"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["This Report is created at " + $F{createdAt} + " and reported to " + $F{fullName}  + " of company " + $F{companyName} + ". If you have any problem of this report, contact Customer Service of Jerawork for detail"]]></textFieldExpression>
+			</textField>
+		</band>
 		<band height="470">
 			<pieChart>
 				<chart evaluationTime="Report">

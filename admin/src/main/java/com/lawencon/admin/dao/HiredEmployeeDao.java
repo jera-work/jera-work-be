@@ -1,11 +1,13 @@
 package com.lawencon.admin.dao;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
 import org.springframework.stereotype.Repository;
 
+import com.lawencon.admin.dto.hiredemployee.HiredAppliedRangeDate;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.CandidateProfile;
 import com.lawencon.admin.model.Company;
@@ -133,5 +135,42 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 			return null;
 		}
 		
+	}
+	
+	public List<HiredAppliedRangeDate> getHiredAppliedRangeDate(String jobVacancyId) {
+		final String sql = "SELECT "
+				+ "	the.created_at AS hiredAt, tav.created_at AS appliedAt "
+				+ "FROM "
+				+ "	t_hired_employee the "
+				+ "INNER JOIN "
+				+ "	t_applied_vacancy tav ON tav.candidate_id = the.candidate_id "
+				+ "WHERE "
+				+ "	tav.job_vacancy_id = :jobVacancyId ";
+		
+		try {
+			final List<?> hiredRangeObjs = ConnHandler.getManager()
+											.createNativeQuery(sql)
+											.setParameter("jobVacancyId", jobVacancyId)
+											.getResultList();
+			
+			final List<HiredAppliedRangeDate> hiredRanges = new ArrayList<>();
+			
+			if(hiredRangeObjs.size() > 0) {
+				for (Object hiredRangeObj : hiredRangeObjs) {
+					final Object[] hiredRangeArr = (Object[]) hiredRangeObj;
+					final HiredAppliedRangeDate hiredRange = new HiredAppliedRangeDate();
+					
+					hiredRange.setAppliedAt(Timestamp.valueOf(hiredRangeArr[0].toString()).toLocalDateTime());
+					hiredRange.setHiredAt(Timestamp.valueOf(hiredRangeArr[1].toString()).toLocalDateTime());
+					
+					hiredRanges.add(hiredRange);
+				}
+			}
+			return hiredRanges;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
 	}
 }

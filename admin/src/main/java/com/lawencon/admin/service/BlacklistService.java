@@ -227,8 +227,13 @@ public class BlacklistService {
         	}
         }
         
-        final Collection<List<BlacklistEmployeeResDto>> result = new ArrayList<>();
-        result.add(blacklistEmployeesRes);
+        final ReportReqDto report = new ReportReqDto();
+        report.setFullName(userLogin.getProfile().getProfileName());
+        report.setCompanyName(userCompany.getCompanyName());
+        report.setCreatedAt(DateUtil.dateTimeFormat(LocalDateTime.now()));
+		
+        final Collection<ReportReqDto> result = new ArrayList<>();
+        result.add(report);
         
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("blacklistEmployees", blacklistEmployeesRes);

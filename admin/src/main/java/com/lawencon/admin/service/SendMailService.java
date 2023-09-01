@@ -28,6 +28,7 @@ import com.lawencon.admin.dto.email.InterviewVacancyReqDto;
 import com.lawencon.admin.dto.email.McuVacancyReqDto;
 import com.lawencon.admin.dto.email.OfferingReqDto;
 import com.lawencon.admin.dto.email.ReportReqDto;
+import com.lawencon.admin.dto.email.UserCreateReportReqDto;
 
 @Service
 public class SendMailService {
@@ -390,6 +391,31 @@ public class SendMailService {
 			}
 		});
 
+	}
+	
+	public void sendCreateAccount(EmailReqDto email, UserCreateReportReqDto data) {
+		executorService = Executors.newFixedThreadPool(8);
+		executorService.execute(() -> {			
+			MimeMessage msg = javaMailSender.createMimeMessage();
+			
+			try {
+				MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+				helper.setTo(email.getEmail());
+				helper.setSubject(email.getSubject());
+				
+				final Context context = new Context();
+				context.setVariable("data", data);
+				final String htmlContent = templateEngine.process("create-account", context);
+				helper.setText(htmlContent, true);
+				
+				final Resource imageJeraWork = new ClassPathResource("/html-template/image/JERA-WORK.jpg");
+
+				helper.addInline("logo", imageJeraWork, "image/jpeg");
+				javaMailSender.send(msg);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
 	

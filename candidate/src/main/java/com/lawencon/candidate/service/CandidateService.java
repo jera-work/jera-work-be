@@ -18,6 +18,7 @@ import com.lawencon.candidate.dao.FileDao;
 import com.lawencon.candidate.dto.InsertResDto;
 import com.lawencon.candidate.dto.UpdateResDto;
 import com.lawencon.candidate.dto.candidate.CandidatePasswordUpdateReqDto;
+import com.lawencon.candidate.dto.email.EmailReqDto;
 import com.lawencon.candidate.dto.profile.CandidateProfileUpdateReqDto;
 import com.lawencon.candidate.dto.register.RegisterReqDto;
 import com.lawencon.candidate.login.LoginReqDto;
@@ -42,6 +43,8 @@ public class CandidateService implements UserDetailsService {
 	private PrincipalServiceImpl principalService;
 	@Autowired
 	private ApiService apiService;
+	@Autowired
+	private SendMailService sendMailService;
 
 	/* Register for Candidate */
 	public InsertResDto register(RegisterReqDto data) {
@@ -67,6 +70,12 @@ public class CandidateService implements UserDetailsService {
 			final HttpStatus adminResponse = apiService.writeTo("http://localhost:8081/candidates/register", data);
 
 			if (adminResponse.equals(HttpStatus.CREATED)) {
+				
+				final EmailReqDto emailReqDto = new EmailReqDto();
+				emailReqDto.setEmail(candidate.getCandidateEmail());
+				emailReqDto.setSubject("Account created successfully");
+				sendMailService.sendCreateAccount(emailReqDto);				
+				
 				response.setId(candidateDb.getId());
 				response.setMessage("Account created succesfully");
 

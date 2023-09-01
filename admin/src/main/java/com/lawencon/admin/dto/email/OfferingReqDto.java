@@ -1,6 +1,7 @@
 package com.lawencon.admin.dto.email;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class OfferingReqDto {
 	private String companyName;
@@ -14,8 +15,8 @@ public class OfferingReqDto {
 	private String typeName;
 	private String levelName;
 	private String salary;
-	private LocalDate startDate;
-	private LocalDate endDate;
+	private String startDate;
+	private String endDate;
 	private String offeringLocation;
 
 	private String benefit;
@@ -109,19 +110,19 @@ public class OfferingReqDto {
 		this.salary = salary;
 	}
 
-	public LocalDate getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDate getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDate endDate) {
+	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
 

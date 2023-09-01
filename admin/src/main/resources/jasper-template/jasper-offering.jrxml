@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_Letter" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2a30cbbc-ed87-47e0-bec3-e460b79fe066">
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="336"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="650"/>
 	<parameter name="img" class="java.lang.String"/>
 	<parameter name="companyDescriptionFontColor" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="companyNameFontColor" class="java.lang.String"/>
@@ -55,7 +57,7 @@
 		<property name="com.jaspersoft.studio.field.label" value="startWork"/>
 		<property name="com.jaspersoft.studio.field.name" value="startWork"/>
 	</field>
-	<field name="endDate" class="java.time.LocalDate">
+	<field name="endDate" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="endDate"/>
 		<property name="com.jaspersoft.studio.field.label" value="endDate"/>
 	</field>
@@ -126,9 +128,9 @@
 		</band>
 	</title>
 	<detail>
-		<band height="150" splitType="Stretch">
+		<band height="160" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="0" y="0" width="570" height="150" backcolor="#FFFFFF" uuid="d49b2f8b-2046-4241-87a1-b107181fb179">
+				<reportElement mode="Opaque" x="0" y="0" width="570" height="160" backcolor="#FFFFFF" uuid="d49b2f8b-2046-4241-87a1-b107181fb179">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 				</reportElement>
 				<box>
@@ -152,7 +154,7 @@
 					<textFieldExpression><![CDATA["We are excited on your profile and offer you " + $F{typeName} + " position of " + $F{levelName} + " " + $F{vacancyTitle} + " at " + $F{companyName} + ". We believe your skills and experience are an excellent match for our company."]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement stretchType="RelativeToTallestObject" x="30" y="120" width="507" height="30" uuid="9f0205c3-1c1e-4084-81e3-fc2ef2e0352d"/>
+					<reportElement stretchType="RelativeToTallestObject" x="30" y="120" width="507" height="50" uuid="9f0205c3-1c1e-4084-81e3-fc2ef2e0352d"/>
 					<textElement>
 						<font size="12"/>
 					</textElement>

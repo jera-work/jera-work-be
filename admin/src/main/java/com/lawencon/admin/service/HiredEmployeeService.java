@@ -167,12 +167,12 @@ public class HiredEmployeeService {
 		final Company userCompany = companyDao.getById(userLogin.getProfile().getCompany().getId());
 		final InsertResDto response = new InsertResDto();
 		
-		hiredDao.getByCompany(0, 0, userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId()).forEach(he -> {
+		hiredDao.getByCompany(userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId()).forEach(he -> {
 			final HiredEmployeeResDto hiredEmployeeRes = new HiredEmployeeResDto();
 			hiredEmployeeRes.setHiredEmployeeId(he.getId());
 			hiredEmployeeRes.setCandidateName(he.getCandidate().getCandidateProfile().getProfileName());
 			
-			final List<JobVacancy> jobVacancies = jobDao.getJobByCompany(0, 0, userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId());
+			final List<JobVacancy> jobVacancies = jobDao.getJobByCompany(userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId());
 			JobVacancy jobVacancy = new JobVacancy();
 			for(JobVacancy job : jobVacancies) {	
 				final AppliedVacancy applied = appliedDao.getByJobVacancyAndCandidate(job.getId(), he.getCandidate().getId());
