@@ -82,8 +82,9 @@ public class JobVacancyController {
 		final InsertResDto response = jobService.getReport();
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
 	}
+	
 	@PutMapping("/edit")
-	public ResponseEntity<UpdateResDto> editjob(JobVacancyUpdateReqDto data){
+	public ResponseEntity<UpdateResDto> editjob(@RequestBody JobVacancyUpdateReqDto data){
 		final UpdateResDto response = jobService.editJob(data);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}

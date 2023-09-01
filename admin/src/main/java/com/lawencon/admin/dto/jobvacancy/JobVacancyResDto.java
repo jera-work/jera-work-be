@@ -13,6 +13,7 @@ public class JobVacancyResDto {
 	private String endDate;
 	private String levelId;
 	private String levelName;
+	private String statusId;
 	private String statusName;
 	private String companyName;
 	private String companyPhotoId;
@@ -31,6 +32,14 @@ public class JobVacancyResDto {
 	private String address;
 	private String description;
 	private Long appliedCandidateTotal;
+
+	public String getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(String statusId) {
+		this.statusId = statusId;
+	}
 
 	public String getCityId() {
 		return cityId;
@@ -255,9 +264,11 @@ public class JobVacancyResDto {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	public Long getAppliedCandidateTotal() {
 		return appliedCandidateTotal;
 	}
+
 	public void setAppliedCandidateTotal(Long appliedCandidateTotal) {
 		this.appliedCandidateTotal = appliedCandidateTotal;
 	}
