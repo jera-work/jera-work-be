@@ -270,8 +270,13 @@ public class HiredEmployeeService {
         	}
         }
         
-        final Collection<List<HiredEmployeeResDto>> result = new ArrayList<>();
-        result.add(hiredEmployeesRes);
+        final ReportReqDto report = new ReportReqDto();
+        report.setFullName(userLogin.getProfile().getProfileName());
+        report.setCompanyName(userCompany.getCompanyName());
+        report.setCreatedAt(DateUtil.dateTimeFormat(LocalDateTime.now()));
+        
+        final Collection<ReportReqDto> result = new ArrayList<>();
+        result.add(report);
         
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("hiredEmployees", hiredEmployeesRes);
