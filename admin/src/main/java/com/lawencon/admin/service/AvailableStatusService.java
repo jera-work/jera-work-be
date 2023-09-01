@@ -19,8 +19,9 @@ public class AvailableStatusService {
 		
 		availableStatusDao.getAll().forEach(av -> {
 			final AvailableStatusResDto response = new AvailableStatusResDto();
-			//
-			
+			response.setId(av.getId());
+			response.setStatusCode(av.getStatusCode());
+			response.setStatusname(av.getStatusname());
 			responses.add(response);
 		});
 		

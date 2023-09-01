@@ -154,8 +154,8 @@ public class HiredEmployeeService {
 			response.setCandidateName(cdt.getCandidateProfile().getProfileName());
 			response.setCompanyName(employee.getCompany().getCompanyName());
 			response.setHiredEmployeeId(employee.getId());
-			
-			return response;			
+			response.setCreatedAt(DateUtil.dateTimeFormat(employee.getCreatedAt()));
+			return response;
 		} else {
 			return null;
 		}

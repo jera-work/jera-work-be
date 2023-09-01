@@ -244,7 +244,7 @@ public class AppliedVacancyService {
 			response.setProfileName(av.getCandidate().getCandidateProfile().getProfileName());
 			response.setStatusName(av.getAppliedStatus().getStatusName());
 			response.setProgressName(av.getAppliedProgress().getProgressName());
-			response.setCreatedAt(DateUtil.dateTimeFormat(av.getCreatedAt()));
+			response.setCreatedAt(DateUtil.dateTimeFormatIso(av.getCreatedAt()));
 			response.setStatusCode(av.getAppliedStatus().getStatusCode());
 			response.setProgressCode(av.getAppliedProgress().getProgressCode());
 

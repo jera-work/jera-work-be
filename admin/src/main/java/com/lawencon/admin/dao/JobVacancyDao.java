@@ -390,7 +390,7 @@ public class JobVacancyDao extends AbstractJpaDao {
 				final User picUser = new User();
 				final Profile userProfile = new Profile();
 				userProfile.setProfileName(objArr[4].toString());
-				picUser.setProfile(hrProfile);
+				picUser.setProfile(userProfile);
 				jobVacancy.setPicUser(picUser);
 				
 				jobVacancy.setStartDate(Timestamp.valueOf(objArr[5].toString()).toLocalDateTime());

@@ -26,14 +26,19 @@ import com.lawencon.admin.dao.JobVacancyDao;
 import com.lawencon.admin.dao.UserDao;
 import com.lawencon.admin.dao.VacancyDescriptionDao;
 import com.lawencon.admin.dto.InsertResDto;
+import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.email.EmailReqDto;
 import com.lawencon.admin.dto.email.ReportReqDto;
 import com.lawencon.admin.dto.hiredemployee.HiredAppliedRangeDate;
 import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.jobvacancy.InsertJobVacancyReqDto;
 import com.lawencon.admin.dto.jobvacancy.JobSearchResDto;
+import com.lawencon.admin.dto.jobvacancy.JobVacancyCountAppliedCandidateResDto;
+import com.lawencon.admin.dto.jobvacancy.JobVacancyCountLevelResDto;
+import com.lawencon.admin.dto.jobvacancy.JobVacancyCountStatusResDto;
 import com.lawencon.admin.dto.jobvacancy.JobVacancyResDto;
 import com.lawencon.admin.dto.jobvacancy.JobVacancyUpdateReqDto;
+import com.lawencon.admin.model.AvailableStatus;
 import com.lawencon.admin.model.Company;
 import com.lawencon.admin.model.JobVacancy;
 import com.lawencon.admin.model.User;
@@ -175,7 +180,6 @@ public class JobVacancyService {
 			response.setVacancyCode(jv.getVacancyCode());
 			response.setCompanyPhotoId(jv.getCompany().getPhoto().getId());
 			response.setCreatedAt(DateUtil.dateTimeFormatIso(jv.getCreatedAt()));
-//			response.setCreatedAt(DateUtil.dateTimeFormatIso(jv.getCreatedAt()));)
 
 			responses.add(response);
 		});
@@ -232,8 +236,9 @@ public class JobVacancyService {
 
 		final User user = userDao.getById(principalService.getAuthPrincipal());
 		final Company company = companyDao.getById(user.getProfile().getCompany().getId());
-
-		jobDao.getJobByCompany(company.getId()).forEach(jv -> {
+		final List<JobVacancy> jobs = jobDao.getJobByCompany(company.getId());
+		
+		jobs.forEach(jv -> {
 			final JobVacancyResDto response = new JobVacancyResDto();
 			response.setCompanyName(jv.getCompany().getCompanyName());
 			response.setEndDate(DateUtil.dateTimeFormat(jv.getEndDate()));
@@ -241,7 +246,7 @@ public class JobVacancyService {
 			response.setHrName(jv.getPicHr().getProfile().getProfileName());
 			response.setUserName(jv.getPicUser().getProfile().getProfileName());
 			response.setLevelName(jv.getExpLevel().getLevelName());
-			response.setStatusName(jv.getAvailableStatus().getStatusname());
+			response.setStatusName(changeStatusByEndDate(jv.getId()));
 			response.setVacancyTitle(jv.getVacancyTitle());
 			response.setVacancyCode(jv.getVacancyCode());
 			response.setVacancyId(jv.getId());
@@ -281,6 +286,7 @@ public class JobVacancyService {
 		response.setUserName(jv.getPicUser().getProfile().getProfileName());
 		response.setLevelId(jv.getExpLevel().getId());
 		response.setLevelName(jv.getExpLevel().getLevelName());
+		response.setStatusId(jv.getAvailableStatus().getId());
 		response.setStatusName(jv.getAvailableStatus().getStatusname());
 		response.setVacancyTitle(jv.getVacancyTitle());
 		response.setVacancyCode(jv.getVacancyCode());
@@ -495,6 +501,8 @@ public class JobVacancyService {
 
 	public UpdateResDto editJob(JobVacancyUpdateReqDto data) {
 		UpdateResDto response = new UpdateResDto();
+		final User user = userDao.getById(principalService.getAuthPrincipal());
+		final Company company = companyDao.getById(user.getProfile().getCompany().getId());
 		
 		try {
 			ConnHandler.begin();
@@ -511,9 +519,24 @@ public class JobVacancyService {
 			desc.setSalary(data.getSalary());
 			final VacancyDescription descDb = descDao.saveAndFlush(desc);
 			
-			job.setAvailableStatus(statusDao.getByIdRef(data.getAvailableStatusId()));
-			job.setCompany(companyDao.getByIdRef(data.getCompanyId()));
-			job.setEndDate(DateUtil.dateTimeParse(data.getEndDate()));
+			final AvailableStatus status = statusDao.getById(data.getAvailableStatusId());
+			if(DateUtil.dateTimeParse(data.getEndDate()).isBefore(LocalDateTime.now())) {
+				final AvailableStatus statusClose = statusDao.getByCode("CLS");
+				job.setAvailableStatus(statusDao.getByIdRef(statusClose.getId()));
+				job.setEndDate(LocalDateTime.now());
+				data.setEndDate(DateUtil.dateTimeFormat(LocalDateTime.now()));
+				data.setAvailableStatusId(statusClose.getId());
+			} else if(status.getStatusCode().equals("CLS")) {
+				job.setAvailableStatus(status);
+				data.setAvailableStatusId(status.getId());
+			} else {
+				final AvailableStatus statusOpen = statusDao.getByCode("OPN");
+				job.setAvailableStatus(statusDao.getByIdRef(statusOpen.getId()));
+				job.setEndDate(DateUtil.dateTimeParse(data.getEndDate()));
+				data.setAvailableStatusId(statusOpen.getId());
+			}
+			
+			job.setCompany(companyDao.getByIdRef(company.getId()));
 			job.setExpLevel(levelDao.getByIdRef(data.getExpLevelId()));
 			job.setPicHr(userDao.getByIdRef(data.getPicHrId()));
 			job.setPicUser(userDao.getByIdRef(data.getPicUserId()));
@@ -536,4 +559,24 @@ public class JobVacancyService {
 		
 		return response;
 	}
+	
+	/* Change available status according job's end date. Used only in jobByCompany() */	
+	public String changeStatusByEndDate(String jobId) {
+		ConnHandler.begin();
+		
+		final JobVacancy job = jobDao.getById(jobId);
+		if(job.getEndDate().isBefore(LocalDateTime.now()) || job.getEndDate().isEqual(LocalDateTime.now())) {
+			final AvailableStatus statusClose = statusDao.getByCode("CLS");
+			job.setAvailableStatus(statusClose);
+			final JobVacancy jobDb = jobDao.saveAndFlush(job);
+			ConnHandler.commit();
+			
+			return statusDao.getById(jobDb.getAvailableStatus().getId()).getStatusname();
+		} else {
+			ConnHandler.rollback();
+			return statusDao.getById(job.getAvailableStatus().getId()).getStatusname();
+		}
+		
+	}
+	
 }
