@@ -1,5 +1,7 @@
 package com.lawencon.admin.service;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +31,8 @@ import com.lawencon.admin.dto.appliedstatus.UpdateStatusReqDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyAdminResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyByProgressAdminResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCandidateDetailResDto;
+import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCountProgressResDto;
+import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCountStatusResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyProgressResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyResDto;
 import com.lawencon.admin.dto.appliedvacancy.InsertAppliedVacancyReqDto;
@@ -39,6 +43,7 @@ import com.lawencon.admin.dto.candidateskill.CandidateSkillResDto;
 import com.lawencon.admin.dto.education.CandidateEducationResDto;
 import com.lawencon.admin.dto.email.EmailReqDto;
 import com.lawencon.admin.dto.email.ReportReqDto;
+import com.lawencon.admin.dto.hiredemployee.HiredAppliedRangeDate;
 import com.lawencon.admin.exception.CustomException;
 import com.lawencon.admin.model.AppliedProgress;
 import com.lawencon.admin.model.AppliedStatus;
@@ -52,8 +57,6 @@ import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.ConnHandler;
 import com.lawencon.security.principal.PrincipalServiceImpl;
 import com.lawencon.util.JasperUtil;
-import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCountProgressResDto;
-import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCountStatusResDto;
 
 @Service
 public class AppliedVacancyService {
@@ -90,6 +93,8 @@ public class AppliedVacancyService {
 	private UserDao userDao;
 	@Autowired
 	private CompanyDao companyDao;
+	@Autowired
+	private HiredEmployeeDao hiredDao;
 	@Autowired
 	private SendMailService sendMailService;
 	@Autowired
@@ -325,24 +330,27 @@ public class AppliedVacancyService {
 		return response;
 	}
 	
-	public InsertResDto getReport(String jobId) {
+	public InsertResDto getReport(String jobId, String dateStr) {
 		final List<AppliedVacancyAdminResDto> appliedVacancies = new ArrayList<>();
 		final User userLogin = userDao.getById(principleService.getAuthPrincipal());
 		final Company userCompany = companyDao.getById(userLogin.getProfile().getCompany().getId());
 		final InsertResDto response = new InsertResDto();
 
 		appliedVacancyDao.getByJobVacancyId(jobId).forEach(av -> {
-			final AppliedVacancyAdminResDto appliedVacancy = new AppliedVacancyAdminResDto();
-			appliedVacancy.setId(av.getId());
-			appliedVacancy.setProfileName(av.getCandidate().getCandidateProfile().getProfileName());
-			appliedVacancy.setStatusName(av.getAppliedStatus().getStatusName());
-			appliedVacancy.setProgressName(av.getAppliedProgress().getProgressName());
-			LocalDateTime dateTime = DateUtil.dateTimeParse(av.getCreatedAt().toString());
-			appliedVacancy.setCreatedAt(DateUtil.dateTimeFormat(dateTime));
-			appliedVacancy.setStatusCode(av.getAppliedStatus().getStatusCode());
-			appliedVacancy.setProgressCode(av.getAppliedProgress().getProgressCode());
-
-			appliedVacancies.add(appliedVacancy);
+			LocalDate date = DateUtil.dateParse(dateStr);
+			if((av.getCreatedAt().getMonthValue() == date.getMonthValue()) && (av.getCreatedAt().getYear() == date.getYear())) {				
+				final AppliedVacancyAdminResDto appliedVacancy = new AppliedVacancyAdminResDto();
+				appliedVacancy.setId(av.getId());
+				appliedVacancy.setProfileName(av.getCandidate().getCandidateProfile().getProfileName());
+				appliedVacancy.setStatusName(av.getAppliedStatus().getStatusName());
+				appliedVacancy.setProgressName(av.getAppliedProgress().getProgressName());
+				LocalDateTime dateTime = DateUtil.dateTimeParse(av.getCreatedAt().toString());
+				appliedVacancy.setCreatedAt(DateUtil.dateTimeFormat(dateTime));
+				appliedVacancy.setStatusCode(av.getAppliedStatus().getStatusCode());
+				appliedVacancy.setProgressCode(av.getAppliedProgress().getProgressCode());
+	
+				appliedVacancies.add(appliedVacancy);
+			}
 		});
 
 		
@@ -401,10 +409,25 @@ public class AppliedVacancyService {
         	}
         }
         
+        final List<HiredAppliedRangeDate> hiredAppliedRanges = hiredDao.getHiredAppliedRangeDate(jobId);
+        for(int i = 0; i < appliedVacancies.size(); i++) {
+        	for(int j = 0; j < hiredAppliedRanges.size(); j++) {        		
+        		if(appliedVacancies.get(i).getProfileName().equals(hiredAppliedRanges.get(j).getProfileName())) {
+        			final AppliedVacancyAdminResDto applied = appliedVacancies.get(i);
+        			Duration range = Duration.between(hiredAppliedRanges.get(i).getHiredAt(), hiredAppliedRanges.get(i).getAppliedAt());
+        			applied.setDuration(range.toDays());
+        			appliedVacancies.set(i, applied);
+        		}
+        	}
+        }
+
+        
         final ReportReqDto report = new ReportReqDto();
         report.setFullName(userLogin.getProfile().getProfileName());
-        report.setCompanyName(userCompany.getCompanyName());
         report.setCreatedAt(DateUtil.dateTimeFormat(LocalDateTime.now()));
+        report.setCompanyName(userCompany.getCompanyName());
+        report.setAddress(userCompany.getAddress());
+        report.setPhoneNumber(userCompany.getPhoneNumber());
         
         final Collection<ReportReqDto> result = new ArrayList<>();
         result.add(report);
@@ -413,6 +436,7 @@ public class AppliedVacancyService {
         parameters.put("appliedVacancies", appliedVacancies);
         parameters.put("appliedStatuses", appliedsCountStatus);
         parameters.put("appliedProgresses", appliedsCountProgress);
+        parameters.put("img", userCompany.getPhoto().getFileContent());
         
         try {				
         	byte[] dataOut = jasperUtil.responseToByteArray(result, parameters, "jasper-applied-candidates");

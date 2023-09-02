@@ -66,12 +66,6 @@ public class UserController {
 		final UpdateResDto response = userService.updateProfile(data);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
-	
-	@GetMapping("/report")
-	public ResponseEntity<InsertResDto> getReport(){
-		final InsertResDto response = userService.getReport();
-		return new ResponseEntity<>(response, HttpStatus.CREATED);
-	}
 
 	@GetMapping("/company")
 	public ResponseEntity<List<UserResDto>> getUserByCompany() {

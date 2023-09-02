@@ -140,11 +140,15 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 	
 	public List<HiredAppliedRangeDate> getHiredAppliedRangeDate(String jobVacancyId) {
 		final String sql = "SELECT "
-				+ "	the.created_at AS hiredAt, tav.created_at AS appliedAt "
+				+ "	the.created_at AS hiredAt, tav.created_at AS appliedAt, tcp.profile_name "
 				+ "FROM "
 				+ "	t_hired_employee the "
 				+ "INNER JOIN "
 				+ "	t_applied_vacancy tav ON tav.candidate_id = the.candidate_id "
+				+ "INNER JOIN "
+				+ "	t_candidate tc ON tav.candidate_id = tc.id "
+				+ "INNER JOIN "
+				+ "	t_candidate_profile tcp ON tc.candidate_profile_id = tcp.id "
 				+ "WHERE "
 				+ "	tav.job_vacancy_id = :jobVacancyId ";
 		
@@ -163,7 +167,7 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 					
 					hiredRange.setAppliedAt(Timestamp.valueOf(hiredRangeArr[0].toString()).toLocalDateTime());
 					hiredRange.setHiredAt(Timestamp.valueOf(hiredRangeArr[1].toString()).toLocalDateTime());
-					
+					hiredRange.setProfileName(hiredRangeArr[2].toString());
 					hiredRanges.add(hiredRange);
 				}
 			}

@@ -98,53 +98,5 @@ public class CompanyService {
 		
 		return responses;
 	}
-	
-	public InsertResDto getReport() {
-		final User userLogin = userDao.getById(principalService.getAuthPrincipal());
-		final Company userCompany = companyDao.getById(userLogin.getProfile().getCompany().getId());
-		final List<Company> companies = companyDao.getAll();
-		final List<CompanyResDto> companiesRes = new ArrayList<>();
-		final InsertResDto response = new InsertResDto();
-		
-		companies.forEach(company -> {
-			final CompanyResDto companyRes = new CompanyResDto();
-			companyRes.setAddress(company.getAddress());
-			companyRes.setCompanyCode(company.getCompanyCode());
-			companyRes.setCompanyName(company.getCompanyName());
-			companyRes.setDescription(company.getDescription());
-			companyRes.setId(company.getId());
-			companyRes.setPhoneNumber(company.getPhoneNumber());
-			companyRes.setPhotoId(company.getPhoto().getId());
-			companiesRes.add(companyRes);
-		});
-		
-		final Collection<List<CompanyResDto>> result = new ArrayList<>();
-		result.add(companiesRes);
-		
-		final Map<String, Object> parameters = new HashMap<>();
-		parameters.put("companyList", companiesRes);
-		
-		try {				
-        	byte[] dataOut = jasperUtil.responseToByteArray(result, parameters, "jasper-companies");
-                	
-	        final EmailReqDto emailReqDto = new EmailReqDto();
-			emailReqDto.setSubject("Companies Report");
-			emailReqDto.setEmail(userLogin.getUserEmail());
-			
-			final ReportReqDto reportReqDto = new ReportReqDto();
-			reportReqDto.setHeader("Company List Report");
-			reportReqDto.setFullName(userLogin.getProfile().getProfileName());
-			reportReqDto.setCompanyName(userCompany.getCompanyName());
-			reportReqDto.setCreatedAt(DateUtil.dateTimeFormat(LocalDateTime.now()));
-			
-			sendMailService.sendCompaniesReport(emailReqDto, reportReqDto, dataOut);
-			            
-			response.setMessage("Report created successfully");
-			return response;		
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}	
-	}
 
 }

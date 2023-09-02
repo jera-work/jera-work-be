@@ -1,6 +1,7 @@
 package com.lawencon.admin.service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -314,7 +315,7 @@ public class JobVacancyService {
 		return response;
 	}
 	
-	public InsertResDto getReport() {
+	public InsertResDto getReport(String dateStr) {
 		final InsertResDto response = new InsertResDto();
 		final List<JobVacancyResDto> jobVacancies = new ArrayList<>();
 
@@ -322,20 +323,24 @@ public class JobVacancyService {
 		final Company company = companyDao.getById(user.getProfile().getCompany().getId());
 
 		jobDao.getJobByCompany(company.getId()).forEach(jv -> {
-			final JobVacancyResDto jobVacancy = new JobVacancyResDto();
-			jobVacancy.setCompanyName(jv.getCompany().getCompanyName());
-			jobVacancy.setEndDate(DateUtil.dateTimeFormat(jv.getEndDate()));
-			jobVacancy.setStartDate(DateUtil.dateTimeFormat(jv.getStartDate()));
-			jobVacancy.setHrName(jv.getPicHr().getProfile().getProfileName());
-			jobVacancy.setUserName(jv.getPicUser().getProfile().getProfileName());
-			jobVacancy.setLevelName(jv.getExpLevel().getLevelName());
-			jobVacancy.setStatusName(jv.getAvailableStatus().getStatusname());
-			jobVacancy.setVacancyTitle(jv.getVacancyTitle());
-			jobVacancy.setVacancyCode(jv.getVacancyCode());
-			jobVacancy.setVacancyId(jv.getId());
-			jobVacancy.setAppliedCandidateTotal(jobDao.getAppliedCandidateTotal(jv.getId()));
-
-			jobVacancies.add(jobVacancy);
+			LocalDate date = DateUtil.dateParse(dateStr);
+			if((jv.getStartDate().getMonthValue() == date.getMonthValue()) && (jv.getStartDate().getYear() == date.getYear())) {				
+				final JobVacancyResDto jobVacancy = new JobVacancyResDto();
+				jobVacancy.setCompanyName(jv.getCompany().getCompanyName());
+				jobVacancy.setEndDate(DateUtil.dateTimeFormat(jv.getEndDate()));
+				jobVacancy.setStartDate(DateUtil.dateTimeFormat(jv.getStartDate()));
+				jobVacancy.setHrName(jv.getPicHr().getProfile().getProfileName());
+				jobVacancy.setUserName(jv.getPicUser().getProfile().getProfileName());
+				jobVacancy.setLevelName(jv.getExpLevel().getLevelName());
+				jobVacancy.setStatusName(jv.getAvailableStatus().getStatusname());
+				jobVacancy.setVacancyTitle(jv.getVacancyTitle());
+				jobVacancy.setVacancyCode(jv.getVacancyCode());
+				jobVacancy.setVacancyId(jv.getId());
+				jobVacancy.setAppliedCandidateTotal(jobDao.getAppliedCandidateTotal(jv.getId()));
+				
+				jobVacancies.add(jobVacancy);
+			}
+			
 		});
 		
 		final List<JobVacancyCountLevelResDto> jobsCountLevel = new ArrayList<>();
@@ -441,7 +446,7 @@ public class JobVacancyService {
             jobCountHiredRangeDate.setHiredRange(avg);
             
             boolean jobExist = false;
-        	for(JobVacancyCountAppliedCandidateResDto j : jobsCountApplied) {
+        	for(JobVacancyCountHiredRangeDate j : jobsCountHiredRangeDate) {
         		if(j.getJobName().equals(jobVacancies.get(i).getVacancyTitle())) {
         			jobExist = true;
         		}
@@ -463,8 +468,10 @@ public class JobVacancyService {
         
         final ReportReqDto report = new ReportReqDto();
         report.setFullName(user.getProfile().getProfileName());
-        report.setCompanyName(company.getCompanyName());
         report.setCreatedAt(DateUtil.dateTimeFormat(LocalDateTime.now()));
+        report.setCompanyName(company.getCompanyName());
+        report.setAddress(company.getAddress());
+        report.setPhoneNumber(company.getPhoneNumber());
         
         final Collection<ReportReqDto> result = new ArrayList<>();
         result.add(report);
@@ -475,6 +482,7 @@ public class JobVacancyService {
         parameters.put("availableStatuses", jobsCountStatus);
         parameters.put("appliedCandidates", jobsCountApplied);
         parameters.put("hiredRangeDates", jobsCountHiredRangeDate);
+        parameters.put("img", company.getPhoto().getFileContent());
         
         try {				
         	byte[] dataOut = jasperUtil.responseToByteArray(result, parameters, "jasper-job-vacancies");
