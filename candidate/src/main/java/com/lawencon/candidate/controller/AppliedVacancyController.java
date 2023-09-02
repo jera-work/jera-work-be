@@ -63,4 +63,5 @@ public class AppliedVacancyController {
 		final List<AppliedVacancyResDto> responses = appliedVacancyService.getByCandidateId();
 		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}
+	
 }

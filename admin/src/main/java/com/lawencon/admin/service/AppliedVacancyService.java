@@ -29,6 +29,8 @@ import com.lawencon.admin.dto.appliedstatus.UpdateStatusReqDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyAdminResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyByProgressAdminResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCandidateDetailResDto;
+import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCountProgressResDto;
+import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCountStatusResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyProgressResDto;
 import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyResDto;
 import com.lawencon.admin.dto.appliedvacancy.InsertAppliedVacancyReqDto;
@@ -52,8 +54,6 @@ import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.ConnHandler;
 import com.lawencon.security.principal.PrincipalServiceImpl;
 import com.lawencon.util.JasperUtil;
-import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCountProgressResDto;
-import com.lawencon.admin.dto.appliedvacancy.AppliedVacancyCountStatusResDto;
 
 @Service
 public class AppliedVacancyService {
@@ -291,19 +291,35 @@ public class AppliedVacancyService {
 		response.setAppliedStatusCode(applied.getAppliedStatus().getStatusCode());
 		response.setCandidateName(candidate.getCandidateProfile().getProfileName());
 		response.setCandidateId(applied.getCandidate().getId());
-		response.setExpectedSalary((candidate.getCandidateProfile().getExpectedSalary() != null) ? candidate.getCandidateProfile().getExpectedSalary() : null);
-		response.setGenderName((candidate.getCandidateProfile().getGender() != null) ? candidate.getCandidateProfile().getGender().getGenderName() : null);
+		response.setExpectedSalary((candidate.getCandidateProfile().getExpectedSalary() != null)
+				? candidate.getCandidateProfile().getExpectedSalary()
+				: null);
+		response.setGenderName((candidate.getCandidateProfile().getGender() != null)
+				? candidate.getCandidateProfile().getGender().getGenderName()
+				: null);
 		response.setId(appliedId);
-		response.setMaritalName((candidate.getCandidateProfile().getMarital() != null) ? candidate.getCandidateProfile().getMarital().getMaritalName() : null);
-		response.setNationalityName((candidate.getCandidateProfile().getNationality() != null) ? candidate.getCandidateProfile().getNationality().getNationalityName() : null);
-		response.setPhoneNumber((candidate.getCandidateProfile().getPhoneNumber() != null) ? candidate.getCandidateProfile().getPhoneNumber() : null);
-		response.setPhotoId((candidate.getCandidateProfile().getPhoto() != null) ? candidate.getCandidateProfile().getPhoto().getId() : null);
+		response.setMaritalName((candidate.getCandidateProfile().getMarital() != null)
+				? candidate.getCandidateProfile().getMarital().getMaritalName()
+				: null);
+		response.setNationalityName((candidate.getCandidateProfile().getNationality() != null)
+				? candidate.getCandidateProfile().getNationality().getNationalityName()
+				: null);
+		response.setPhoneNumber((candidate.getCandidateProfile().getPhoneNumber() != null)
+				? candidate.getCandidateProfile().getPhoneNumber()
+				: null);
+		response.setPhotoId((candidate.getCandidateProfile().getPhoto() != null)
+				? candidate.getCandidateProfile().getPhoto().getId()
+				: null);
 		response.setPicHrId(applied.getJobVacancy().getPicHr().getId());
 		response.setPicHrName(applied.getJobVacancy().getPicHr().getProfile().getProfileName());
 		response.setPicUserId(applied.getJobVacancy().getPicUser().getId());
 		response.setPicUserName(applied.getJobVacancy().getPicUser().getProfile().getProfileName());
-		response.setProfileAddress((candidate.getCandidateProfile().getProfileAddress() != null) ? candidate.getCandidateProfile().getProfileAddress() : null);
-		response.setReligionName((candidate.getCandidateProfile().getReligion() != null) ? candidate.getCandidateProfile().getReligion().getReligionName() : null);
+		response.setProfileAddress((candidate.getCandidateProfile().getProfileAddress() != null)
+				? candidate.getCandidateProfile().getProfileAddress()
+				: null);
+		response.setReligionName((candidate.getCandidateProfile().getReligion() != null)
+				? candidate.getCandidateProfile().getReligion().getReligionName()
+				: null);
 		response.setJobTitle(applied.getJobVacancy().getVacancyTitle());
 		response.setDocuments(docsDto);
 		response.setExperiences(expsDto);
@@ -324,7 +340,7 @@ public class AppliedVacancyService {
 		response.setAppliedVacancyFromAdminId(appliedVacancy.getId());
 		return response;
 	}
-	
+
 	public InsertResDto getReport(String jobId) {
 		final List<AppliedVacancyAdminResDto> appliedVacancies = new ArrayList<>();
 		final User userLogin = userDao.getById(principleService.getAuthPrincipal());
@@ -345,106 +361,130 @@ public class AppliedVacancyService {
 			appliedVacancies.add(appliedVacancy);
 		});
 
-		
-        final List<AppliedVacancyCountStatusResDto> appliedsCountStatus = new ArrayList<>();
-        
-        for(int i = 0; i < appliedVacancies.size(); i++) {
-        	AppliedVacancyCountStatusResDto appliedCountStatus = new AppliedVacancyCountStatusResDto();
-        	appliedCountStatus.setStatusName(appliedVacancies.get(i).getStatusName());
-        	appliedCountStatus.setStatusCount(1);
-        	
-        	boolean statusExist = false;
-        	
-        	for(AppliedVacancyCountStatusResDto a : appliedsCountStatus) {
-        		if(a.getStatusName().equals(appliedVacancies.get(i).getStatusName())) {
-        			statusExist = true;
-        		}
-        	}
-        	
-        	if(!statusExist) {
-        		appliedsCountStatus.add(appliedCountStatus);
-        	}else {
-        		for(int j = 0; j < appliedsCountStatus.size(); j++) {
-        			if(appliedsCountStatus.get(j).getStatusName().equals(appliedVacancies.get(i).getStatusName())) {        				
-        				appliedCountStatus.setStatusCount(appliedsCountStatus.get(j).getStatusCount()+1);
-        				appliedsCountStatus.set(j, appliedCountStatus);
-        			}
-        		}
-        	}
-        }
-        
-        
-        final List<AppliedVacancyCountProgressResDto> appliedsCountProgress = new ArrayList<>();
-        
-        for(int i = 0; i < appliedVacancies.size(); i ++) {
-        	final AppliedVacancyCountProgressResDto appliedCountProgress = new AppliedVacancyCountProgressResDto();
-        	appliedCountProgress.setProgressName(appliedVacancies.get(i).getProgressName());
-        	appliedCountProgress.setProgressCount(1);
-        	
-        	boolean progressExist = false;
-        	
-        	for(AppliedVacancyCountProgressResDto a : appliedsCountProgress) {
-        		if(a.getProgressName().equals(appliedVacancies.get(i).getProgressName())) {
-        			progressExist = true;
-        		}
-        	}
-        	
-        	if(!progressExist) {
-        		appliedsCountProgress.add(appliedCountProgress);
-        	}else {
-        		for(int j = 0; j < appliedsCountProgress.size(); j++) {
-        			if(appliedsCountProgress.get(j).getProgressName().equals(appliedVacancies.get(i).getProgressName())) {
-        				appliedCountProgress.setProgressCount(appliedsCountProgress.get(j).getProgressCount()+1);
-        				appliedsCountProgress.set(j, appliedCountProgress);
-        			}
-        		}
-        	}
-        }
-        
-        final Collection<List<AppliedVacancyAdminResDto>> result = new ArrayList<>();
-        result.add(appliedVacancies);
-        
-        final Map<String, Object> parameters = new HashMap<>();
-        parameters.put("appliedVacancies", appliedVacancies);
-        parameters.put("appliedStatuses", appliedsCountStatus);
-        parameters.put("appliedProgresses", appliedsCountProgress);
-        
-        try {				
-        	byte[] dataOut = jasperUtil.responseToByteArray(result, parameters, "jasper-applied-candidates");
-                	
-	        final EmailReqDto emailReqDto = new EmailReqDto();
+		final List<AppliedVacancyCountStatusResDto> appliedsCountStatus = new ArrayList<>();
+
+		for (int i = 0; i < appliedVacancies.size(); i++) {
+			AppliedVacancyCountStatusResDto appliedCountStatus = new AppliedVacancyCountStatusResDto();
+			appliedCountStatus.setStatusName(appliedVacancies.get(i).getStatusName());
+			appliedCountStatus.setStatusCount(1);
+
+			boolean statusExist = false;
+
+			for (AppliedVacancyCountStatusResDto a : appliedsCountStatus) {
+				if (a.getStatusName().equals(appliedVacancies.get(i).getStatusName())) {
+					statusExist = true;
+				}
+			}
+
+			if (!statusExist) {
+				appliedsCountStatus.add(appliedCountStatus);
+			} else {
+				for (int j = 0; j < appliedsCountStatus.size(); j++) {
+					if (appliedsCountStatus.get(j).getStatusName().equals(appliedVacancies.get(i).getStatusName())) {
+						appliedCountStatus.setStatusCount(appliedsCountStatus.get(j).getStatusCount() + 1);
+						appliedsCountStatus.set(j, appliedCountStatus);
+					}
+				}
+			}
+		}
+
+		final List<AppliedVacancyCountProgressResDto> appliedsCountProgress = new ArrayList<>();
+
+		for (int i = 0; i < appliedVacancies.size(); i++) {
+			final AppliedVacancyCountProgressResDto appliedCountProgress = new AppliedVacancyCountProgressResDto();
+			appliedCountProgress.setProgressName(appliedVacancies.get(i).getProgressName());
+			appliedCountProgress.setProgressCount(1);
+
+			boolean progressExist = false;
+
+			for (AppliedVacancyCountProgressResDto a : appliedsCountProgress) {
+				if (a.getProgressName().equals(appliedVacancies.get(i).getProgressName())) {
+					progressExist = true;
+				}
+			}
+
+			if (!progressExist) {
+				appliedsCountProgress.add(appliedCountProgress);
+			} else {
+				for (int j = 0; j < appliedsCountProgress.size(); j++) {
+					if (appliedsCountProgress.get(j).getProgressName()
+							.equals(appliedVacancies.get(i).getProgressName())) {
+						appliedCountProgress.setProgressCount(appliedsCountProgress.get(j).getProgressCount() + 1);
+						appliedsCountProgress.set(j, appliedCountProgress);
+					}
+				}
+			}
+		}
+
+		final Collection<List<AppliedVacancyAdminResDto>> result = new ArrayList<>();
+		result.add(appliedVacancies);
+
+		final Map<String, Object> parameters = new HashMap<>();
+		parameters.put("appliedVacancies", appliedVacancies);
+		parameters.put("appliedStatuses", appliedsCountStatus);
+		parameters.put("appliedProgresses", appliedsCountProgress);
+
+		try {
+			byte[] dataOut = jasperUtil.responseToByteArray(result, parameters, "jasper-applied-candidates");
+
+			final EmailReqDto emailReqDto = new EmailReqDto();
 			emailReqDto.setSubject("Applied Candidates Report");
 			emailReqDto.setEmail(userLogin.getUserEmail());
-			
+
 			final ReportReqDto reportReqDto = new ReportReqDto();
 			reportReqDto.setHeader("Applied Candidate List Report");
 			reportReqDto.setFullName(userLogin.getProfile().getProfileName());
 			reportReqDto.setCompanyName(userCompany.getCompanyName());
 			reportReqDto.setCreatedAt(DateUtil.dateTimeFormat(LocalDateTime.now()));
-			
+
 			sendMailService.sendAppliedCandidateReport(emailReqDto, reportReqDto, dataOut);
-			            
+
 			response.setMessage("Report created successfully");
-			return response;		
+			return response;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		}	
+		}
 	}
-	public List<AppliedVacancyByProgressAdminResDto> getProgressCount(String jobVacancyId){
+
+	public List<AppliedVacancyByProgressAdminResDto> getProgressCount(String jobVacancyId) {
 		final List<AppliedProgressResDto> appliedProgresses = appliedProgressService.getAll();
-		
+
 		final List<AppliedVacancyByProgressAdminResDto> responses = new ArrayList<>();
-		for(int i = 0; i < appliedProgresses.size(); i++) {
+		for (int i = 0; i < appliedProgresses.size(); i++) {
 			final AppliedVacancyByProgressAdminResDto response = new AppliedVacancyByProgressAdminResDto();
 			response.setProgressId(appliedProgresses.get(i).getId());
 			response.setProgressName(appliedProgresses.get(i).getProgressName());
 			response.setProgressCode(appliedProgresses.get(i).getProgressCode());
-			response.setAppliedCount(appliedVacancyDao.getProgressCount(appliedProgresses.get(i).getProgressCode(), jobVacancyId));
-			
+			response.setAppliedCount(
+					appliedVacancyDao.getProgressCount(appliedProgresses.get(i).getProgressCode(), jobVacancyId));
+
 			responses.add(response);
 		}
 		return responses;
 	}
-	
+
+	public String updateAppliedStatusByEditJob(String jobId) {
+		ConnHandler.begin();
+
+		final JobVacancy job = jobVacancyDao.getById(jobId);
+		final List<AppliedVacancy> applied = appliedVacancyDao.getByJobVacancyId(jobId);
+		final boolean availableStatusClose = job.getAvailableStatus().getStatusCode().equals("CLS");
+		final boolean availableStatusOpen = job.getAvailableStatus().getStatusCode().equals("OPN");
+		String availableStatusId = null;
+
+		for (int i = 0; i < applied.size(); i++) {
+			final AppliedVacancy apply = appliedVacancyDao.getById(applied.get(i).getId());
+			final AppliedStatus status = (availableStatusClose) ? statusDao.getByCode("CLS")
+					: (availableStatusOpen) ? statusDao.getByCode("ACT")
+							: statusDao.getById(applied.get(i).getAppliedStatus().getId());
+			apply.setAppliedStatus(status);
+			final AppliedVacancy appliedDb = appliedVacancyDao.saveAndFlush(apply);
+			availableStatusId = appliedDb.getAppliedStatus().getId();
+		}
+
+		ConnHandler.commit();
+		return availableStatusId;
+	}
+
 }

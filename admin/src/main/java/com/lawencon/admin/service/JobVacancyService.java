@@ -77,6 +77,8 @@ public class JobVacancyService {
 	private JasperUtil jasperUtil;
 	@Autowired
 	private SendMailService sendMailService;
+	@Autowired
+	private AppliedVacancyService appliedVacancyService;
 
 	public InsertResDto insertJob(InsertJobVacancyReqDto data) {
 
@@ -461,16 +463,21 @@ public class JobVacancyService {
 			final VacancyDescription descDb = descDao.saveAndFlush(desc);
 			
 			final AvailableStatus status = statusDao.getById(data.getAvailableStatusId());
+			
+			//check if end date has passed the expiration date
 			if(DateUtil.dateTimeParse(data.getEndDate()).isBefore(LocalDateTime.now())) {
+				//set available status to closed and set end date to now
 				final AvailableStatus statusClose = statusDao.getByCode("CLS");
 				job.setAvailableStatus(statusDao.getByIdRef(statusClose.getId()));
 				job.setEndDate(LocalDateTime.now());
 				data.setEndDate(DateUtil.dateTimeFormat(LocalDateTime.now()));
 				data.setAvailableStatusId(statusClose.getId());
 			} else if(status.getStatusCode().equals("CLS")) {
+				//set status to close if manually inputted status equals to closed
 				job.setAvailableStatus(status);
 				data.setAvailableStatusId(status.getId());
 			} else {
+				//set status to open and end date to the manually inputted ones
 				final AvailableStatus statusOpen = statusDao.getByCode("OPN");
 				job.setAvailableStatus(statusDao.getByIdRef(statusOpen.getId()));
 				job.setEndDate(DateUtil.dateTimeParse(data.getEndDate()));
@@ -487,9 +494,12 @@ public class JobVacancyService {
 			job.setVacancyTitle(data.getVacancyTitle());
 			final JobVacancy jobDb = jobDao.saveAndFlush(job);
 			
-			data.setVacancyCode(job.getVacancyCode());
-			apiService.putTo("http://localhost:8080/jobs/edit", data);
 			ConnHandler.commit();
+			
+			data.setVacancyCode(jobDb.getVacancyCode());
+			data.setAppliedStatusId(appliedVacancyService.updateAppliedStatusByEditJob(jobDb.getId()));
+			data.setCompanyId(company.getId());
+			apiService.putTo("http://localhost:8080/jobs/edit", data);
 			
 			response.setMessage("Job has been edited!");
 			response.setVer(jobDb.getVersion());
