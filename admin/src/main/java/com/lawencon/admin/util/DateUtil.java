@@ -17,10 +17,23 @@ public class DateUtil {
 
 		return date.format(formatter);
 	}
+	
+	public static String dateTimeFormatMonthYear(LocalDateTime localDateTime) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
+
+		return localDateTime.format(formatter);
+	}
 
 	public static LocalDateTime dateTimeParse(String dateStr) {
 //		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
 		final LocalDateTime date = LocalDateTime.parse(dateStr, DateTimeFormatter.ISO_DATE_TIME);
+		
+		return date;
+	}
+	
+	public static LocalDateTime dateTimeParseCustomSecond(String dateStr) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		final LocalDateTime date = LocalDateTime.parse(dateStr, formatter);
 		
 		return date;
 	}

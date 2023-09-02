@@ -12,9 +12,11 @@ import com.lawencon.base.ConnHandler;
 import com.lawencon.candidate.dao.JobVacancyDao;
 import com.lawencon.candidate.dao.VacancyDescriptionDao;
 import com.lawencon.candidate.dto.InsertResDto;
+import com.lawencon.candidate.dto.UpdateResDto;
 import com.lawencon.candidate.dto.jobvacancy.InsertJobVacancyReqDto;
 import com.lawencon.candidate.dto.jobvacancy.JobSearchResDto;
 import com.lawencon.candidate.dto.jobvacancy.JobVacancyResDto;
+import com.lawencon.candidate.dto.jobvacancy.JobVacancyUpdateReqDto;
 import com.lawencon.candidate.model.JobVacancy;
 import com.lawencon.candidate.model.VacancyDescription;
 import com.lawencon.candidate.util.DateUtil;
@@ -48,9 +50,9 @@ public class JobVacancyService {
 			final JobVacancy job = new JobVacancy();
 			job.setAvailableStatus(data.getAvailableStatusId());
 			job.setCompany(data.getCompanyId());
-			job.setEndDate(DateUtil.dateParse(data.getEndDate()));
+			job.setEndDate(DateUtil.dateTimeParse(data.getEndDate()));
 			job.setExpLevel(data.getExpLevelId());
-			job.setStartDate(DateUtil.dateParse(data.getStartDate()));
+			job.setStartDate(DateUtil.dateTimeParse(data.getStartDate()));
 			job.setVacancyCode(data.getVacancyCode());
 			job.setVacancyTitle(data.getVacancyTitle());
 			job.setVacancyDescription(descDb);
@@ -260,5 +262,44 @@ public class JobVacancyService {
 		response.setVacancyId(jobId);
 		response.setVacancyCode(job.getVacancyCode());
 		return response;
+	}
+	
+	public UpdateResDto editJob(JobVacancyUpdateReqDto data) {
+		ConnHandler.begin();
+
+		try {
+			final JobVacancy job = jobDao.getByCode(data.getVacancyCode());
+			
+			final VacancyDescription desc = descDao.getById(job.getVacancyDescription().getId());
+			desc.setAddress(data.getAddress());
+			desc.setAgeVacancy(data.getAgeVacancyId());
+			desc.setCity(data.getCityId());
+			desc.setDegree(data.getDegreeId());
+			desc.setDescription(data.getDescription());
+			desc.setGender(data.getGenderId());
+			desc.setJobType(data.getJobTypeId());
+			desc.setSalary(data.getSalary());
+			final VacancyDescription descDb = descDao.saveAndFlush(desc);
+
+			job.setAvailableStatus(data.getAvailableStatusId());
+			job.setCompany(data.getCompanyId());
+			job.setEndDate(DateUtil.dateTimeParse(data.getEndDate()));
+			job.setExpLevel(data.getExpLevelId());
+			job.setStartDate(DateUtil.dateTimeParse(data.getStartDate()));
+			job.setVacancyCode(data.getVacancyCode());
+			job.setVacancyTitle(data.getVacancyTitle());
+			job.setVacancyDescription(descDb);
+			final JobVacancy jobDb = jobDao.saveAndFlush(job);
+
+			final UpdateResDto response = new UpdateResDto();
+			response.setVer(jobDb.getVersion());
+			response.setMessage("Job has been created!");
+			ConnHandler.commit();
+
+			return response;
+		} catch (Exception e) {
+			ConnHandler.rollback();
+			return null;
+		}
 	}
 }

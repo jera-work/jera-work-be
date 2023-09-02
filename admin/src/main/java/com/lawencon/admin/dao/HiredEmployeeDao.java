@@ -1,11 +1,13 @@
 package com.lawencon.admin.dao;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
 import org.springframework.stereotype.Repository;
 
+import com.lawencon.admin.dto.hiredemployee.HiredAppliedRangeDate;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.CandidateProfile;
 import com.lawencon.admin.model.Company;
@@ -49,7 +51,7 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 		return super.deleteById(HiredEmployee.class, entityId);
 	}
 
-	public List<HiredEmployee> getByCompany(int firstIndex, int endIndex, String companyId) {
+	public List<HiredEmployee> getByCompany(String companyId) {
 		final String sql = "SELECT "
 				+ "	the.id, tc.id as candidateId, tcp.profile_name, tc2.company_name, the.created_at "
 				+ "FROM "
@@ -66,8 +68,6 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 		final List<?> hirObjs = ConnHandler.getManager()
 				.createNativeQuery(sql)
 				.setParameter("companyId", companyId)
-				.setFirstResult(firstIndex)
-				.setMaxResults(endIndex)
 				.getResultList();
 		
 		final List<HiredEmployee> hiredEmployees = new ArrayList<>();
@@ -101,7 +101,7 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 	
 	public HiredEmployee getByCandidate(String companyId, String candidateId) {
 		final String sql = "SELECT "
-				+ "	the.id, the.company_id "
+				+ "	the.id, the.company_id, the.created_at "
 				+ "FROM "
 				+ "	t_hired_employee the "
 				+ "INNER JOIN "
@@ -123,6 +123,7 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 				if(hirObjArr.length > 0) {
 					employee = new HiredEmployee();
 					employee.setId(hirObjArr[0].toString());
+					employee.setCreatedAt(Timestamp.valueOf(hirObjArr[2].toString()).toLocalDateTime());
 					
 					final Company company = new Company();
 					company.setId(hirObjArr[1].toString());
@@ -135,5 +136,42 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 			return null;
 		}
 		
+	}
+	
+	public List<HiredAppliedRangeDate> getHiredAppliedRangeDate(String jobVacancyId) {
+		final String sql = "SELECT "
+				+ "	the.created_at AS hiredAt, tav.created_at AS appliedAt "
+				+ "FROM "
+				+ "	t_hired_employee the "
+				+ "INNER JOIN "
+				+ "	t_applied_vacancy tav ON tav.candidate_id = the.candidate_id "
+				+ "WHERE "
+				+ "	tav.job_vacancy_id = :jobVacancyId ";
+		
+		try {
+			final List<?> hiredRangeObjs = ConnHandler.getManager()
+											.createNativeQuery(sql)
+											.setParameter("jobVacancyId", jobVacancyId)
+											.getResultList();
+			
+			final List<HiredAppliedRangeDate> hiredRanges = new ArrayList<>();
+			
+			if(hiredRangeObjs.size() > 0) {
+				for (Object hiredRangeObj : hiredRangeObjs) {
+					final Object[] hiredRangeArr = (Object[]) hiredRangeObj;
+					final HiredAppliedRangeDate hiredRange = new HiredAppliedRangeDate();
+					
+					hiredRange.setAppliedAt(Timestamp.valueOf(hiredRangeArr[0].toString()).toLocalDateTime());
+					hiredRange.setHiredAt(Timestamp.valueOf(hiredRangeArr[1].toString()).toLocalDateTime());
+					
+					hiredRanges.add(hiredRange);
+				}
+			}
+			return hiredRanges;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
 	}
 }

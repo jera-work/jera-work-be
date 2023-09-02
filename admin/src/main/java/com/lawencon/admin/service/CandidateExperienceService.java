@@ -65,13 +65,13 @@ public class CandidateExperienceService {
 		
 		for (CandidateExperience experience : experiences) {
 			final CandidateExperienceResDto response = new CandidateExperienceResDto();
-			response.setEndDate(experience.getEndDate().toString());
+			response.setEndDate(DateUtil.dateTimeFormatMonthYear(experience.getEndDate()));
 			response.setFormerInstitution(experience.getFormerInstitution());
 			response.setFormerJobdesc(experience.getFormerJobdesk());
 			response.setFormerLocation(experience.getFormerLocation());
 			response.setFormerPosition(experience.getFormerPosition());
 			response.setId(experience.getId());
-			response.setStartDate(experience.getStartDate().toString());
+			response.setStartDate(DateUtil.dateTimeFormatMonthYear(experience.getStartDate()));
 			responses.add(response);
 		}
 		

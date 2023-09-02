@@ -17,7 +17,7 @@ import com.lawencon.admin.dto.blacklistemployee.InsertBlacklistEmployeeReqDto;
 import com.lawencon.admin.service.BlacklistService;
 
 @RestController
-@RequestMapping("/blacklist")
+@RequestMapping("/blacklists")
 public class BlacklistEmployeeController {
 
 	@Autowired
@@ -33,5 +33,11 @@ public class BlacklistEmployeeController {
 	public ResponseEntity<List<BlacklistEmployeeResDto>> getAll(int startIndex, int endIndex)  {
 		final List<BlacklistEmployeeResDto> responses = employeeService.getByCompany(startIndex, endIndex);
 		return new ResponseEntity<>(responses, HttpStatus.OK);
+	}
+	
+	@GetMapping("/report")
+	public ResponseEntity<InsertResDto> getReport(){
+		final InsertResDto response = employeeService.getReport();
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 }

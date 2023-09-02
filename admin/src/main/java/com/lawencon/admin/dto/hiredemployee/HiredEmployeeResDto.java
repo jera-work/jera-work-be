@@ -1,13 +1,23 @@
 package com.lawencon.admin.dto.hiredemployee;
 
 public class HiredEmployeeResDto {
+	
 	private String hiredEmployeeId;
 	private String candidateName;
 	private String companyName;
 	private String jobTypeName;
 	private String levelName;
 	private String vacancyTitle;
+	private String appliedId;
 	private String createdAt;
+
+	public String getAppliedId() {
+		return appliedId;
+	}
+
+	public void setAppliedId(String appliedId) {
+		this.appliedId = appliedId;
+	}
 
 	public String getHiredEmployeeId() {
 		return hiredEmployeeId;
