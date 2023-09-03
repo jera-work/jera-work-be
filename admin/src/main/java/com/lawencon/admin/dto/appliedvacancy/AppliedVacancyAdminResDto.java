@@ -9,6 +9,7 @@ public class AppliedVacancyAdminResDto {
 	private String statusCode;
 	private String progressCode;
 	private String createdAt;
+	private Long duration;
 
 	public String getStatusCode() {
 		return statusCode;
@@ -64,6 +65,14 @@ public class AppliedVacancyAdminResDto {
 
 	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public Long getDuration() {
+		return duration;
+	}
+
+	public void setDuration(Long duration) {
+		this.duration = duration;
 	}
 
 }

@@ -221,7 +221,7 @@ public class BlacklistService {
         		for(int j = 0; j < blacklistEmployeesCountJob.size(); j++) {
         			if(blacklistEmployeesCountJob.get(j).getJobName().equals(blacklistEmployeesRes.get(i).getVacancyTitle() + " - " + blacklistEmployeesRes.get(i).getLevelName())) {
         				blacklistEmployeeCountJob.setEmployeeCount(blacklistEmployeesCountJob.get(j).getEmployeeCount()+1);
-        				blacklistEmployeesCountJob.add(blacklistEmployeeCountJob);
+        				blacklistEmployeesCountJob.set(j, blacklistEmployeeCountJob);
         			}
         		}
         	}
@@ -229,8 +229,10 @@ public class BlacklistService {
         
         final ReportReqDto report = new ReportReqDto();
         report.setFullName(userLogin.getProfile().getProfileName());
-        report.setCompanyName(userCompany.getCompanyName());
         report.setCreatedAt(DateUtil.dateTimeFormat(LocalDateTime.now()));
+        report.setCompanyName(userCompany.getCompanyName());
+        report.setAddress(userCompany.getAddress());
+        report.setPhoneNumber(userCompany.getPhoneNumber());
 		
         final Collection<ReportReqDto> result = new ArrayList<>();
         result.add(report);
@@ -240,6 +242,7 @@ public class BlacklistService {
         parameters.put("jobsType", blacklistEmployeesCountJobType);
         parameters.put("expLevels", blacklistEmployeesCountExpLevel);
         parameters.put("jobsTitle", blacklistEmployeesCountJob);
+        parameters.put("img", userCompany.getPhoto().getFileContent());
         
         try {				
         	byte[] dataOut = jasperUtil.responseToByteArray(result, parameters, "jasper-blacklist-employee");

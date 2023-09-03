@@ -22,6 +22,15 @@ public class JobVacancyUpdateReqDto {
 	private String cityId;
 	private String address;
 	private String description;
+	private String appliedStatusId;
+
+	public String getAppliedStatusId() {
+		return appliedStatusId;
+	}
+
+	public void setAppliedStatusId(String appliedStatusId) {
+		this.appliedStatusId = appliedStatusId;
+	}
 
 	public String getJobVacancyId() {
 		return jobVacancyId;

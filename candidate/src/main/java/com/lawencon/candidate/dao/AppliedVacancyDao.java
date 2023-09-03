@@ -108,4 +108,37 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 		
 		return appliedVacancies;
 	}
+	
+	public List<AppliedVacancy> getByJobVacancyId(String jobId){
+		final String sql = "SELECT "
+				+ "	tav.id, tav.job_vacancy_id "
+				+ "FROM "
+				+ "	t_applied_vacancy tav "
+				+ "INNER JOIN "
+				+ "	t_job_vacancy tjv ON tav.job_vacancy_id = tjv.id "
+				+ "WHERE "
+				+ "	tjv.id LIKE :job_id ";
+		
+		final List<?> appObjs = ConnHandler.getManager().createNativeQuery(sql)
+				.setParameter("job_id", jobId)
+				.getResultList();
+		
+		final List<AppliedVacancy> appliedVacancies = new ArrayList<>();
+		if(appObjs.size() > 0) {
+			for(Object appObj: appObjs) {
+				final Object[] appObjArr = (Object[]) appObj;
+				
+				final JobVacancy job = new JobVacancy();
+				job.setId(appObjArr[0].toString());
+				
+				final AppliedVacancy appliedVacancy = new AppliedVacancy();
+				appliedVacancy.setId(appObjArr[0].toString());
+				appliedVacancy.setJobVacancy(job);
+				
+				appliedVacancies.add(appliedVacancy);
+			}
+		}
+		
+		return appliedVacancies;
+	}
 }

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class HiredAppliedRangeDate {
 	private LocalDateTime appliedAt;
 	private LocalDateTime hiredAt;
+	private String profileName;
 	public LocalDateTime getAppliedAt() {
 		return appliedAt;
 	}
@@ -16,6 +17,12 @@ public class HiredAppliedRangeDate {
 	}
 	public void setHiredAt(LocalDateTime hiredAt) {
 		this.hiredAt = hiredAt;
+	}
+	public String getProfileName() {
+		return profileName;
+	}
+	public void setProfileName(String profileName) {
+		this.profileName = profileName;
 	}
 	
 	

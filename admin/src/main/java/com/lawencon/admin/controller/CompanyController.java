@@ -34,11 +34,5 @@ public class CompanyController {
 		final List<CompanyResDto> responses = companyService.getCompanies();
 		return new ResponseEntity<List<CompanyResDto>>(responses, HttpStatus.OK);
 	}
-	
-	@GetMapping("/report")
-	public ResponseEntity<InsertResDto> getReport(){
-		final InsertResDto response = companyService.getReport();
-		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
-	}
 
 }

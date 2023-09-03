@@ -157,7 +157,7 @@ public class CandidateService implements UserDetailsService {
 
 	/* change password for candidate */
 	public UpdateResDto changePassword(CandidatePasswordUpdateReqDto data) {
-		ConnHandler.commit();
+		ConnHandler.begin();
 		final String id = principalService.getAuthPrincipal();
 		final Candidate cdt = candidateDao.getById(id);
 		if (cdt != null) {

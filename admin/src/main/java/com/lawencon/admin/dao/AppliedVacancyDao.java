@@ -89,7 +89,7 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 
 	public List<AppliedVacancy> getByJobVacancyId(String jobVacancyId) {
 		final String sql = "SELECT "
-				+ "	tav.id, tcp.profile_name, tap.progress_name, tas.status_name, tav.created_at, tap.progress_code, tas.status_code  "
+				+ "	tav.id, tcp.profile_name, tap.progress_name, tas.status_name, tav.created_at, tap.progress_code, tas.status_code, tas.id as statusId "
 				+ "FROM "
 				+ "	t_applied_vacancy tav "
 				+ "INNER JOIN "
@@ -123,6 +123,7 @@ public class AppliedVacancyDao extends AbstractJpaDao {
 				appliedVacancy.setCandidate(candidate);
 				
 				final AppliedStatus appliedStatus = new AppliedStatus();
+				appliedStatus.setId(appObjArr[7].toString());
 				appliedStatus.setStatusName(appObjArr[3].toString());
 				appliedStatus.setStatusCode(appObjArr[6].toString());
 				appliedVacancy.setAppliedStatus(appliedStatus);

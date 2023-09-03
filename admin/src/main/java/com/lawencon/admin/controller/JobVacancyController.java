@@ -78,8 +78,8 @@ public class JobVacancyController {
 	}
 	
 	@GetMapping("/report")
-	public ResponseEntity<InsertResDto> getReport(){
-		final InsertResDto response = jobService.getReport();
+	public ResponseEntity<InsertResDto> getReport(String date){
+		final InsertResDto response = jobService.getReport(date);
 		return new ResponseEntity<InsertResDto>(response, HttpStatus.CREATED);
 	}
 	

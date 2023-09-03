@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawencon.base.ConnHandler;
+import com.lawencon.candidate.dao.AppliedVacancyDao;
 import com.lawencon.candidate.dao.JobVacancyDao;
 import com.lawencon.candidate.dao.VacancyDescriptionDao;
 import com.lawencon.candidate.dto.InsertResDto;
@@ -17,6 +18,7 @@ import com.lawencon.candidate.dto.jobvacancy.InsertJobVacancyReqDto;
 import com.lawencon.candidate.dto.jobvacancy.JobSearchResDto;
 import com.lawencon.candidate.dto.jobvacancy.JobVacancyResDto;
 import com.lawencon.candidate.dto.jobvacancy.JobVacancyUpdateReqDto;
+import com.lawencon.candidate.model.AppliedVacancy;
 import com.lawencon.candidate.model.JobVacancy;
 import com.lawencon.candidate.model.VacancyDescription;
 import com.lawencon.candidate.util.DateUtil;
@@ -30,6 +32,8 @@ public class JobVacancyService {
 	private JobVacancyDao jobDao;
 	@Autowired
 	private ApiService apiService;
+	@Autowired
+	private AppliedVacancyDao appliedVacancyDao;
 
 	public InsertResDto insertJob(InsertJobVacancyReqDto data) {
 		ConnHandler.begin();
@@ -263,13 +267,14 @@ public class JobVacancyService {
 		response.setVacancyCode(job.getVacancyCode());
 		return response;
 	}
-	
+
 	public UpdateResDto editJob(JobVacancyUpdateReqDto data) {
-		ConnHandler.begin();
 
 		try {
+			ConnHandler.begin();
 			final JobVacancy job = jobDao.getByCode(data.getVacancyCode());
-			
+			final JobVacancy jobUpdate = jobDao.getById(job.getId());
+
 			final VacancyDescription desc = descDao.getById(job.getVacancyDescription().getId());
 			desc.setAddress(data.getAddress());
 			desc.setAgeVacancy(data.getAgeVacancyId());
@@ -281,25 +286,41 @@ public class JobVacancyService {
 			desc.setSalary(data.getSalary());
 			final VacancyDescription descDb = descDao.saveAndFlush(desc);
 
-			job.setAvailableStatus(data.getAvailableStatusId());
-			job.setCompany(data.getCompanyId());
-			job.setEndDate(DateUtil.dateTimeParse(data.getEndDate()));
-			job.setExpLevel(data.getExpLevelId());
-			job.setStartDate(DateUtil.dateTimeParse(data.getStartDate()));
-			job.setVacancyCode(data.getVacancyCode());
-			job.setVacancyTitle(data.getVacancyTitle());
-			job.setVacancyDescription(descDb);
-			final JobVacancy jobDb = jobDao.saveAndFlush(job);
+			jobUpdate.setAvailableStatus(data.getAvailableStatusId());
+			jobUpdate.setCompany(data.getCompanyId());
+			jobUpdate.setEndDate(DateUtil.dateTimeParse(data.getEndDate()));
+			jobUpdate.setExpLevel(data.getExpLevelId());
+			jobUpdate.setStartDate(DateUtil.dateTimeParse(data.getStartDate()));
+			jobUpdate.setVacancyCode(data.getVacancyCode());
+			jobUpdate.setVacancyTitle(data.getVacancyTitle());
+			jobUpdate.setVacancyDescription(descDb);
+			final JobVacancy jobDb = jobDao.saveAndFlush(jobUpdate);
 
 			final UpdateResDto response = new UpdateResDto();
 			response.setVer(jobDb.getVersion());
-			response.setMessage("Job has been created!");
+			response.setMessage("Job has been edited!");
+			updateAppliedStatusByEditJob(jobDb.getId(), data.getAppliedStatusId());
 			ConnHandler.commit();
-
+			
 			return response;
 		} catch (Exception e) {
+			e.printStackTrace();
 			ConnHandler.rollback();
 			return null;
 		}
+	}
+
+	public void updateAppliedStatusByEditJob(String jobId, String statusId) {
+		
+		System.err.println(jobId);
+		System.err.println(statusId);
+		final List<AppliedVacancy> applied = appliedVacancyDao.getByJobVacancyId(jobId);
+
+		for (int i = 0; i < applied.size(); i++) {
+			final AppliedVacancy apply = appliedVacancyDao.getById(applied.get(i).getId());
+			apply.setAppliedStatus(statusId);
+			appliedVacancyDao.saveAndFlush(apply);
+		}
+
 	}
 }

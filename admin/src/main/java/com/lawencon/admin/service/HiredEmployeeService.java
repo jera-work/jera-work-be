@@ -175,15 +175,15 @@ public class HiredEmployeeService {
 			final List<JobVacancy> jobVacancies = jobDao.getJobByCompany(userDao.getById(principalService.getAuthPrincipal()).getProfile().getCompany().getId());
 			JobVacancy jobVacancy = new JobVacancy();
 			for(JobVacancy job : jobVacancies) {	
-				final AppliedVacancy applied = appliedDao.getByJobVacancyAndCandidate(job.getId(), he.getCandidate().getId());
-				if(AppliedProgressCode.HIRED.progressCode.equals(applied.getAppliedProgress().getProgressCode())){
-					jobVacancy = job;
-					final VacancyDescription jobDetail = jobDetailDao.getById(jobVacancy.getVacancyDescription().getId());			
-					hiredEmployeeRes.setJobTypeName(jobDetail.getJobType().getTypeName());
-					hiredEmployeeRes.setVacancyTitle(jobVacancy.getVacancyTitle());
-					hiredEmployeeRes.setLevelName(jobVacancy.getExpLevel().getLevelName());
-					hiredEmployeeRes.setCreatedAt(DateUtil.dateTimeFormat(he.getCreatedAt()));
-					break;
+				final AppliedVacancy applied = (appliedDao.getByJobVacancyAndCandidate(job.getId(), he.getCandidate().getId()) != null) ? appliedDao.getByJobVacancyAndCandidate(job.getId(), he.getCandidate().getId()) : null;
+				if(applied != null && AppliedProgressCode.HIRED.progressCode.equals(applied.getAppliedProgress().getProgressCode())){
+						jobVacancy = job;
+						final VacancyDescription jobDetail = jobDetailDao.getById(jobVacancy.getVacancyDescription().getId());			
+						hiredEmployeeRes.setJobTypeName(jobDetail.getJobType().getTypeName());
+						hiredEmployeeRes.setVacancyTitle(jobVacancy.getVacancyTitle());
+						hiredEmployeeRes.setLevelName(jobVacancy.getExpLevel().getLevelName());
+						hiredEmployeeRes.setCreatedAt(DateUtil.dateTimeFormat(he.getCreatedAt()));
+						break;
 				}
 			}
 			hiredEmployeesRes.add(hiredEmployeeRes);
@@ -199,7 +199,7 @@ public class HiredEmployeeService {
         	boolean jobTypeExist = false;
         	
         	for(HiredEmployeeCountJobType h : hiredEmployeesCountJobType) {
-        		if(h.getJobTypeName().equals(hiredEmployeesCountJobType.get(i).getJobTypeName())) {
+        		if(h.getJobTypeName().equals(hiredEmployeesRes.get(i).getJobTypeName())) {
         			jobTypeExist = true;
         		}
         	}
@@ -210,7 +210,7 @@ public class HiredEmployeeService {
         		for(int j = 0; j < hiredEmployeesCountJobType.size(); j++) {
         			if(hiredEmployeesCountJobType.get(j).getJobTypeName().equals(hiredEmployeesRes.get(i).getJobTypeName())) {
         				hiredEmployeeCountJobType.setJobTypeCount(hiredEmployeesCountJobType.get(j).getJobTypeCount()+1);
-        				hiredEmployeesCountJobType.add(hiredEmployeeCountJobType);
+        				hiredEmployeesCountJobType.set(j, hiredEmployeeCountJobType);
         			}
         		}
         	}
@@ -226,7 +226,7 @@ public class HiredEmployeeService {
         	boolean expLevelExist = false;
         	
         	for(HiredEmployeeCountExpLevel h : hiredEmployeesCountExpLevel) {
-        		if(h.getLevelName().equals(hiredEmployeesCountExpLevel.get(i).getLevelName())) {
+        		if(h.getLevelName().equals(hiredEmployeesRes.get(i).getLevelName())) {
         			expLevelExist = true;
         		}
         	}
@@ -234,10 +234,10 @@ public class HiredEmployeeService {
         	if(!expLevelExist) {
         		hiredEmployeesCountExpLevel.add(hiredEmployeeCountExpLevel);
         	}else {
-        		for(int j = 0; j < hiredEmployeesCountJobType.size(); j++) {
+        		for(int j = 0; j < hiredEmployeesCountExpLevel.size(); j++) {
         			if(hiredEmployeesCountExpLevel.get(j).getLevelName().equals(hiredEmployeesRes.get(i).getJobTypeName())) {
         				hiredEmployeeCountExpLevel.setLevelCount(hiredEmployeesCountExpLevel.get(j).getLevelCount()+1);
-        				hiredEmployeesCountExpLevel.add(hiredEmployeeCountExpLevel);
+        				hiredEmployeesCountExpLevel.set(j, hiredEmployeeCountExpLevel);
         			}
         		}
         	}
@@ -264,7 +264,7 @@ public class HiredEmployeeService {
         		for(int j = 0; j < hiredEmployeesCountJob.size(); j++) {
         			if(hiredEmployeesCountJob.get(j).getJobName().equals(hiredEmployeesRes.get(i).getVacancyTitle() + " - " + hiredEmployeesRes.get(i).getLevelName())) {
         				hiredEmployeeCountJob.setEmployeeCount(hiredEmployeesCountJob.get(j).getEmployeeCount()+1);
-        				hiredEmployeesCountJob.add(hiredEmployeeCountJob);
+        				hiredEmployeesCountJob.set(j, hiredEmployeeCountJob);
         			}
         		}
         	}
@@ -272,8 +272,10 @@ public class HiredEmployeeService {
         
         final ReportReqDto report = new ReportReqDto();
         report.setFullName(userLogin.getProfile().getProfileName());
-        report.setCompanyName(userCompany.getCompanyName());
         report.setCreatedAt(DateUtil.dateTimeFormat(LocalDateTime.now()));
+        report.setCompanyName(userCompany.getCompanyName());
+        report.setAddress(userCompany.getAddress());
+        report.setPhoneNumber(userCompany.getPhoneNumber());
         
         final Collection<ReportReqDto> result = new ArrayList<>();
         result.add(report);
@@ -283,6 +285,7 @@ public class HiredEmployeeService {
         parameters.put("jobsType", hiredEmployeesCountJobType);
         parameters.put("expLevels", hiredEmployeesCountExpLevel);
         parameters.put("jobsTitle", hiredEmployeesCountJob);
+        parameters.put("img", userCompany.getPhoto().getFileContent());
         
         try {				
         	byte[] dataOut = jasperUtil.responseToByteArray(result, parameters, "jasper-hired-employee");

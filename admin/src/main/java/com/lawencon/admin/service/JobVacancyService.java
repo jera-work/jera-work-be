@@ -1,6 +1,7 @@
 package com.lawencon.admin.service;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -87,6 +88,8 @@ public class JobVacancyService {
 	private JasperUtil jasperUtil;
 	@Autowired
 	private SendMailService sendMailService;
+	@Autowired
+	private AppliedVacancyService appliedVacancyService;
 
 	public InsertResDto insertJob(InsertJobVacancyReqDto data) {
 
@@ -314,7 +317,7 @@ public class JobVacancyService {
 		return response;
 	}
 	
-	public InsertResDto getReport() {
+	public InsertResDto getReport(String dateStr) {
 		final InsertResDto response = new InsertResDto();
 		final List<JobVacancyResDto> jobVacancies = new ArrayList<>();
 
@@ -322,20 +325,24 @@ public class JobVacancyService {
 		final Company company = companyDao.getById(user.getProfile().getCompany().getId());
 
 		jobDao.getJobByCompany(company.getId()).forEach(jv -> {
-			final JobVacancyResDto jobVacancy = new JobVacancyResDto();
-			jobVacancy.setCompanyName(jv.getCompany().getCompanyName());
-			jobVacancy.setEndDate(DateUtil.dateTimeFormat(jv.getEndDate()));
-			jobVacancy.setStartDate(DateUtil.dateTimeFormat(jv.getStartDate()));
-			jobVacancy.setHrName(jv.getPicHr().getProfile().getProfileName());
-			jobVacancy.setUserName(jv.getPicUser().getProfile().getProfileName());
-			jobVacancy.setLevelName(jv.getExpLevel().getLevelName());
-			jobVacancy.setStatusName(jv.getAvailableStatus().getStatusname());
-			jobVacancy.setVacancyTitle(jv.getVacancyTitle());
-			jobVacancy.setVacancyCode(jv.getVacancyCode());
-			jobVacancy.setVacancyId(jv.getId());
-			jobVacancy.setAppliedCandidateTotal(jobDao.getAppliedCandidateTotal(jv.getId()));
-
-			jobVacancies.add(jobVacancy);
+			LocalDate date = DateUtil.dateParse(dateStr);
+			if((jv.getStartDate().getMonthValue() == date.getMonthValue()) && (jv.getStartDate().getYear() == date.getYear())) {				
+				final JobVacancyResDto jobVacancy = new JobVacancyResDto();
+				jobVacancy.setCompanyName(jv.getCompany().getCompanyName());
+				jobVacancy.setEndDate(DateUtil.dateTimeFormat(jv.getEndDate()));
+				jobVacancy.setStartDate(DateUtil.dateTimeFormat(jv.getStartDate()));
+				jobVacancy.setHrName(jv.getPicHr().getProfile().getProfileName());
+				jobVacancy.setUserName(jv.getPicUser().getProfile().getProfileName());
+				jobVacancy.setLevelName(jv.getExpLevel().getLevelName());
+				jobVacancy.setStatusName(jv.getAvailableStatus().getStatusname());
+				jobVacancy.setVacancyTitle(jv.getVacancyTitle());
+				jobVacancy.setVacancyCode(jv.getVacancyCode());
+				jobVacancy.setVacancyId(jv.getId());
+				jobVacancy.setAppliedCandidateTotal(jobDao.getAppliedCandidateTotal(jv.getId()));
+				
+				jobVacancies.add(jobVacancy);
+			}
+			
 		});
 		
 		final List<JobVacancyCountLevelResDto> jobsCountLevel = new ArrayList<>();
@@ -441,7 +448,7 @@ public class JobVacancyService {
             jobCountHiredRangeDate.setHiredRange(avg);
             
             boolean jobExist = false;
-        	for(JobVacancyCountAppliedCandidateResDto j : jobsCountApplied) {
+        	for(JobVacancyCountHiredRangeDate j : jobsCountHiredRangeDate) {
         		if(j.getJobName().equals(jobVacancies.get(i).getVacancyTitle())) {
         			jobExist = true;
         		}
@@ -463,8 +470,10 @@ public class JobVacancyService {
         
         final ReportReqDto report = new ReportReqDto();
         report.setFullName(user.getProfile().getProfileName());
-        report.setCompanyName(company.getCompanyName());
         report.setCreatedAt(DateUtil.dateTimeFormat(LocalDateTime.now()));
+        report.setCompanyName(company.getCompanyName());
+        report.setAddress(company.getAddress());
+        report.setPhoneNumber(company.getPhoneNumber());
         
         final Collection<ReportReqDto> result = new ArrayList<>();
         result.add(report);
@@ -475,6 +484,7 @@ public class JobVacancyService {
         parameters.put("availableStatuses", jobsCountStatus);
         parameters.put("appliedCandidates", jobsCountApplied);
         parameters.put("hiredRangeDates", jobsCountHiredRangeDate);
+        parameters.put("img", company.getPhoto().getFileContent());
         
         try {				
         	byte[] dataOut = jasperUtil.responseToByteArray(result, parameters, "jasper-job-vacancies");
@@ -520,16 +530,21 @@ public class JobVacancyService {
 			final VacancyDescription descDb = descDao.saveAndFlush(desc);
 			
 			final AvailableStatus status = statusDao.getById(data.getAvailableStatusId());
+			
+			//check if end date has passed the expiration date
 			if(DateUtil.dateTimeParse(data.getEndDate()).isBefore(LocalDateTime.now())) {
+				//set available status to closed and set end date to now
 				final AvailableStatus statusClose = statusDao.getByCode("CLS");
 				job.setAvailableStatus(statusDao.getByIdRef(statusClose.getId()));
 				job.setEndDate(LocalDateTime.now());
 				data.setEndDate(DateUtil.dateTimeFormat(LocalDateTime.now()));
 				data.setAvailableStatusId(statusClose.getId());
 			} else if(status.getStatusCode().equals("CLS")) {
+				//set status to close if manually inputted status equals to closed
 				job.setAvailableStatus(status);
 				data.setAvailableStatusId(status.getId());
 			} else {
+				//set status to open and end date to the manually inputted ones
 				final AvailableStatus statusOpen = statusDao.getByCode("OPN");
 				job.setAvailableStatus(statusDao.getByIdRef(statusOpen.getId()));
 				job.setEndDate(DateUtil.dateTimeParse(data.getEndDate()));
@@ -546,9 +561,12 @@ public class JobVacancyService {
 			job.setVacancyTitle(data.getVacancyTitle());
 			final JobVacancy jobDb = jobDao.saveAndFlush(job);
 			
-			data.setVacancyCode(job.getVacancyCode());
-			apiService.putTo("http://localhost:8080/jobs/edit", data);
 			ConnHandler.commit();
+			
+			data.setVacancyCode(jobDb.getVacancyCode());
+			data.setAppliedStatusId(appliedVacancyService.updateAppliedStatusByEditJob(jobDb.getId()));
+			data.setCompanyId(company.getId());
+			apiService.putTo("http://localhost:8080/jobs/edit", data);
 			
 			response.setMessage("Job has been edited!");
 			response.setVer(jobDb.getVersion());
