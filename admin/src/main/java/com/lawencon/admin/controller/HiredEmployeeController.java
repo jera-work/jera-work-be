@@ -44,6 +44,6 @@ public class HiredEmployeeController {
 	@GetMapping("/report")
 	public ResponseEntity<InsertResDto> getReport(){
 		final InsertResDto response = hiredEmployeeService.getReport();
-		return new ResponseEntity<>(response, HttpStatus.CREATED);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }

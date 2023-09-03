@@ -84,7 +84,7 @@ public class AppliedVacancyController {
 	@GetMapping("/report")
 	public ResponseEntity<InsertResDto> getReport(String jobId, String date){
 		final InsertResDto response = appliedVacancyService.getReport(jobId, date);
-		return new ResponseEntity<>(response, HttpStatus.CREATED);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	@GetMapping("/counts")
