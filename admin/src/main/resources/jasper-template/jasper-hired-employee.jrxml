@@ -111,34 +111,118 @@
 	<parameter name="jobsType" class="java.util.List"/>
 	<parameter name="expLevels" class="java.util.List"/>
 	<parameter name="jobsTitle" class="java.util.List"/>
+	<parameter name="img" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
+	<field name="createdAt" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="createdAt"/>
+		<property name="com.jaspersoft.studio.field.name" value="createdAt"/>
+	</field>
+	<field name="fullName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="fullName"/>
+		<property name="com.jaspersoft.studio.field.name" value="fullName"/>
+	</field>
+	<field name="companyName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="companyName"/>
+		<property name="com.jaspersoft.studio.field.label" value="companyName"/>
+	</field>
+	<field name="header" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="header"/>
+		<property name="com.jaspersoft.studio.field.label" value="header"/>
+	</field>
+	<field name="address" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="address"/>
+		<property name="com.jaspersoft.studio.field.name" value="address"/>
+	</field>
+	<field name="phoneNumber" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="phoneNumber"/>
+		<property name="com.jaspersoft.studio.field.name" value="phoneNumber"/>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="54" splitType="Stretch">
+		<band height="180" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement x="40" y="24" width="280" height="30" forecolor="#25708E" uuid="7476bc49-cc2f-4e10-bb19-780fea193eed"/>
+				<reportElement x="40" y="120" width="280" height="30" forecolor="#25708E" uuid="7476bc49-cc2f-4e10-bb19-780fea193eed">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Center">
 					<font fontName="Arial" size="20" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Report Hired Employee List]]></text>
 			</staticText>
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="571" height="90" backcolor="#FFFFFF" uuid="f154143b-7ecd-4819-b192-f0eb49471734">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textField>
+					<reportElement x="80" y="69" width="458" height="18" uuid="96cd02e0-f4e4-4eb6-991e-08f8ed9b7e1f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Telp. : " + $F{phoneNumber}]]></textFieldExpression>
+				</textField>
+				<image scaleImage="FillFrame">
+					<reportElement x="0" y="14" width="55" height="55" uuid="ccd729cb-f1b3-4676-a55c-11b0f6e2a5eb">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<graphicElement fill="Solid"/>
+					<imageExpression><![CDATA[new ByteArrayInputStream(java.util.Base64.getDecoder().decode($P{img}))]]></imageExpression>
+				</image>
+				<textField textAdjust="ScaleFont">
+					<reportElement x="80" y="51" width="458" height="18" uuid="c73fe920-6707-4b07-804f-311d73accacb">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="StretchHeight">
+					<reportElement stretchType="RelativeToTallestObject" x="80" y="7" width="458" height="44" uuid="cfb4c230-4144-4eb2-9fdb-d222b435d29b">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+						<font fontName="DejaVu Sans Mono" size="16" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{companyName}]]></textFieldExpression>
+				</textField>
+			</frame>
 		</band>
 	</title>
 	<detail>
-		<band height="470">
+		<band height="116">
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="40" y="15" width="490" height="101" uuid="94900bd5-2a09-459b-96f9-41afd94613bd"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["This Report is created at " + $F{createdAt} + " and reported to " + $F{fullName}  + " of company " + $F{companyName} + ". If you have any problem of this report, contact Customer Service of Jerawork for detail"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="470" splitType="Stretch">
 			<pieChart>
 				<chart evaluationTime="Report">
-					<reportElement x="40" y="30" width="200" height="200" uuid="b7fabd25-527f-4cc3-9deb-5ab93ee67475"/>
+					<reportElement stretchType="RelativeToTallestObject" x="10" y="30" width="259" height="200" uuid="b7fabd25-527f-4cc3-9deb-5ab93ee67475"/>
 					<chartTitle color="#3FBDF1">
 						<font fontName="Comic Sans MS" size="12"/>
 						<titleExpression><![CDATA["Job Type"]]></titleExpression>
 					</chartTitle>
 					<chartSubtitle/>
-					<chartLegend/>
+					<chartLegend position="Right"/>
 				</chart>
 				<pieDataset>
 					<dataset>
@@ -157,13 +241,13 @@
 			</pieChart>
 			<pieChart>
 				<chart evaluationTime="Report">
-					<reportElement x="331" y="30" width="200" height="200" uuid="a1073bc7-6e4a-4849-867a-7a0f444605b2"/>
+					<reportElement stretchType="RelativeToTallestObject" x="290" y="30" width="271" height="200" uuid="a1073bc7-6e4a-4849-867a-7a0f444605b2"/>
 					<chartTitle color="#3FBDF1">
 						<font fontName="Comic Sans MS" size="12"/>
 						<titleExpression><![CDATA["Experience Level"]]></titleExpression>
 					</chartTitle>
 					<chartSubtitle/>
-					<chartLegend/>
+					<chartLegend position="Right"/>
 				</chart>
 				<pieDataset>
 					<dataset>
@@ -182,13 +266,13 @@
 			</pieChart>
 			<pieChart>
 				<chart evaluationTime="Report">
-					<reportElement stretchType="RelativeToTallestObject" x="80" y="260" width="399" height="200" uuid="9ac91d80-78c0-4568-8fee-2c360d7c79bf"/>
+					<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="80" y="260" width="399" height="200" uuid="9ac91d80-78c0-4568-8fee-2c360d7c79bf"/>
 					<chartTitle color="#3FBDF1">
 						<font fontName="Comic Sans MS" size="12"/>
 						<titleExpression><![CDATA["Job Title"]]></titleExpression>
 					</chartTitle>
 					<chartSubtitle/>
-					<chartLegend/>
+					<chartLegend position="Right"/>
 				</chart>
 				<pieDataset>
 					<dataset>
@@ -232,7 +316,7 @@
 						<jr:detailCell style="Table 1_TD" height="30">
 							<textField>
 								<reportElement x="0" y="0" width="50" height="30" uuid="1eef804a-5b8a-43d1-a056-91d39a9c4fdb"/>
-								<box leftPadding="5"/>
+								<box leftPadding="5" rightPadding="5"/>
 								<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
@@ -251,7 +335,7 @@
 						<jr:detailCell style="Table 1_TD" height="30">
 							<textField>
 								<reportElement x="0" y="0" width="130" height="30" uuid="c000d561-c450-47c2-bce0-ed78fddcbd03"/>
-								<box leftPadding="5"/>
+								<box leftPadding="5" rightPadding="5"/>
 								<textFieldExpression><![CDATA[$F{candidateName}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
@@ -270,7 +354,7 @@
 						<jr:detailCell style="Table 1_TD" height="30">
 							<textField>
 								<reportElement x="0" y="0" width="100" height="30" uuid="18178086-f021-4ee7-ae85-993760ef92b0"/>
-								<box leftPadding="5"/>
+								<box leftPadding="5" rightPadding="5"/>
 								<textFieldExpression><![CDATA[$F{jobTypeName}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
@@ -289,7 +373,7 @@
 						<jr:detailCell style="Table 1_TD" height="30">
 							<textField>
 								<reportElement x="0" y="0" width="100" height="30" uuid="71324c77-b744-427b-99e9-f7f8cc5a9d6d"/>
-								<box leftPadding="5"/>
+								<box leftPadding="5" rightPadding="5"/>
 								<textFieldExpression><![CDATA[$F{levelName}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
@@ -308,7 +392,7 @@
 						<jr:detailCell style="Table 1_TD" height="30">
 							<textField>
 								<reportElement x="0" y="0" width="100" height="30" uuid="c684a114-3a75-4aa3-95fb-b47b5d73d556"/>
-								<box leftPadding="5"/>
+								<box leftPadding="5" rightPadding="5"/>
 								<textFieldExpression><![CDATA[$F{vacancyTitle}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
@@ -327,7 +411,7 @@
 						<jr:detailCell style="Table 1_TD" height="30">
 							<textField>
 								<reportElement x="0" y="0" width="90" height="30" uuid="e593c299-435b-40e9-9872-171832a083e8"/>
-								<box leftPadding="5"/>
+								<box leftPadding="5" rightPadding="5"/>
 								<textFieldExpression><![CDATA[$F{createdAt}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>

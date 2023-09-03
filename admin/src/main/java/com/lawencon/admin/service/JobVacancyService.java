@@ -1,5 +1,7 @@
 package com.lawencon.admin.service;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,6 +21,7 @@ import com.lawencon.admin.dao.CompanyDao;
 import com.lawencon.admin.dao.DegreeDao;
 import com.lawencon.admin.dao.ExperienceLevelDao;
 import com.lawencon.admin.dao.GenderDao;
+import com.lawencon.admin.dao.HiredEmployeeDao;
 import com.lawencon.admin.dao.JobTypeDao;
 import com.lawencon.admin.dao.JobVacancyDao;
 import com.lawencon.admin.dao.UserDao;
@@ -27,6 +30,8 @@ import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.email.EmailReqDto;
 import com.lawencon.admin.dto.email.ReportReqDto;
+import com.lawencon.admin.dto.hiredemployee.HiredAppliedRangeDate;
+import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.jobvacancy.InsertJobVacancyReqDto;
 import com.lawencon.admin.dto.jobvacancy.JobSearchResDto;
 import com.lawencon.admin.dto.jobvacancy.JobVacancyCountAppliedCandidateResDto;
@@ -41,6 +46,10 @@ import com.lawencon.admin.model.User;
 import com.lawencon.admin.model.VacancyDescription;
 import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.ConnHandler;
+import com.lawencon.admin.dto.jobvacancy.JobVacancyCountAppliedCandidateResDto;
+import com.lawencon.admin.dto.jobvacancy.JobVacancyCountHiredRangeDate;
+import com.lawencon.admin.dto.jobvacancy.JobVacancyCountLevelResDto;
+import com.lawencon.admin.dto.jobvacancy.JobVacancyCountStatusResDto;
 import com.lawencon.security.principal.PrincipalServiceImpl;
 import com.lawencon.util.JasperUtil;
 
@@ -71,6 +80,8 @@ public class JobVacancyService {
 	private PrincipalServiceImpl principalService;
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private HiredEmployeeDao hiredDao;
 	@Autowired
 	private ApiService apiService;
 	@Autowired
@@ -306,7 +317,7 @@ public class JobVacancyService {
 		return response;
 	}
 	
-	public InsertResDto getReport() {
+	public InsertResDto getReport(String dateStr) {
 		final InsertResDto response = new InsertResDto();
 		final List<JobVacancyResDto> jobVacancies = new ArrayList<>();
 
@@ -314,20 +325,24 @@ public class JobVacancyService {
 		final Company company = companyDao.getById(user.getProfile().getCompany().getId());
 
 		jobDao.getJobByCompany(company.getId()).forEach(jv -> {
-			final JobVacancyResDto jobVacancy = new JobVacancyResDto();
-			jobVacancy.setCompanyName(jv.getCompany().getCompanyName());
-			jobVacancy.setEndDate(DateUtil.dateTimeFormat(jv.getEndDate()));
-			jobVacancy.setStartDate(DateUtil.dateTimeFormat(jv.getStartDate()));
-			jobVacancy.setHrName(jv.getPicHr().getProfile().getProfileName());
-			jobVacancy.setUserName(jv.getPicUser().getProfile().getProfileName());
-			jobVacancy.setLevelName(jv.getExpLevel().getLevelName());
-			jobVacancy.setStatusName(jv.getAvailableStatus().getStatusname());
-			jobVacancy.setVacancyTitle(jv.getVacancyTitle());
-			jobVacancy.setVacancyCode(jv.getVacancyCode());
-			jobVacancy.setVacancyId(jv.getId());
-			jobVacancy.setAppliedCandidateTotal(jobDao.getAppliedCandidateTotal(jv.getId()));
-
-			jobVacancies.add(jobVacancy);
+			LocalDate date = DateUtil.dateParse(dateStr);
+			if((jv.getStartDate().getMonthValue() == date.getMonthValue()) && (jv.getStartDate().getYear() == date.getYear())) {				
+				final JobVacancyResDto jobVacancy = new JobVacancyResDto();
+				jobVacancy.setCompanyName(jv.getCompany().getCompanyName());
+				jobVacancy.setEndDate(DateUtil.dateTimeFormat(jv.getEndDate()));
+				jobVacancy.setStartDate(DateUtil.dateTimeFormat(jv.getStartDate()));
+				jobVacancy.setHrName(jv.getPicHr().getProfile().getProfileName());
+				jobVacancy.setUserName(jv.getPicUser().getProfile().getProfileName());
+				jobVacancy.setLevelName(jv.getExpLevel().getLevelName());
+				jobVacancy.setStatusName(jv.getAvailableStatus().getStatusname());
+				jobVacancy.setVacancyTitle(jv.getVacancyTitle());
+				jobVacancy.setVacancyCode(jv.getVacancyCode());
+				jobVacancy.setVacancyId(jv.getId());
+				jobVacancy.setAppliedCandidateTotal(jobDao.getAppliedCandidateTotal(jv.getId()));
+				
+				jobVacancies.add(jobVacancy);
+			}
+			
 		});
 		
 		final List<JobVacancyCountLevelResDto> jobsCountLevel = new ArrayList<>();
@@ -410,14 +425,66 @@ public class JobVacancyService {
         	
         }
         
-        final Collection<List<JobVacancyResDto>> result = new ArrayList<>();
-        result.add(jobVacancies);
+        final List<JobVacancyCountHiredRangeDate> jobsCountHiredRangeDate = new ArrayList<>();
+        
+        
+        for(int i = 0; i < jobVacancies.size(); i++) {
+            final List<HiredAppliedRangeDate> hiredAppliedRanges = hiredDao.getHiredAppliedRangeDate(jobVacancies.get(i).getVacancyId());
+            Long avg = 0L;
+            for(HiredAppliedRangeDate h : hiredAppliedRanges) {
+            	Duration range = Duration.between(h.getHiredAt(), h.getAppliedAt());
+            	if(range.toDays() == 0) {
+            		avg += 1;
+            	}else {            		
+            		avg += range.toDays();
+            	}
+            }
+            if(avg != 0) {            	
+            	avg /= hiredAppliedRanges.size();
+            }
+            
+            final JobVacancyCountHiredRangeDate jobCountHiredRangeDate = new JobVacancyCountHiredRangeDate();
+            jobCountHiredRangeDate.setJobName(jobVacancies.get(i).getVacancyTitle() + " - " + jobVacancies.get(i).getLevelName());
+            jobCountHiredRangeDate.setHiredRange(avg);
+            
+            boolean jobExist = false;
+        	for(JobVacancyCountHiredRangeDate j : jobsCountHiredRangeDate) {
+        		if(j.getJobName().equals(jobVacancies.get(i).getVacancyTitle())) {
+        			jobExist = true;
+        		}
+        	}
+        	
+        	if(!jobExist && hiredAppliedRanges.size() > 0) {
+        		jobsCountHiredRangeDate.add(jobCountHiredRangeDate);
+        	}else if(hiredAppliedRanges.size() > 0){
+        		for(int j = 0; j < jobsCountApplied.size(); j++) {
+        			if(jobsCountHiredRangeDate.get(j).getJobName().equals(jobVacancies.get(i).getVacancyTitle() + " - " + jobVacancies.get(i).getLevelName())) {
+        				jobCountHiredRangeDate.setHiredRange(jobsCountHiredRangeDate.get(j).getHiredRange());
+        				jobsCountHiredRangeDate.set(j, jobCountHiredRangeDate);
+        			}
+        		}
+        	}
+            
+        }
+        
+        
+        final ReportReqDto report = new ReportReqDto();
+        report.setFullName(user.getProfile().getProfileName());
+        report.setCreatedAt(DateUtil.dateTimeFormat(LocalDateTime.now()));
+        report.setCompanyName(company.getCompanyName());
+        report.setAddress(company.getAddress());
+        report.setPhoneNumber(company.getPhoneNumber());
+        
+        final Collection<ReportReqDto> result = new ArrayList<>();
+        result.add(report);
         
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("jobVacancies", jobVacancies);
         parameters.put("expLevels", jobsCountLevel);
         parameters.put("availableStatuses", jobsCountStatus);
         parameters.put("appliedCandidates", jobsCountApplied);
+        parameters.put("hiredRangeDates", jobsCountHiredRangeDate);
+        parameters.put("img", company.getPhoto().getFileContent());
         
         try {				
         	byte[] dataOut = jasperUtil.responseToByteArray(result, parameters, "jasper-job-vacancies");

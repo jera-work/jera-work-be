@@ -66,8 +66,8 @@ public class InterviewVacancyService {
 		interviewVacancyReqDto.setCompanyPhoto(job.getCompany().getPhoto().getFileContent());
 		interviewVacancyReqDto.setVacancyTitle(job.getVacancyTitle());
 		interviewVacancyReqDto.setLevelName(job.getExpLevel().getLevelName());
-		interviewVacancyReqDto.setStartDate(interviewVacancyDb.getStartDate());
-		interviewVacancyReqDto.setEndDate(interviewVacancyDb.getEndDate());
+		interviewVacancyReqDto.setStartDate(DateUtil.dateTimeFormat(interviewVacancyDb.getStartDate()));
+		interviewVacancyReqDto.setEndDate(DateUtil.dateTimeFormat(interviewVacancyDb.getEndDate()));
 		interviewVacancyReqDto.setNotes(interviewVacancyDb.getNotes());
 		interviewVacancyReqDto.setInterviewLocation(interviewVacancyDb.getInterviewLocation());
 		

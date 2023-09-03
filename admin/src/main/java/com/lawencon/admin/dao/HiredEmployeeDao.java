@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 import org.springframework.stereotype.Repository;
 
+import com.lawencon.admin.dto.hiredemployee.HiredAppliedRangeDate;
 import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.CandidateProfile;
 import com.lawencon.admin.model.Company;
@@ -135,5 +136,46 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 			return null;
 		}
 		
+	}
+	
+	public List<HiredAppliedRangeDate> getHiredAppliedRangeDate(String jobVacancyId) {
+		final String sql = "SELECT "
+				+ "	the.created_at AS hiredAt, tav.created_at AS appliedAt, tcp.profile_name "
+				+ "FROM "
+				+ "	t_hired_employee the "
+				+ "INNER JOIN "
+				+ "	t_applied_vacancy tav ON tav.candidate_id = the.candidate_id "
+				+ "INNER JOIN "
+				+ "	t_candidate tc ON tav.candidate_id = tc.id "
+				+ "INNER JOIN "
+				+ "	t_candidate_profile tcp ON tc.candidate_profile_id = tcp.id "
+				+ "WHERE "
+				+ "	tav.job_vacancy_id = :jobVacancyId ";
+		
+		try {
+			final List<?> hiredRangeObjs = ConnHandler.getManager()
+											.createNativeQuery(sql)
+											.setParameter("jobVacancyId", jobVacancyId)
+											.getResultList();
+			
+			final List<HiredAppliedRangeDate> hiredRanges = new ArrayList<>();
+			
+			if(hiredRangeObjs.size() > 0) {
+				for (Object hiredRangeObj : hiredRangeObjs) {
+					final Object[] hiredRangeArr = (Object[]) hiredRangeObj;
+					final HiredAppliedRangeDate hiredRange = new HiredAppliedRangeDate();
+					
+					hiredRange.setAppliedAt(Timestamp.valueOf(hiredRangeArr[0].toString()).toLocalDateTime());
+					hiredRange.setHiredAt(Timestamp.valueOf(hiredRangeArr[1].toString()).toLocalDateTime());
+					hiredRange.setProfileName(hiredRangeArr[2].toString());
+					hiredRanges.add(hiredRange);
+				}
+			}
+			return hiredRanges;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
 	}
 }

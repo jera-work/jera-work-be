@@ -1,11 +1,7 @@
 package com.lawencon.admin.service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,10 +18,9 @@ import com.lawencon.admin.dao.UserDao;
 import com.lawencon.admin.dto.InsertResDto;
 import com.lawencon.admin.dto.UpdateResDto;
 import com.lawencon.admin.dto.email.EmailReqDto;
-import com.lawencon.admin.dto.email.ReportReqDto;
+import com.lawencon.admin.dto.email.UserCreateReportReqDto;
 import com.lawencon.admin.dto.login.LoginReqDto;
 import com.lawencon.admin.dto.profile.ProfileUpdateReqDto;
-import com.lawencon.admin.dto.role.RoleCountResDto;
 import com.lawencon.admin.dto.user.UserChangePasswordReqDto;
 import com.lawencon.admin.dto.user.UserCreateReqDto;
 import com.lawencon.admin.dto.user.UserProfileResDto;
@@ -35,7 +30,6 @@ import com.lawencon.admin.model.File;
 import com.lawencon.admin.model.Profile;
 import com.lawencon.admin.model.Role;
 import com.lawencon.admin.model.User;
-import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.ConnHandler;
 import com.lawencon.security.principal.PrincipalServiceImpl;
 import com.lawencon.util.JasperUtil;
@@ -96,10 +90,19 @@ public class UserService implements UserDetailsService {
 
 		ConnHandler.commit();
 
-		sendMailService.sendEmail(userDb.getUserEmail(), "Account created successfully", "Hello, "
-				+ data.getProfileName()
-				+ "! Your account has been created successfully for jera-work app, you can login using this password : "
-				+ generatedString);
+		final EmailReqDto emailReqDto = new EmailReqDto();
+		emailReqDto.setEmail(userDb.getUserEmail());
+		emailReqDto.setSubject("Account created Successfully");
+		
+		final UserCreateReportReqDto userCreate = new UserCreateReportReqDto();
+		userCreate.setProfileName(userDb.getProfile().getProfileName());
+		userCreate.setEmail(userDb.getUserEmail());
+		userCreate.setPassword(generatedString);
+		userCreate.setCompanyName(userDb.getProfile().getCompany().getCompanyName());
+		userCreate.setRoleName(userDb.getRole().getRoleName());
+		
+		sendMailService.sendCreateAccount(emailReqDto, userCreate);
+
 		final InsertResDto response = new InsertResDto();
 		response.setId(userDb.getId());
 		response.setMessage("User created successfully");
@@ -267,81 +270,6 @@ public class UserService implements UserDetailsService {
 		}
 
 		throw new UsernameNotFoundException("User not found");
-	}
-	
-	public InsertResDto getReport() {
-		final User userLogin = userDao.getById(principalService.getAuthPrincipal());
-		final Company userCompany = companyDao.getById(userLogin.getProfile().getCompany().getId());
-		final List<User> users = userDao.getAll();
-		final List<UserResDto> usersRes = new ArrayList<>();
-		final InsertResDto response = new InsertResDto();
-		
-		users.forEach(user -> {
-			final UserResDto userRes = new UserResDto();
-			userRes.setId(user.getId());
-			userRes.setProfileName(user.getProfile().getProfileName());
-			userRes.setCompanyId(user.getProfile().getCompany().getId());
-			userRes.setCompanyName(user.getProfile().getCompany().getCompanyName());
-			userRes.setRoleName(user.getRole().getRoleName());
-			userRes.setPhoneNumber(user.getProfile().getProfilePhone());
-			userRes.setProfileAddress(user.getProfile().getProfileAddress());
-			usersRes.add(userRes);
-		});
-		
-		final List<RoleCountResDto> rolesCount = new ArrayList<>();
-		for(int i = 0; i < usersRes.size(); i++) {
-			final RoleCountResDto roleCount = new RoleCountResDto();
-			roleCount.setRoleName(usersRes.get(i).getRoleName());
-			roleCount.setRoleCount(1);
-			
-			boolean roleExist = false;
-			
-			for(RoleCountResDto r : rolesCount) {
-				if(r.getRoleName().equals(usersRes.get(i).getRoleName())) {
-					roleExist = true;
-					break;
-				}
-			}
-			
-			if(!roleExist) {
-				rolesCount.add(roleCount);
-			}else {
-				for(RoleCountResDto r : rolesCount) {
-					if(r.getRoleName().equals(roleCount.getRoleName())) {
-						roleCount.setRoleCount(r.getRoleCount()+1);
-						rolesCount.set(i, roleCount);
-					}
-				}
-			}
-		}
-		final Collection<List<UserResDto>> result = new ArrayList<>();
-		result.add(usersRes);
-		
-		final Map<String, Object> parameters = new HashMap<>();
-		parameters.put("usersList", usersRes);
-		parameters.put("rolesList", rolesCount);
-		
-		try {				
-        	byte[] dataOut = jasperUtil.responseToByteArray(result, parameters, "jasper-users");
-                	
-	        final EmailReqDto emailReqDto = new EmailReqDto();
-			emailReqDto.setSubject("Users Report");
-			emailReqDto.setEmail(userLogin.getUserEmail());
-			
-			final ReportReqDto reportReqDto = new ReportReqDto();
-			reportReqDto.setHeader("Users List Report");
-			reportReqDto.setFullName(userLogin.getProfile().getProfileName());
-			reportReqDto.setCompanyName(userCompany.getCompanyName());
-			reportReqDto.setCreatedAt(DateUtil.dateTimeFormat(LocalDateTime.now()));
-			
-			sendMailService.sendUsersReport(emailReqDto, reportReqDto, dataOut);
-			            
-			response.setMessage("Report created successfully");
-			return response;		
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}		
 	}
 
 }
