@@ -184,7 +184,7 @@
 					<textElement>
 						<font size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA["The starting salary for this position is " + $F{salary} + " per month. " + "In addition to this starting salary, we’re offering you benefit "]]></textFieldExpression>
+					<textFieldExpression><![CDATA["The starting salary for this position is " + "Rp." + $F{salary} + " per month. " + "In addition to this starting salary, we’re offering you benefit "]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement stretchType="RelativeToTallestObject" x="30" y="4" width="507" height="20" uuid="4063538b-052d-4545-904f-aaf45650339a"/>
