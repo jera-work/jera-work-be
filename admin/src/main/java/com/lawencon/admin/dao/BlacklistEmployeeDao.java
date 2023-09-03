@@ -1,6 +1,6 @@
 package com.lawencon.admin.dao;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -12,7 +12,6 @@ import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.CandidateProfile;
 import com.lawencon.admin.model.Company;
 import com.lawencon.admin.model.HiredEmployee;
-import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
@@ -80,7 +79,7 @@ public class BlacklistEmployeeDao extends AbstractJpaDao {
 				final Object[] blkObjArr = (Object[]) blkObj;
 				final BlacklistEmployee blacklistEmployee = new BlacklistEmployee();
 				blacklistEmployee.setId(blkObjArr[0].toString());
-				blacklistEmployee.setCreatedAt(DateUtil.dateTimeParseCustom(blkObjArr[4].toString()));
+				blacklistEmployee.setCreatedAt(Timestamp.valueOf(blkObjArr[4].toString()).toLocalDateTime());
 				
 				final Candidate candidate = new Candidate();
 				candidate.setId(blkObjArr[1].toString());

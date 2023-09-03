@@ -12,7 +12,6 @@ import com.lawencon.admin.model.Candidate;
 import com.lawencon.admin.model.CandidateProfile;
 import com.lawencon.admin.model.Company;
 import com.lawencon.admin.model.HiredEmployee;
-import com.lawencon.admin.util.DateUtil;
 import com.lawencon.base.AbstractJpaDao;
 import com.lawencon.base.ConnHandler;
 
@@ -77,7 +76,7 @@ public class HiredEmployeeDao extends AbstractJpaDao {
 				final Object[] hirObjArr = (Object[]) hirObj;
 				final HiredEmployee hiredEmployee = new HiredEmployee();
 				hiredEmployee.setId(hirObjArr[0].toString());
-				hiredEmployee.setCreatedAt(DateUtil.dateTimeParseCustom(hirObjArr[4].toString()));
+				hiredEmployee.setCreatedAt(Timestamp.valueOf(hirObjArr[4].toString()).toLocalDateTime());
 				
 				final Candidate candidate = new Candidate();
 				candidate.setId(hirObjArr[1].toString());
