@@ -35,9 +35,4 @@ public class BlacklistEmployeeController {
 		return new ResponseEntity<>(responses, HttpStatus.OK);
 	}
 	
-	@GetMapping("/report")
-	public ResponseEntity<InsertResDto> getReport(){
-		final InsertResDto response = employeeService.getReport();
-		return new ResponseEntity<>(response, HttpStatus.CREATED);
-	}
 }
