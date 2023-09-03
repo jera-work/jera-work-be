@@ -201,7 +201,7 @@ public class AppliedVacancyService {
 		data.setJobVacancyCode(appliedVacancy.getJobVacancy().getVacancyCode());
 		data.setCandidateEmail(appliedVacancy.getCandidate().getCandidateEmail());
 
-		final HttpStatus responseCandidate = apiService.putTo("http://localhost:8080/applied", data);
+		final HttpStatus responseCandidate = apiService.putTo("http://localhost:8080/applied/change-status", data);
 
 		if (responseCandidate.equals(HttpStatus.OK)) {
 			response.setVer(updatedAppliedVacancy.getVersion());

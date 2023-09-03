@@ -508,7 +508,9 @@ CREATE TABLE t_candidate_education (
 	PRIMARY KEY(id),
 	UNIQUE (education_code),
 	FOREIGN KEY(candidate_id)
-		REFERENCES t_candidate(id)
+		REFERENCES t_candidate(id),
+	FOREIGN KEY(majors_id)
+		REFERENCES t_major(id)
 );
 
 CREATE TABLE t_candidate_document (
@@ -703,7 +705,9 @@ CREATE TABLE t_mcu_vacancy (
 	updated_at timestamp,
 	is_active boolean NOT NULL,
 	ver int NOT NULL,
-	PRIMARY KEY (id)
+	PRIMARY KEY (id),
+	FOREIGN KEY (applied_vacancy_id)
+		REFERENCES t_applied_vacancy (id)
 );
 
 CREATE TABLE t_offering(
